@@ -26,5 +26,10 @@ composer.phar
 
 # phpunit itself is not needed
 phpunit.phar
+
 # local phpunit config
 /phpunit.xml
+
+
+###### DRIMTIM IGNORE ######
+/common/config/main-local.php
