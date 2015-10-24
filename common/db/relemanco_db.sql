@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS ADMINISTRADORES, AGENDA, RUTAS_RELEVADOR_COMERCIO,
-PRODUCTOS_PEDIDOS, PRODUCTOS_COMERCIO_STOCK, PEDIDOS_COMERCIOS, PRODUCTOS, CONTRATOS, COMERCIOS, PEDIDOS,
-RELEVADORES, RUTAS, EMPRESAS, DIAS, LOCALIZACION, CATEGORIAS, PRIORIDADES, ESTADOS;
+DROP TABLE IF EXISTS administradores, agenda, rutasRelevadorComercio,
+productosPedidos, productosComerciostock, pedidosComercios, productos, contratos, comercios, pedidos,
+relevadores, rutas, empresas, dias, localizacion, categorias, prioridades, estados;
 
 CREATE TABLE
-LOCALIZACION(
+localizacion(
 
   	id bigint NOT NULL AUTO_INCREMENT,
   	latitud DECIMAL(19,2),
@@ -13,19 +13,19 @@ LOCALIZACION(
 );
 
 CREATE TABLE
-EMPRESAS(
+empresas(
 
     id bigint NOT NULL AUTO_INCREMENT,
     id_localizacion bigint NOT NULL,
     nombre varchar(80) NOT NULL,
     descripcion varchar(500),
     PRIMARY KEY (id),
-    FOREIGN KEY(id_localizacion) REFERENCES LOCALIZACION(id) ON DELETE CASCADE
+    FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-DIAS(
+dias(
 
     id smallint NOT NULL AUTO_INCREMENT,
     nombre varchar(20) NOT NULL,
@@ -34,7 +34,7 @@ DIAS(
 );
 
 CREATE TABLE
-CATEGORIAS(
+categorias(
 
     id bigint NOT NULL AUTO_INCREMENT,
     nombre varchar(80) NOT NULL,
@@ -44,7 +44,7 @@ CATEGORIAS(
 );
 
 CREATE TABLE
-PRIORIDADES(
+prioridades(
 
     id smallint NOT NULL AUTO_INCREMENT,
     nombre varchar(50) NOT NULL,
@@ -53,7 +53,7 @@ PRIORIDADES(
 );
 
 CREATE TABLE
-ESTADOS(
+estados(
 
     id smallint NOT NULL AUTO_INCREMENT,
     nombre varchar(50) NOT NULL,
@@ -63,7 +63,7 @@ ESTADOS(
 );
 
 CREATE TABLE
-ADMINISTRADORES(
+administradores(
 
     id bigint NOT NULL AUTO_INCREMENT,
     id_estado smallint NOT NULL,
@@ -74,12 +74,12 @@ ADMINISTRADORES(
     pass varchar(32) NOT NULL,
     celular varchar(20) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(id_estado) REFERENCES ESTADOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_estado) REFERENCES estados(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-RELEVADORES(
+relevadores(
 
   	id bigint NOT NULL AUTO_INCREMENT,
     id_estado smallint NOT NULL,
@@ -92,26 +92,26 @@ RELEVADORES(
   	celular varchar(20) NOT NULL,
   	pass varchar(32) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(id_localizacion) REFERENCES LOCALIZACION(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_estado) REFERENCES ESTADOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_estado) REFERENCES estados(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-COMERCIOS(
+comercios(
 
   	id bigint NOT NULL AUTO_INCREMENT,
   	id_localizacion bigint NOT NULL,
     id_prioridad smallint NOT NULL,
   	nombre varchar(100) NOT NULL,
   	PRIMARY KEY (id),
-  	FOREIGN KEY(id_localizacion) REFERENCES LOCALIZACION(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_prioridad) REFERENCES PRIORIDADES(id) ON DELETE CASCADE
+  	FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_prioridad) REFERENCES prioridades(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-PRODUCTOS(
+productos(
 
     id bigint NOT NULL AUTO_INCREMENT,
     id_categoria bigint NOT NULL,
@@ -119,24 +119,24 @@ PRODUCTOS(
     imagen varchar(100),
     descripcion varchar(200),
     PRIMARY KEY (id),
-    FOREIGN KEY(id_categoria) REFERENCES CATEGORIAS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_categoria) REFERENCES categorias(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-PRODUCTOS_COMERCIO_STOCK(
+productosComerciostock(
 
     id_comercio bigint NOT NULL,
     id_producto bigint NOT NULL,
     cantidad DECIMAL(10,2),
     PRIMARY KEY (id_comercio, id_producto),
-    FOREIGN KEY(id_producto) REFERENCES PRODUCTOS(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES COMERCIOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-CONTRATOS(
+contratos(
 
   	id bigint NOT NULL AUTO_INCREMENT,
     id_empresa bigint NOT NULL,
@@ -144,13 +144,13 @@ CONTRATOS(
     fecha_desde TIMESTAMP NOT NULL,
     fecha_hasta TIMESTAMP NOT NULL,
   	PRIMARY KEY (id),
-    FOREIGN KEY(id_empresa) REFERENCES EMPRESAS(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES COMERCIOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_empresa) REFERENCES empresas(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-PEDIDOS(
+pedidos(
 
 	id bigint NOT NULL AUTO_INCREMENT,
     fecha_realizado TIMESTAMP NOT NULL,
@@ -159,29 +159,29 @@ PEDIDOS(
 );
 
 CREATE TABLE
-PRODUCTOS_PEDIDOS(
+productosPedidos(
 
     id_pedido bigint NOT NULL,
     id_producto bigint NOT NULL,
     cantidad DECIMAL(10,2),
-    FOREIGN KEY(id_pedido) REFERENCES PEDIDOS(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_producto) REFERENCES PRODUCTOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-PEDIDOS_COMERCIOS(
+pedidosComercios(
 
     id_pedido bigint NOT NULL,
     id_comercio bigint NOT NULL,
     cantidad DECIMAL(10,2),
-    FOREIGN KEY(id_pedido) REFERENCES PEDIDOS(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES COMERCIOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-RUTAS(
+rutas(
 
 	id bigint NOT NULL AUTO_INCREMENT,
     fecha_asignada TIMESTAMP NOT NULL,
@@ -191,26 +191,26 @@ RUTAS(
 );
 
 CREATE TABLE
-RUTAS_RELEVADOR_COMERCIO(
+rutasRelevadorComercio(
 
     id_ruta bigint NOT NULL,
     id_relevador bigint NOT NULL,
     id_comercio bigint NOT NULL,
     fecha_relevada TIMESTAMP NOT NULL,
-    FOREIGN KEY(id_ruta) REFERENCES RUTAS(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_relevador) REFERENCES RELEVADORES(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES COMERCIOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_ruta) REFERENCES rutas(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_relevador) REFERENCES relevadores(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE
-AGENDA(
+agenda(
 
     id_dia smallint NOT NULL,
     id_relevador bigint NOT NULL,
     id_comercio bigint NOT NULL,
-    FOREIGN KEY(id_dia) REFERENCES DIAS(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_relevador) REFERENCES RELEVADORES(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES COMERCIOS(id) ON DELETE CASCADE
+    FOREIGN KEY(id_dia) REFERENCES dias(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_relevador) REFERENCES relevadores(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
 
 );
