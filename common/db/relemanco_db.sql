@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS administradores, agenda, rutasRelevadorComercio,
-productosPedidos, productosComerciostock, pedidosComercios, productos, contratos, comercios, pedidos,
-relevadores, rutas, empresas, dias, localizacion, categorias, prioridades, estados;
+DROP TABLE IF EXISTS administradores, rutasRelevadorComercio, agendaComercios, dias,
+productosPedidos, productosComercioStock, pedidosComercios, productos, contratos, comercios, pedidos,
+relevadores, rutas, empresas, localizacion, categorias, prioridades, estados;
 
 CREATE TABLE
 localizacion(
@@ -124,7 +124,7 @@ productos(
 );
 
 CREATE TABLE
-productosComerciostock(
+productosComercioStock(
 
     id_comercio bigint NOT NULL,
     id_producto bigint NOT NULL,
@@ -204,7 +204,7 @@ rutasRelevadorComercio(
 );
 
 CREATE TABLE
-agenda(
+agendaComercios(
 
     id_dia smallint NOT NULL,
     id_relevador bigint NOT NULL,
