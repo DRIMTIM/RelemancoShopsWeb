@@ -22,6 +22,20 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
         ],*/
+        'user' => [
+            'identityCookie' => [
+                'name'     => '_backendIdentity',
+                'path'     => '/admin',
+                'httpOnly' => true,
+            ],
+        ],        
+        'session' => [
+            'name' => 'BACKENDSESSID',
+            'cookieParams' => [
+                'httpOnly' => true,
+                'path'     => '/admin',
+            ],
+        ],
         'view' => [
             'theme' => [
                 'pathMap' => [
