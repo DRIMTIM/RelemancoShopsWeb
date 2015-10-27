@@ -3,16 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use backend\models\Providers;
-use backend\models\ProvidersSearch;
+use app\models\Localizacion;
+use app\models\BuscarLocalizacion;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProvidersController implements the CRUD actions for Providers model.
+ * LocalizacionController implements the CRUD actions for Localizacion model.
  */
-class ProvidersController extends Controller
+class LocalizacionController extends Controller
 {
     public function behaviors()
     {
@@ -41,12 +41,12 @@ class ProvidersController extends Controller
     }
 
     /**
-     * Lists all Providers models.
+     * Lists all Localizacion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ProvidersSearch();
+        $searchModel = new BuscarLocalizacion();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -56,7 +56,7 @@ class ProvidersController extends Controller
     }
 
     /**
-     * Displays a single Providers model.
+     * Displays a single Localizacion model.
      * @param integer $id
      * @return mixed
      */
@@ -68,16 +68,16 @@ class ProvidersController extends Controller
     }
 
     /**
-     * Creates a new Providers model.
+     * Creates a new Localizacion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Providers();
+        $model = new Localizacion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_prov]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -86,7 +86,7 @@ class ProvidersController extends Controller
     }
 
     /**
-     * Updates an existing Providers model.
+     * Updates an existing Localizacion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -96,7 +96,7 @@ class ProvidersController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_prov]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -105,7 +105,7 @@ class ProvidersController extends Controller
     }
 
     /**
-     * Deletes an existing Providers model.
+     * Deletes an existing Localizacion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -118,15 +118,15 @@ class ProvidersController extends Controller
     }
 
     /**
-     * Finds the Providers model based on its primary key value.
+     * Finds the Localizacion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Providers the loaded model
+     * @return Localizacion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Providers::findOne($id)) !== null) {
+        if (($model = Localizacion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

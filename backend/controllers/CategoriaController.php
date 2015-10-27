@@ -28,12 +28,12 @@ class CategoriaController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'view', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
-            ],            
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
