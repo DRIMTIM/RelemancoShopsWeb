@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\models\Empresa;
 use app\models\BuscarEmpresa;
 use yii\web\Controller;
