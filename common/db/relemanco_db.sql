@@ -8,6 +8,7 @@ localizacion(
   	id bigint NOT NULL AUTO_INCREMENT,
   	latitud DECIMAL(19,2),
   	longitud DECIMAL(19,2),
+    nota varchar(100),
   	PRIMARY KEY (id)
 
 );
@@ -48,6 +49,7 @@ prioridades(
 
     id smallint NOT NULL AUTO_INCREMENT,
     nombre varchar(50) NOT NULL,
+    descripcion varchar(100),
     PRIMARY KEY (id)
 
 );
@@ -66,15 +68,13 @@ CREATE TABLE
 administradores(
 
     id bigint NOT NULL AUTO_INCREMENT,
-    id_estado smallint NOT NULL,
-    apellido varchar(80) NOT NULL,
+    user_id int(11) NOT NULL,
+    apellido varchar(80),
     email varchar(50) NOT NULL UNIQUE,
   	fechaNac TIMESTAMP NOT NULL,
     nombre varchar(50) NOT NULL,
-    pass varchar(32) NOT NULL,
-    celular varchar(20) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(id_estado) REFERENCES estados(id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE
 
 );
 
@@ -82,18 +82,15 @@ CREATE TABLE
 relevadores(
 
   	id bigint NOT NULL AUTO_INCREMENT,
-    id_estado smallint NOT NULL,
+    user_id int(11) NOT NULL,
     id_localizacion bigint NOT NULL,
   	nombre varchar(50) NOT NULL,
-  	apellido varchar(50) NOT NULL,
+  	apellido varchar(50),
   	email varchar(50) NOT NULL UNIQUE,
   	fechaNac TIMESTAMP NOT NULL,
-  	timeZone varchar(20) NOT NULL,
-  	celular varchar(20) NOT NULL,
-  	pass varchar(32) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_estado) REFERENCES estados(id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE
 
 );
 
