@@ -44,11 +44,11 @@ class Contrato extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_empresa' => 'Id Empresa',
-            'id_comercio' => 'Id Comercio',
-            'fecha_desde' => 'Fecha Desde',
-            'fecha_hasta' => 'Fecha Hasta',
+            'id' => Yii::t('app', 'ID'),
+            'id_empresa' => Yii::t('app', 'Id Empresa'),
+            'id_comercio' => Yii::t('app', 'Id Comercio'),
+            'fecha_desde' => Yii::t('app', 'Fecha Desde'),
+            'fecha_hasta' => Yii::t('app', 'Fecha Hasta'),
         ];
     }
 

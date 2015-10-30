@@ -8,8 +8,9 @@ use Yii;
  * This is the model class for table "localizacion".
  *
  * @property integer $id
- * @property string $latitud
- * @property string $longitud
+ * @property double $latitud
+ * @property double $longitud
+ * @property string $nota
  *
  * @property Comercios[] $comercios
  * @property Empresas[] $empresas
@@ -31,7 +32,9 @@ class Localizacion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['latitud', 'longitud'], 'number']
+            [['latitud', 'longitud'], 'required'],
+            [['latitud', 'longitud'], 'number'],
+            [['nota'], 'string', 'max' => 100]
         ];
     }
 
@@ -41,9 +44,10 @@ class Localizacion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'latitud' => 'Latitud',
-            'longitud' => 'Longitud',
+            'id' => Yii::t('app', 'ID'),
+            'latitud' => Yii::t('app', 'Latitud'),
+            'longitud' => Yii::t('app', 'Longitud'),
+            'nota' => Yii::t('app', 'Nota'),
         ];
     }
 

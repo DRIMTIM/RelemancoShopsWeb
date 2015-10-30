@@ -8,19 +8,12 @@ use Yii;
  * This is the model class for table "relevadores".
  *
  * @property integer $id
- * @property integer $id_estado
+ * @property integer $user_id
  * @property integer $id_localizacion
- * @property string $nombre
- * @property string $apellido
- * @property string $email
- * @property string $fechaNac
- * @property string $timeZone
- * @property string $celular
- * @property string $pass
  *
  * @property AgendaComercios[] $agendaComercios
+ * @property Profile $user
  * @property Localizacion $idLocalizacion
- * @property Estados $idEstado
  * @property RutasRelevadorComercio[] $rutasRelevadorComercios
  */
 class Relevador extends \yii\db\ActiveRecord
@@ -39,13 +32,8 @@ class Relevador extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_estado', 'id_localizacion', 'nombre', 'apellido', 'email', 'timeZone', 'celular', 'pass'], 'required'],
-            [['id_estado', 'id_localizacion'], 'integer'],
-            [['fechaNac'], 'safe'],
-            [['nombre', 'apellido', 'email'], 'string', 'max' => 50],
-            [['timeZone', 'celular'], 'string', 'max' => 20],
-            [['pass'], 'string', 'max' => 32],
-            [['email'], 'unique']
+            [['user_id', 'id_localizacion'], 'required'],
+            [['user_id', 'id_localizacion'], 'integer']
         ];
     }
 
@@ -55,16 +43,9 @@ class Relevador extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_estado' => 'Id Estado',
-            'id_localizacion' => 'Id Localizacion',
-            'nombre' => 'Nombre',
-            'apellido' => 'Apellido',
-            'email' => 'Email',
-            'fechaNac' => 'Fecha Nac',
-            'timeZone' => 'Time Zone',
-            'celular' => 'Celular',
-            'pass' => 'Pass',
+            'id' => Yii::t('app', 'ID'),
+            'user_id' => Yii::t('app', 'User ID'),
+            'id_localizacion' => Yii::t('app', 'Id Localizacion'),
         ];
     }
 
@@ -79,17 +60,17 @@ class Relevador extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdLocalizacion()
+    public function getUser()
     {
-        return $this->hasOne(Localizacion::className(), ['id' => 'id_localizacion']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdEstado()
+    public function getIdLocalizacion()
     {
-        return $this->hasOne(Estados::className(), ['id' => 'id_estado']);
+        return $this->hasOne(Localizacion::className(), ['id' => 'id_localizacion']);
     }
 
     /**

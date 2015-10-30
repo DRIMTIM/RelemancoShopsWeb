@@ -48,11 +48,11 @@ class Producto extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_categoria' => 'Id Categoria',
-            'nombre' => 'Nombre',
-            'imagen' => 'Imagen',
-            'descripcion' => 'Descripcion',
+            'id' => Yii::t('app', 'ID'),
+            'id_categoria' => Yii::t('app', 'Id Categoria'),
+            'nombre' => Yii::t('app', 'Nombre'),
+            'imagen' => Yii::t('app', 'Imagen'),
+            'descripcion' => Yii::t('app', 'Descripcion'),
         ];
     }
 

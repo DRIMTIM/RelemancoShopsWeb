@@ -8,15 +8,9 @@ use Yii;
  * This is the model class for table "administradores".
  *
  * @property integer $id
- * @property integer $id_estado
- * @property string $apellido
- * @property string $email
- * @property string $fechaNac
- * @property string $nombre
- * @property string $pass
- * @property string $celular
+ * @property integer $user_id
  *
- * @property Estados $idEstado
+ * @property Profile $user
  */
 class Administrador extends \yii\db\ActiveRecord
 {
@@ -34,14 +28,8 @@ class Administrador extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_estado', 'apellido', 'email', 'nombre', 'pass', 'celular'], 'required'],
-            [['id_estado'], 'integer'],
-            [['fechaNac'], 'safe'],
-            [['apellido'], 'string', 'max' => 80],
-            [['email', 'nombre'], 'string', 'max' => 50],
-            [['pass'], 'string', 'max' => 32],
-            [['celular'], 'string', 'max' => 20],
-            [['email'], 'unique']
+            [['user_id'], 'required'],
+            [['user_id'], 'integer']
         ];
     }
 
@@ -51,22 +39,16 @@ class Administrador extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_estado' => 'Id Estado',
-            'apellido' => 'Apellido',
-            'email' => 'Email',
-            'fechaNac' => 'Fecha Nac',
-            'nombre' => 'Nombre',
-            'pass' => 'Pass',
-            'celular' => 'Celular',
+            'id' => Yii::t('app', 'ID'),
+            'user_id' => Yii::t('app', 'User ID'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdEstado()
+    public function getUser()
     {
-        return $this->hasOne(Estados::className(), ['id' => 'id_estado']);
+        return $this->hasOne(Profile::className(), ['user_id' => 'user_id']);
     }
 }

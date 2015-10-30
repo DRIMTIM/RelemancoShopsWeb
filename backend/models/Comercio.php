@@ -49,10 +49,10 @@ class Comercio extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_localizacion' => 'Id Localizacion',
-            'id_prioridad' => 'Id Prioridad',
-            'nombre' => 'Nombre',
+            'id' => Yii::t('app', 'ID'),
+            'id_localizacion' => Yii::t('app', 'Id Localizacion'),
+            'id_prioridad' => Yii::t('app', 'Id Prioridad'),
+            'nombre' => Yii::t('app', 'Nombre'),
         ];
     }
 

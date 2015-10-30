@@ -41,9 +41,9 @@ class Ruta extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'fecha_asignada' => 'Fecha Asignada',
-            'id_estado' => 'Id Estado',
+            'id' => Yii::t('app', 'ID'),
+            'fecha_asignada' => Yii::t('app', 'Fecha Asignada'),
+            'id_estado' => Yii::t('app', 'Id Estado'),
         ];
     }
 

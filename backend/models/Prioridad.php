@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $nombre
+ * @property string $descripcion
  *
  * @property Comercios[] $comercios
  */
@@ -29,7 +30,8 @@ class Prioridad extends \yii\db\ActiveRecord
     {
         return [
             [['nombre'], 'required'],
-            [['nombre'], 'string', 'max' => 50]
+            [['nombre'], 'string', 'max' => 50],
+            [['descripcion'], 'string', 'max' => 100]
         ];
     }
 
@@ -39,8 +41,9 @@ class Prioridad extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'nombre' => 'Nombre',
+            'id' => Yii::t('app', 'ID'),
+            'nombre' => Yii::t('app', 'Nombre'),
+            'descripcion' => Yii::t('app', 'Descripcion'),
         ];
     }
 

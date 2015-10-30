@@ -5,22 +5,20 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "categorias".
+ * This is the model class for table "estados".
  *
  * @property integer $id
  * @property string $nombre
  * @property string $descripcion
- *
- * @property Productos[] $productos
  */
-class Categoria extends \yii\db\ActiveRecord
+class Estado extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'categorias';
+        return 'estados';
     }
 
     /**
@@ -30,7 +28,7 @@ class Categoria extends \yii\db\ActiveRecord
     {
         return [
             [['nombre'], 'required'],
-            [['nombre'], 'string', 'max' => 80],
+            [['nombre'], 'string', 'max' => 50],
             [['descripcion'], 'string', 'max' => 200]
         ];
     }
@@ -45,13 +43,5 @@ class Categoria extends \yii\db\ActiveRecord
             'nombre' => Yii::t('app', 'Nombre'),
             'descripcion' => Yii::t('app', 'Descripcion'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProductos()
-    {
-        return $this->hasMany(Productos::className(), ['id_categoria' => 'id']);
     }
 }

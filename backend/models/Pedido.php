@@ -39,8 +39,8 @@ class Pedido extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'fecha_realizado' => 'Fecha Realizado',
+            'id' => Yii::t('app', 'ID'),
+            'fecha_realizado' => Yii::t('app', 'Fecha Realizado'),
         ];
     }
 

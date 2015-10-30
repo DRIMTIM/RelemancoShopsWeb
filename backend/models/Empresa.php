@@ -44,10 +44,10 @@ class Empresa extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_localizacion' => 'Id Localizacion',
-            'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
+            'id' => Yii::t('app', 'ID'),
+            'id_localizacion' => Yii::t('app', 'Id Localizacion'),
+            'nombre' => Yii::t('app', 'Nombre'),
+            'descripcion' => Yii::t('app', 'Descripcion'),
         ];
     }
 

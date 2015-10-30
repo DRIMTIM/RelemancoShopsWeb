@@ -6,8 +6,8 @@ CREATE TABLE
 localizacion(
 
   	id bigint NOT NULL AUTO_INCREMENT,
-  	latitud DECIMAL(19,2),
-  	longitud DECIMAL(19,2),
+  	latitud FLOAT(10,6) NOT NULL,
+  	longitud FLOAT(10,6) NOT NULL,
     nota varchar(100),
   	PRIMARY KEY (id)
 
@@ -69,12 +69,8 @@ administradores(
 
     id bigint NOT NULL AUTO_INCREMENT,
     user_id int(11) NOT NULL,
-    apellido varchar(80),
-    email varchar(50) NOT NULL UNIQUE,
-  	fechaNac TIMESTAMP NOT NULL,
-    nombre varchar(50) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES profile(user_id) ON DELETE CASCADE
 
 );
 
@@ -84,12 +80,8 @@ relevadores(
   	id bigint NOT NULL AUTO_INCREMENT,
     user_id int(11) NOT NULL,
     id_localizacion bigint NOT NULL,
-  	nombre varchar(50) NOT NULL,
-  	apellido varchar(50),
-  	email varchar(50) NOT NULL UNIQUE,
-  	fechaNac TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES profile(user_id) ON DELETE CASCADE,
     FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE
 
 );
