@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Comercio;
-use app\models\BuscarComercios;
+use app\models\BuscarComercio;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,20 +17,6 @@ class ComercioController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index', 'view', 'create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -46,7 +32,7 @@ class ComercioController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new BuscarComercios();
+        $searchModel = new BuscarComercio();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

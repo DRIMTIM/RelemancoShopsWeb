@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\BuscarLocalizacion */
+/* @var $model app\models\BuscarPedido */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="localizacion-search">
+<div class="pedido-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,11 +17,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'latitud') ?>
-
-    <?= $form->field($model, 'longitud') ?>
-
-    <?= $form->field($model, 'nota') ?>
+    <?= $form->field($model, 'fecha_realizado') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>

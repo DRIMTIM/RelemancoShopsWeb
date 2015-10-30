@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\BuscarLocalizacion */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Localizaciones';
+$this->title = Yii::t('app', 'Localizacions');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="localizacion-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Crear Localizacion', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Localizacion'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'latitud',
             'longitud',
+            'nota',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

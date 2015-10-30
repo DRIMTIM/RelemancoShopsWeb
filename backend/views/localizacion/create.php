@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Localizacion */
 
-$this->title = 'Create Localizacion';
-$this->params['breadcrumbs'][] = ['label' => 'Localizacions', 'url' => ['index']];
+$this->title = Yii::t('app', 'Create Localizacion');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localizacions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="localizacion-create">

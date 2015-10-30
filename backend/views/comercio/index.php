@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\BuscarComercios */
+/* @var $searchModel app\models\BuscarComercio */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Comercios';
+$this->title = Yii::t('app', 'Comercios');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comercio-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Comercio', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create Comercio'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

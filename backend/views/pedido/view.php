@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Localizacion */
+/* @var $model app\models\Pedido */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localizacions'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Pedidos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="localizacion-view">
+<div class="pedido-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,9 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'latitud',
-            'longitud',
-            'nota',
+            'fecha_realizado',
         ],
     ]) ?>
 

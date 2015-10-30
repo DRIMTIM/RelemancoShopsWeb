@@ -1,36 +1,22 @@
 <?php
 
-namespace backend\controllers;
+namespace app\controllers;
 
 use Yii;
-use backend\models\Pedidos;
-use backend\PedidosSearch;
+use app\models\Pedido;
+use app\models\BuscarPedido;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PedidosController implements the CRUD actions for Pedidos model.
+ * PedidoController implements the CRUD actions for Pedido model.
  */
-class PedidosController extends Controller
+class PedidoController extends Controller
 {
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index', 'view', 'create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -41,12 +27,12 @@ class PedidosController extends Controller
     }
 
     /**
-     * Lists all Pedidos models.
+     * Lists all Pedido models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PedidosSearch();
+        $searchModel = new BuscarPedido();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -56,8 +42,8 @@ class PedidosController extends Controller
     }
 
     /**
-     * Displays a single Pedidos model.
-     * @param string $id
+     * Displays a single Pedido model.
+     * @param integer $id
      * @return mixed
      */
     public function actionView($id)
@@ -68,16 +54,16 @@ class PedidosController extends Controller
     }
 
     /**
-     * Creates a new Pedidos model.
+     * Creates a new Pedido model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Pedidos();
+        $model = new Pedido();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -86,9 +72,9 @@ class PedidosController extends Controller
     }
 
     /**
-     * Updates an existing Pedidos model.
+     * Updates an existing Pedido model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
@@ -96,7 +82,7 @@ class PedidosController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -105,9 +91,9 @@ class PedidosController extends Controller
     }
 
     /**
-     * Deletes an existing Pedidos model.
+     * Deletes an existing Pedido model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
@@ -118,15 +104,15 @@ class PedidosController extends Controller
     }
 
     /**
-     * Finds the Pedidos model based on its primary key value.
+     * Finds the Pedido model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return Pedidos the loaded model
+     * @param integer $id
+     * @return Pedido the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Pedidos::findOne($id)) !== null) {
+        if (($model = Pedido::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
