@@ -7,17 +7,20 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\BuscarCategoria */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Categorias';
+$this->title = Yii::t('app', 'Categorias');
 $this->params['breadcrumbs'][] = $this->title;
+
+// style="border-bottom: solid 1px #D0D0D0; margin: 1%"
+
 ?>
 <div class="categoria-index">
 
-    <div class="box box-warning">
+    <div class="box box-solid box-warning">
 
-        <div class="box-header" style="border-bottom: solid 1px #D0D0D0; margin: 1%">
+        <div class="box-header with-border">
             <h1 class="box-title" ><?= Html::encode($this->title) ?></h1>
-            <div style="float: right">
-                <?= Html::a('Crear Categoria', ['create'], ['class' => 'btn btn-success']) ?>
+            <div style="float: right;">
+                 <?= Html::a(Yii::t('app', 'Create Categoria'), ['create'], ['class' => 'btn btn-success']) ?>
             </div>
         </div>
 
