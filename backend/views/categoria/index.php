@@ -19,12 +19,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="box-header with-border">
             <h1 class="box-title" ><?= Html::encode($this->title) ?></h1>
-            <div style="float: right;">
-                 <?= Html::a(Yii::t('app', 'Create Categoria'), ['create'], ['class' => 'btn btn-success']) ?>
-            </div>
         </div>
 
         <div class="box-body">
+
+            <div class="box-tools" style="float: right;">
+                 <?= Html::a(Yii::t('app', 'Create Categoria'), ['create'], ['class' => 'btn btn-success']) ?>
+            </div>
+
+            <br/>
 
             <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
