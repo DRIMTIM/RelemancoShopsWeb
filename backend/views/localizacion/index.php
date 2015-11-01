@@ -12,26 +12,35 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="localizacion-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="box box-solid box-warning">
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Localizacion'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <div class="box-header">
+            <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
+            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+        </div>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        <div class="box-body">
 
-            'id',
-            'latitud',
-            'longitud',
-            'nota',
+            <div style="float: right">
+                <?= Html::a(Yii::t('app', 'Create Localizacion'), ['create'], ['class' => 'btn btn-success']) ?>
+            </div>
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            <br/><br/>
+
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+
+                    'id',
+                    'latitud',
+                    'longitud',
+                    'nota',
+
+                    ['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]); ?>
+        </div>
 
 </div>

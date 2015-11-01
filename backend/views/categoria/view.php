@@ -14,9 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="box box-solid box-warning">
 
-            <div class="box-header with-border">
-                <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
-            </div>
+        <div class="box-header with-border">
+            <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
+        </div>
 
         <div class="box-body">
 

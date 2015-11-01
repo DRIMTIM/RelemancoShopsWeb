@@ -44,8 +44,9 @@ if (isset(Yii::$app->user->identity)) :
                     '<li class="header">RelemancoShops - Menu</li>',
                     ['label' => '<i class="fa fa-user"></i><span>Perfil</span>', 'url' => ['/user/profile/show','id'=>isset(Yii::$app->user->identity) ? Yii::$app->user->identity->id : -1], 'visible' =>!Yii::$app->user->isGuest],
                     ['label' => '<i class="fa fa-tags"></i><span>Categorias</span>', 'url' => ['/categoria']],
-                    ['label' => '<i class="fa fa-user-secret"></i><span>Usuarios Relevadores</span>', 'url' => ['/user/admin']],
+                    ['label' => '<i class="fa fa-user-secret"></i><span>Usuarios</span>', 'url' => ['/user/admin']],
                     ['label' => '<i class="fa fa-institution"></i><span>Empresas</span>', 'url' => ['/empresa']],
+                    ['label' => '<i class="fa fa-building-o"></i><span>Comercios</span>', 'url' => ['/comercio']],
                     ['label' => '<i class="fa fa-globe"></i><span>Localizacion</span>', 'url' => ['/localizacion']],
                     ['label' => '<i class="fa fa-shopping-cart"></i><span>Productos</span>', 'url' => ['/producto']],
                     [

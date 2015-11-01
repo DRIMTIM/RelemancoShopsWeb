@@ -12,27 +12,37 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="producto-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="box box-solid box-warning">
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Producto'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <div class="box-header">
+            <i class="fa fa-shopping-cart"></i><h1 class="box-title"><?= Html::encode($this->title) ?></h1>
+            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+        </div>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        <div class="box-body">
 
-            'id',
-            'id_categoria',
-            'nombre',
-            'imagen',
-            'descripcion',
+            <div style="float: right">
+                <?= Html::a(Yii::t('app', 'Create Producto'), ['create'], ['class' => 'btn btn-success']) ?>
+            </div>
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            <br/><br/>
+
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+
+                    'id',
+                    'id_categoria',
+                    'nombre',
+                    'imagen',
+                    'descripcion',
+
+                    ['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]); ?>
+
+        </div>
 
 </div>
