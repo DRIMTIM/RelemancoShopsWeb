@@ -49,8 +49,8 @@ class CustomFilter extends \yii\base\ActionFilter
                 return true;
 
             throw new ForbiddenHttpException('You are not allowed to perform this action');
-            
-                
+
+
         }else{
             throw new ForbiddenHttpException('You are not allowed to perform this action');
         }

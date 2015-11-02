@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\AccessRule;
 use app\models\Categoria;
 use app\models\BuscarCategoria;
 use yii\web\Controller;
@@ -22,16 +23,27 @@ class CategoriaController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index', 'view', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
+                        'matchCallback' => function () {
+                           return Yii::$app->user->identity->getIsAdmin();
+                        },
                     ],
+                    /*[
+                        'actions' => ['index', 'error'],
+                        'allow' => true,
+                        'roles' => ['?', '@'],
+                    ],
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'error'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],*/
                 ],
             ],
             'verbs' => [

@@ -11,9 +11,7 @@ use yii\widgets\ActiveForm;
 $this->title = Yii::t('user', 'Sign up');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="alert alert-success">
-    <p>This view file has been overriden!</p>
-</div>
+
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-default">
@@ -24,6 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php $form = ActiveForm::begin([
                     'id' => 'registration-form',
                 ]); ?>
+
+                <?= $form->field($model, 'name') ?>
 
                 <?= $form->field($model, 'username') ?>
 

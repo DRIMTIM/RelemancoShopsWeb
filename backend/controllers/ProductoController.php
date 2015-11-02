@@ -22,13 +22,11 @@ class ProductoController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index', 'view', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
+                        'matchCallback' => function () {
+                           return Yii::$app->user->identity->getIsAdmin();
+                        },
                     ],
                 ],
             ],
