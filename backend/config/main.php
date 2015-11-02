@@ -11,31 +11,32 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [
+    /*'modules' => [
          'user' => [
                 'class' => 'dektrium\user\Module',
                 'admins' => ['pelupotter']
             ],
+    ],*/
+    'modules' => [
+        'user' => [
+            // following line will restrict access to admin page
+            'as backend' => 'dektrium\user\filters\BackendFilter',
+            'admins' => ['pelupotter']            
+        ],
     ],
     'components' => [
         /*'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
         ],*/
-        /*'user' => [
+        'user' => [
             'identityCookie' => [
                 'name'     => '_backendIdentity',
-                'path'     => '/admin',
-                'httpOnly' => true,
             ],
         ],
         'session' => [
             'name' => 'BACKENDSESSID',
-            'cookieParams' => [
-                'httpOnly' => true,
-                'path'     => '/admin',
-            ],
-        ],*/
+        ],
         'view' => [
             'theme' => [
                 'pathMap' => [
