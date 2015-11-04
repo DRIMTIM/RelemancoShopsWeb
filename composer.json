@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "*",
         "dmstr/yii2-adminlte-asset": "2.*",
         "2amigos/yii2-ckeditor-widget" : "*",
-        "dektrium/yii2-user": "0.9.*@dev"
+        "dektrium/yii2-user": "0.9.*@dev",
+        "2amigos/yii2-google-maps-library": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -21,7 +21,7 @@ return [
         'user' => [
             // following line will restrict access to admin page
             'as backend' => 'dektrium\user\filters\BackendFilter',
-            'admins' => ['pelupotter']            
+            'admins' => ['pelupotter']
         ],
     ],
     'components' => [
@@ -53,6 +53,13 @@ return [
             'bundles' => [
                 'dmstr\web\AdminLteAsset' => [
                     'skin' => 'skin-yellow',
+                ],
+                'dosamigos\google\maps\MapAsset' => [
+                    'options' => [
+                        'key' => 'AIzaSyCc8qdTE4hoIsnmWLGoGzhp0Djsgck8Kmk',
+                        'language' => 'es',
+                        'version' => '3.1.18'
+                    ]
                 ],
             ],
         ],
