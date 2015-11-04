@@ -149,4 +149,10 @@ class CategoriaController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    /* Metodos Auxiliares */
+    public function findAll(){
+        return Categoria::find()->select(['nombre', 'id'])->indexBy('id')->column();
+    }
+
 }

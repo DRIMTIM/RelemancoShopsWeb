@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use backend\controllers\CategoriaController;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Producto */
@@ -10,13 +11,13 @@ use yii\widgets\ActiveForm;
 
 <div class="producto-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'id_categoria')->textInput() ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'imagen')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'id_categoria')->dropdownList(CategoriaController::findAll(), ['prompt' => Yii::t('app', 'Seleccione una Categoria')]) ?>
+
+    <?= $form->field($model, 'imageFile')->fileInput(['class' => 'btn btn-primary']) ?>
 
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 

@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\web\UploadedFile;
+use app\models\UploadForm;
 
 /**
  * This is the model class for table "productos".
@@ -20,6 +22,12 @@ use Yii;
  */
 class Producto extends \yii\db\ActiveRecord
 {
+
+    /**
+     * @var UploadedFile
+     */
+    public $imageFile;
+
     /**
      * @inheritdoc
      */
@@ -34,11 +42,11 @@ class Producto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_categoria', 'nombre'], 'required'],
+            [['id_categoria', 'nombre'], 'required', 'message' => Yii::t('app','Este campo no puede estar vacio.')],
             [['id_categoria'], 'integer'],
             [['nombre'], 'string', 'max' => 80],
             [['imagen'], 'string', 'max' => 100],
-            [['descripcion'], 'string', 'max' => 200]
+            [['descripcion'], 'string', 'max' => 200],
         ];
     }
 
@@ -49,11 +57,28 @@ class Producto extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_categoria' => Yii::t('app', 'Id Categoria'),
+            'id_categoria' => Yii::t('app', 'Categoria'),
             'nombre' => Yii::t('app', 'Nombre'),
             'imagen' => Yii::t('app', 'Imagen'),
             'descripcion' => Yii::t('app', 'Descripcion'),
+            'imageFile' => Yii::t('app', 'Seleccione una imagen'),
         ];
+    }
+
+    public function upload()
+    {
+        $imageUp = new UploadForm();
+        $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
+        $imageUp->imageFile = $this->imageFile;
+
+        if ($imageUp->validate()) {
+            $this->imagen = $this->imageFile->baseName . '.' . $this->imageFile->extension;
+            $this->imageFile->saveAs('uploads/productos/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->imageFile = null;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
