@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use app\assets\MapsAsset;
+use app\assets\MapAsset;
 
 use dosamigos\google\maps\LatLng;
 use dosamigos\google\maps\services\DirectionsWayPoint;
@@ -28,13 +28,12 @@ $map = new Map([
 $this->title = Yii::t('app', 'Create Localizacion');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localizacions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-MapsAsset::register($this);
+MapAsset::register($this);
 
 ?>
 <div class="localizacion-create col-md-4 row">
 
     <div class="box box-solid box-warning">
-
         <div class="box-header">
             <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
         </div>
@@ -44,13 +43,12 @@ MapsAsset::register($this);
                 'model' => $model,
             ]) ?>
         </div>
-
     </div>
 
 </div>
 
 <div class="localizacion-create col-md-8 pull-right">
     <div id="map" class="box box-solid box-warning">
-        <?= $map->display(); ?>
+
     </div>
 </div>
