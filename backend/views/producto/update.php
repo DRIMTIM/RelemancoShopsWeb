@@ -7,17 +7,25 @@ use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Producto',
-]) . ' ' . $model->id;
+]) . ' ' . $model->nombre;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Productos'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->nombre, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="producto-update">
+<div class="producto-update col-md-6 row">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="box box-solid box-warning">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+        <div class="box-header">
+            <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
+        </div>
+
+        <div class="box-body">
+            <?= $this->render('_form', [
+                'model' => $model,
+            ]) ?>
+        </div>
+
+    </div>
 
 </div>

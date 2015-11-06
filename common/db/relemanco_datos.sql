@@ -29,3 +29,9 @@ INSERT INTO categorias (nombre, descripcion) VALUES ("Música, Libros y Películ
 INSERT INTO categorias (nombre, descripcion) VALUES ("Ropa, Calzados y Accesorios", "Ropa, Calzados y Accesorios");
 INSERT INTO categorias (nombre, descripcion) VALUES ("Salud y Belleza", "Salud y Belleza");
 INSERT INTO categorias (nombre, descripcion) VALUES ("Otras categorías", "Otras categorías");
+
+/* PRIORIDADES */
+INSERT INTO prioridades (nombre, descripcion) VALUES ("URGENTE", "Urgente.");
+INSERT INTO prioridades (nombre, descripcion) VALUES ("ALTA", "Prioridad alta.");
+INSERT INTO prioridades (nombre, descripcion) VALUES ("MEDIA", "Prioridad media.");
+INSERT INTO prioridades (nombre, descripcion) VALUES ("BAJA", "Prioridad baja");

@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localizacions'), 'ur
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="localizacion-update">
+<div class="localizacion-update col-md-5 row">
 
     <div class="box box-solid box-warning">
 
@@ -20,12 +20,12 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
             <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
         </div>
 
-        <div>
+        <div class="box-body">
             <?= $this->render('_form', [
                 'model' => $model,
             ]) ?>
         </div>
-        
+
     </div>
 
 </div>
