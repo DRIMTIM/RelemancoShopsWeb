@@ -8,13 +8,13 @@ function mostrarMiniaturaImagen(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $('#blah').attr('src', e.target.result);
+            $('.imagenProducto').attr('src', e.target.result);
         }
 
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-$("#imgInp").change(function(){
-    readURL(this);
+$("#producto-imagefile").change(function(){
+    mostrarMiniaturaImagen(this);
 });

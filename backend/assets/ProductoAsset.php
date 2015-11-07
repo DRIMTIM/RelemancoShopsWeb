@@ -4,7 +4,7 @@ namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class MapAsset extends AssetBundle
+class ProductoAsset extends AssetBundle
 {
 
     public $options = [
@@ -15,14 +15,15 @@ class MapAsset extends AssetBundle
     public $js = [];
 
     public function init() {
-        $this->js = ['https://maps.googleapis.com/maps/api/js?' . http_build_query($this->options), 'js/relemanco/gmaps/maps.js'];
+        $this->js = [
+            'https://maps.googleapis.com/maps/api/js?' . http_build_query($this->options),
+            'js/relemanco/productos/app.js'];
     }
 
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
-        'css/maps.css',
+        'css/estiloProducto.css',
     ];
 
     public $depends = [

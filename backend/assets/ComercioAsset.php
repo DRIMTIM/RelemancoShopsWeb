@@ -24,8 +24,7 @@ class ComercioAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
-        'css/maps.css',
+        'css/estiloComercio.css',
     ];
 
     public $depends = [
