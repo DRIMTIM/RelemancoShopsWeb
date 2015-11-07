@@ -1,3 +1,7 @@
+/******************************************************/
+/*  Funciones para manejo del mapa de Localizaciones  */
+/******************************************************/
+
 $( document ).ready(function() {
 
     initMap();

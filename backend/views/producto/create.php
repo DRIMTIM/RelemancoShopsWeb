@@ -10,7 +10,7 @@ $this->title = Yii::t('app', 'Create Producto');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Productos'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="producto-create col-md-8 row">
+<div class="producto-create col-md-6 row">
 
     <div class="box box-solid box-warning">
 
@@ -23,6 +23,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'model' => $model,
             ]) ?>
         </div>
+    </div>
+
+</div>
+
+<div class="producto-create miniaturaProducto col-md-3">
+
+    <div class="box box-solid box-warning">
+
+        <div class="box-header">
+            <h1 class="box-title">Imagen del Producto</h1>
+        </div>
+
     </div>
 
 </div>
