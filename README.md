@@ -1,6 +1,6 @@
 # RelemancoShopsWeb
 
-Planificacion:
+<h3>Planificacion:</h3>
 
 <h4>Arquitectura:</h4>
 
@@ -14,7 +14,7 @@ Planificacion:
 
 <hr/>
 
-Requisitos funcionales del BACKEND:
+<h4>Requisitos funcionales del BACKEND:</h4>
 
 <b>Jona</b>:
 
@@ -35,7 +35,7 @@ Requisitos funcionales del BACKEND:
 ● Estadísticas (ej: Gráficas de stock de productos, relevador más eficiente, etc)
 <hr/>
 
-Requisitos funcionales del FRONTEND:
+<h4>Requisitos funcionales del FRONTEND:</h4>
 
 <b>Nacho (se reutiliza del Backend):</b>
 
@@ -50,7 +50,7 @@ normal). Siempre el registro queda pendiente de que el usuario Administrador lo 
 recorrido que tuve asignado y que fue lo que registre.
 <hr/>
 
-Requisitos funcionales de API:
+<h4>Requisitos funcionales de API:</h4>
 
 <b>Jona</b>:
 
@@ -67,7 +67,7 @@ Requisitos funcionales de API:
 (Se puede realizar mas urls, estas son solas las sugeridas)
 <hr/>
 
-Requisitos funcionales de Aplicación Mobile:
+<h4>Requisitos funcionales de Aplicación Mobile:</h4>
 
 <b>Diego:</b>
 
