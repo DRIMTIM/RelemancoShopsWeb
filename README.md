@@ -4,11 +4,11 @@ Planificacion:
 
 <h4>Arquitectura:</h4>
 
-<b>Nacho</>:
+<b>Nacho:</b>
 
 - Puesta a punto del repositorio central y de aplicación mobile, pasaje del modelo de datos a esquema SQL,.
 
-Diego:
+<b>Diego:</b>
 
 - Elección del entorno de trabajo para implementar la aplicación mobile.
 
