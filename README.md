@@ -15,7 +15,7 @@ Diego:
 
 Requisitos funcionales del BACKEND:
 
-Jona:
+<b>Jona</b>:
 
 ● ABM de Usuarios relevadores (Ej: Juan, Diego, etc)
 
