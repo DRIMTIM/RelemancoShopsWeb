@@ -17,7 +17,10 @@ use backend\controllers\CategoriaController;
 
     <?= $form->field($model, 'id_categoria')->dropdownList(CategoriaController::findAll(), ['prompt' => Yii::t('app', 'Seleccione una Categoria')]) ?>
 
-    <?= $form->field($model, 'imageFile')->fileInput(['class' => 'btn btn-primary']) ?>
+    <input id="uploadFile" placeholder=" Eliga una imagen..." disabled="disabled" />
+    <div class="fileUpload btn btn-warning">
+        <?= $form->field($model, 'imageFile')->fileInput(['class' => 'upload']) ?>
+    </div>
 
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 

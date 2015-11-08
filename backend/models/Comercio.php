@@ -13,7 +13,7 @@ use Yii;
  * @property string $nombre
  *
  * @property AgendaComercios[] $agendaComercios
- * @property Localizacion $idLocalizacion
+ * @property Localizacion $localizacion
  * @property Prioridades $idPrioridad
  * @property Contratos[] $contratos
  * @property PedidosComercios[] $pedidosComercios
@@ -37,9 +37,10 @@ class Comercio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_localizacion', 'id_prioridad', 'nombre'], 'required'],
+            [['id_prioridad', 'nombre'], 'required'],
             [['id_localizacion', 'id_prioridad'], 'integer'],
-            [['nombre'], 'string', 'max' => 100]
+            [['nombre'], 'string', 'max' => 100],
+            [['localizacion'], 'required'],
         ];
     }
 
@@ -51,7 +52,7 @@ class Comercio extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'id_localizacion' => Yii::t('app', 'Id Localizacion'),
-            'id_prioridad' => Yii::t('app', 'Id Prioridad'),
+            'id_prioridad' => Yii::t('app', 'Prioridad'),
             'nombre' => Yii::t('app', 'Nombre'),
         ];
     }
@@ -67,7 +68,7 @@ class Comercio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdLocalizacion()
+    public function getLocalizacion()
     {
         return $this->hasOne(Localizacion::className(), ['id' => 'id_localizacion']);
     }

@@ -16,5 +16,6 @@ function mostrarMiniaturaImagen(input) {
 }
 
 $("#producto-imagefile").change(function(){
+    $("#uploadFile").val(this.value.split("\\")[2]);
     mostrarMiniaturaImagen(this);
 });

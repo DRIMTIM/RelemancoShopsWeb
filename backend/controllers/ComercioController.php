@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use app\models\Comercio;
+use app\models\Localizacion;
 use app\models\BuscarComercio;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -74,14 +75,20 @@ class ComercioController extends Controller
     public function actionCreate()
     {
         $model = new Comercio();
+        $localizacion = new Localizacion();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $localizacion->load(Yii::$app->request->post())) {
+            $localizacion->save();
+            $model->id_localizacion = $localizacion->id;
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'localizacion' => $localizacion,
+        ]);
+
     }
 
     /**

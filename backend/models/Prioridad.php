@@ -54,4 +54,13 @@ class Prioridad extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Comercios::className(), ['id_prioridad' => 'id']);
     }
+
+
+    /* Metodos Auxiliares */
+    public static function getAll(){
+
+        return Prioridad::find()->select(['nombre', 'id'])->indexBy('id')->column();
+
+    }
+
 }
