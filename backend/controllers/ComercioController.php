@@ -62,6 +62,7 @@ class ComercioController extends Controller
      */
     public function actionView($id)
     {
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -78,9 +79,10 @@ class ComercioController extends Controller
         $localizacion = new Localizacion();
 
         if ($model->load(Yii::$app->request->post()) && $localizacion->load(Yii::$app->request->post())) {
-            $localizacion->save();
+            $localizacion->nota = $model->nombre;
+            $localizacion->save(false);
             $model->id_localizacion = $localizacion->id;
-            $model->save();
+            $model->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -100,12 +102,17 @@ class ComercioController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $localizacion = Localizacion::findOne($model->id_localizacion);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $localizacion->load(Yii::$app->request->post())) {
+            $localizacion->nota = $model->nombre;
+            $localizacion->save(false);
+            $model->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'localizacion' => $localizacion,
             ]);
         }
     }

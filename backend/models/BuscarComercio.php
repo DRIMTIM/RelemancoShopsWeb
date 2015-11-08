@@ -41,11 +41,16 @@ class BuscarComercio extends Comercio
      */
     public function search($params)
     {
-        $query = Comercio::find();
+        $query = Comercio::find()->with('prioridad');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['prioridad.nombre'] = [
+            'asc' => ['id_prioridad' => SORT_ASC],
+            'desc' => ['id_prioridad' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -61,6 +66,7 @@ class BuscarComercio extends Comercio
             'id_prioridad' => $this->id_prioridad,
         ]);
 
+        $query->andFilterWhere(['like', 'id_prioridad', $this->id_prioridad]);
         $query->andFilterWhere(['like', 'nombre', $this->nombre]);
 
         return $dataProvider;

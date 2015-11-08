@@ -47,6 +47,11 @@ class BuscarProducto extends Producto
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['categoria.nombre'] = [
+            'asc' => ['id_categoria' => SORT_ASC],
+            'desc' => ['id_categoria' => SORT_DESC],
+        ];
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -61,7 +66,6 @@ class BuscarProducto extends Producto
         ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'imagen', $this->imagen])
             ->andFilterWhere(['like', 'descripcion', $this->descripcion]);
 
         return $dataProvider;

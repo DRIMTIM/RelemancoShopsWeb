@@ -17,10 +17,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'id_localizacion') ?>
-
-    <?= $form->field($model, 'id_prioridad') ?>
-
     <?= $form->field($model, 'nombre') ?>
 
     <div class="form-group">

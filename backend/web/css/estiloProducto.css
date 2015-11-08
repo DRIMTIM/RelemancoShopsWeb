@@ -1,5 +1,12 @@
+.imagenProducto{
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .miniaturaProducto{
     height: 30%;
+    max-width: 50%;
+    max-height: 50%;
     width: auto;
 }
 
@@ -11,6 +18,7 @@
     height: 30px;
     text-align: center;
 }
+
 .fileUpload input.upload {
 	position: absolute;
 	top: 0;
@@ -28,6 +36,6 @@
 }
 
 #uploadFile{
-    width: 40%;
+    width: 75%;
     height: 25px;
 }

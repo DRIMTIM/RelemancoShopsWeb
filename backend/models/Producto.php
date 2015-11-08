@@ -15,7 +15,7 @@ use app\models\UploadForm;
  * @property string $imagen
  * @property string $descripcion
  *
- * @property Categorias $idCategoria
+ * @property Categoria $categoria
  * @property ProductosComercioStock[] $productosComercioStocks
  * @property Comercios[] $idComercios
  * @property ProductosPedidos[] $productosPedidos
@@ -48,6 +48,12 @@ class Producto extends \yii\db\ActiveRecord
             [['imagen'], 'string', 'max' => 100],
             [['descripcion'], 'string', 'max' => 200],
         ];
+    }
+
+    public function attributes()
+    {
+        // add related fields to searchable attributes
+        return array_merge(parent::attributes(), ['categoria.nombre']);
     }
 
     /**
@@ -84,9 +90,9 @@ class Producto extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdCategoria()
+    public function getCategoria()
     {
-        return $this->hasOne(Categorias::className(), ['id' => 'id_categoria']);
+        return $this->hasOne(Categoria::className(), ['id' => 'id_categoria']);
     }
 
     /**

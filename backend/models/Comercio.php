@@ -14,7 +14,7 @@ use Yii;
  *
  * @property AgendaComercios[] $agendaComercios
  * @property Localizacion $localizacion
- * @property Prioridades $idPrioridad
+ * @property Prioridad $prioridad
  * @property Contratos[] $contratos
  * @property PedidosComercios[] $pedidosComercios
  * @property ProductosComercioStock[] $productosComercioStocks
@@ -41,7 +41,14 @@ class Comercio extends \yii\db\ActiveRecord
             [['id_localizacion', 'id_prioridad'], 'integer'],
             [['nombre'], 'string', 'max' => 100],
             [['localizacion'], 'required'],
+            [['prioridad.nombre'], 'safe'],
         ];
+    }
+
+    public function attributes()
+    {
+        // add related fields to searchable attributes
+        return array_merge(parent::attributes(), ['prioridad.nombre', 'localizacion.nota']);
     }
 
     /**
@@ -54,6 +61,7 @@ class Comercio extends \yii\db\ActiveRecord
             'id_localizacion' => Yii::t('app', 'Id Localizacion'),
             'id_prioridad' => Yii::t('app', 'Prioridad'),
             'nombre' => Yii::t('app', 'Nombre'),
+            'prioridad.nombre' => Yii::t('app', 'Prioridad'),
         ];
     }
 
@@ -76,9 +84,9 @@ class Comercio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdPrioridad()
+    public function getPrioridad()
     {
-        return $this->hasOne(Prioridades::className(), ['id' => 'id_prioridad']);
+        return $this->hasOne(Prioridad::className(), ['id' => 'id_prioridad']);
     }
 
     /**

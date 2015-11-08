@@ -23,11 +23,9 @@ use app\models\Prioridad;
 
     <div class="box box-warning bg-gray">
 
-        <span class="box-header">
-            <div class="box-title">
-                <i class="fa fa-globe"></i> Localizacion
-            </div>
-        </span>
+        <div class="box-header">
+            <h1 class="box-title"><i class="fa fa-globe"></i> Localizacion</h1>
+        </div>
 
         <div class="box-body">
             <?= $form->field($localizacion, 'latitud')->textInput(['readonly' => 'readonly']) ?>
