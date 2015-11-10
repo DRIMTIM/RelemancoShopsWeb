@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use app\models\Comercio;
 use app\models\Localizacion;
 use app\models\BuscarComercio;
+use app\models\BuscarProducto;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -128,6 +129,22 @@ class ComercioController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Asigna los productos seleccionados
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @return mixed
+     */
+    public function actionAsignarProductos()
+    {
+        $searchModel = new BuscarProducto();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('asignarProductos', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**

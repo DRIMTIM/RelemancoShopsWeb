@@ -68,6 +68,7 @@ class Producto extends \yii\db\ActiveRecord
             'imagen' => Yii::t('app', 'Imagen'),
             'descripcion' => Yii::t('app', 'Descripcion'),
             'imageFile' => Yii::t('app', 'Subir Imagen'),
+            'categoria.nombre' => Yii::t('app', 'Categoria'),
         ];
     }
 

@@ -17,7 +17,7 @@ class ProductoAsset extends AssetBundle
     public function init() {
         $this->js = [
             'https://maps.googleapis.com/maps/api/js?' . http_build_query($this->options),
-            'js/relemanco/productos/app.js'];
+            'js/relemanco/productos/productos.js'];
     }
 
     public $basePath = '@webroot';
