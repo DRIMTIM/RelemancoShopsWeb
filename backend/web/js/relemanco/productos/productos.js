@@ -29,7 +29,7 @@ $("#producto-imagefile").change(function(){
 $("#asignarProductosGrid tr input:even").click(function(){
     var keys = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
     if($(this).prop("checked")){
-        $(this).parent().parent('tr').css("background-color", "#F7BA5B");
+        $(this).parent().parent('tr').css("background-color", "#FAD9A4");
     }else{
         $(this).parent().parent('tr').css("background-color", "white");
     }
@@ -39,9 +39,11 @@ $("#asignarProductosGrid tr input:even").click(function(){
 $("#asignarProductosGrid tr input:odd").click(function(){
     var keys = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
     if($(this).prop("checked")){
-        $(this).parent().parent('tr').css("background-color", "#F7BA5B");
+        $(this).parent().parent('tr').css("background-color", "#FAD9A4");
     }else{
         $(this).parent().parent('tr').css("background-color", "#f9f9f9");
     }
-    //alert($(this).parent().parent('tr').children('td').length);
+    $(this).parent().parent('tr').children('td').each(function(){
+
+    });
 });
