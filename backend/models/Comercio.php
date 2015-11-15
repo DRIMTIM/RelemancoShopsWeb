@@ -18,7 +18,7 @@ use Yii;
  * @property Contratos[] $contratos
  * @property PedidosComercios[] $pedidosComercios
  * @property ProductosComercioStock[] $productosComercioStocks
- * @property Productos[] $idProductos
+ * @property Productos[] $productos
  * @property RutasRelevadorComercio[] $rutasRelevadorComercios
  */
 class Comercio extends \yii\db\ActiveRecord
@@ -116,7 +116,7 @@ class Comercio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdProductos()
+    public function getProductos()
     {
         return $this->hasMany(Productos::className(), ['id' => 'id_producto'])->viaTable('productosComercioStock', ['id_comercio' => 'id']);
     }

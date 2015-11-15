@@ -8,6 +8,7 @@ use app\models\Comercio;
 use app\models\Localizacion;
 use app\models\BuscarComercio;
 use app\models\BuscarProducto;
+use app\models\ProductoComercioStock;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -139,12 +140,37 @@ class ComercioController extends Controller
     public function actionAsignarProductos()
     {
         $searchModel = new BuscarProducto();
+        $comercios = new Comercio();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('asignarProductos', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'comercios' => $comercios,
         ]);
+    }
+
+    public function actionGuardarProductos(){
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        if(isset($_POST['id_comercio'])){
+            if(isset($_POST['productos'])){
+                $productos = $_POST['productos'];
+                ProductoComercioStock::deleteAll(['id_comercio' => $_POST['id_comercio']]);
+                foreach ($productos as $producto) {
+                    $prodComStock = new ProductoComercioStock();
+                    $prodComStock->id_comercio = $_POST['id_comercio'];
+                    $prodComStock->id_producto = $producto;
+                    $prodComStock->cantidad = 100000;
+                    $prodComStock->save();
+                }
+            }
+        }
+
+        $item = $_POST['productos'];
+        return $item;
+
     }
 
     /**
@@ -162,4 +188,11 @@ class ComercioController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function getAll(){
+
+        return Comercio::find()->select(['nombre', 'id'])->indexBy('id')->column();
+
+    }
+
 }

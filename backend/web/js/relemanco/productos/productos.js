@@ -2,6 +2,15 @@
 /*    Funciones para manejo de datos de Productos     */
 /******************************************************/
 
+var rootURL = "/RelemancoShopsWeb/backend/web";
+
+$( document ).ready(function() {
+
+    $("label[for=comercio-id]").css("display", "none");
+    asignarProductosClick();
+
+});
+
 function mostrarMiniaturaImagen(input) {
 
     if (input.files && input.files[0]) {
@@ -47,3 +56,19 @@ $("#asignarProductosGrid tr input:odd").click(function(){
 
     });
 });
+
+/* Funcion que envia los id de los productos seleccionados para asignarlos
+al comercio elegido */
+function asignarProductosClick(){
+    $(".btnAsignar").click(function(){
+        var id = $("#comercio-id").val();
+        var productos = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
+
+        $.post(rootURL + "/comercio/guardar-productos", { id_comercio : id, "productos[]" : productos} ,
+        function(data){
+            alert(data);
+        }).fail(function(){
+            alert("Ocurrio un error al asignar el/los productos seleccionados.");
+        });
+    });
+}
