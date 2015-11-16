@@ -17,6 +17,7 @@ class ProductoAsset extends AssetBundle
     public function init() {
         $this->js = [
             'https://maps.googleapis.com/maps/api/js?' . http_build_query($this->options),
+            'js/magnificPopup.js',
             'js/relemanco/productos/productos.js'];
     }
 
@@ -24,6 +25,7 @@ class ProductoAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/estiloProducto.css',
+        'css/magnificPopup.css',
     ];
 
     public $depends = [

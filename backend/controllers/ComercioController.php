@@ -152,25 +152,26 @@ class ComercioController extends Controller
 
     public function actionGuardarProductos(){
 
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if(Yii::$app->request->isAjax){
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        if(isset($_POST['id_comercio'])){
-            if(isset($_POST['productos'])){
-                $productos = $_POST['productos'];
-                ProductoComercioStock::deleteAll(['id_comercio' => $_POST['id_comercio']]);
-                foreach ($productos as $producto) {
-                    $prodComStock = new ProductoComercioStock();
-                    $prodComStock->id_comercio = $_POST['id_comercio'];
-                    $prodComStock->id_producto = $producto;
-                    $prodComStock->cantidad = 100000;
-                    $prodComStock->save();
+            if(isset($_POST['id_comercio'])){
+                if(isset($_POST['productos'])){
+                    $productos = $_POST['productos'];
+                    ProductoComercioStock::deleteAll(['id_comercio' => $_POST['id_comercio']]);
+                    foreach ($productos as $producto) {
+                        $prodComStock = new ProductoComercioStock();
+                        $prodComStock->id_comercio = $_POST['id_comercio'];
+                        $prodComStock->id_producto = $producto;
+                        $prodComStock->cantidad = 100000;
+                        $prodComStock->save();
+                    }
                 }
             }
+
+            $item = $_POST['productos'];
+            return $item;
         }
-
-        $item = $_POST['productos'];
-        return $item;
-
     }
 
     /**
@@ -192,6 +193,21 @@ class ComercioController extends Controller
     public function getAll(){
 
         return Comercio::find()->select(['nombre', 'id'])->indexBy('id')->column();
+
+    }
+
+    public function actionObtenerProductos(){
+
+        if(Yii::$app->request->isAjax){
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            if(isset($_POST['id_comercio'])){
+                $id = $_POST['id_comercio'];
+                $model = Comercio::findOne($id);
+                if (isset($model)) {
+                    return $model->getProductos()->all();
+                }
+            }
+        }
 
     }
 

@@ -36,6 +36,7 @@ class AppAsset extends AssetBundle
     public $js = ['admin-lte/js/AdminLTE/app.js'];
     public $depends = [
         'yii\web\YiiAsset',
+        'yii\jui\JuiAsset',
         'yii\bootstrap\BootstrapAsset',
         'yii\bootstrap\BootstrapPluginAsset',
     ];

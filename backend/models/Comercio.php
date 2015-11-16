@@ -118,7 +118,7 @@ class Comercio extends \yii\db\ActiveRecord
      */
     public function getProductos()
     {
-        return $this->hasMany(Productos::className(), ['id' => 'id_producto'])->viaTable('productosComercioStock', ['id_comercio' => 'id']);
+        return $this->hasMany(Producto::className(), ['id' => 'id_producto'])->viaTable('productosComercioStock', ['id_comercio' => 'id']);
     }
 
     /**

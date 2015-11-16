@@ -35,7 +35,7 @@ $("#producto-imagefile").change(function(){
 /************************************************/
 
 // keys is an array consisting of the keys associated with the selected rows
-$("#asignarProductosGrid tr input:even").click(function(){
+$("#asignarProductosGrid tr input[type=checkbox]:even").click(function(){
     var keys = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
     if($(this).prop("checked")){
         $(this).parent().parent('tr').css("background-color", "#FAD9A4");
@@ -45,16 +45,16 @@ $("#asignarProductosGrid tr input:even").click(function(){
     //alert($(this).parent().parent('tr').children('td').length);
 });
 
-$("#asignarProductosGrid tr input:odd").click(function(){
+$("#asignarProductosGrid tr input[type=checkbox]:odd").click(function(){
     var keys = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
     if($(this).prop("checked")){
         $(this).parent().parent('tr').css("background-color", "#FAD9A4");
     }else{
         $(this).parent().parent('tr').css("background-color", "#f9f9f9");
     }
-    $(this).parent().parent('tr').children('td').each(function(){
+    /*$(this).parent().parent('tr').children('td').each(function(){
 
-    });
+    });*/
 });
 
 /* Funcion que envia los id de los productos seleccionados para asignarlos
@@ -64,11 +64,64 @@ function asignarProductosClick(){
         var id = $("#comercio-id").val();
         var productos = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
 
-        $.post(rootURL + "/comercio/guardar-productos", { id_comercio : id, "productos[]" : productos} ,
-        function(data){
-            alert(data);
+        $.ajax({
+            method: "POST",
+            url: rootURL + "/comercio/guardar-productos",
+            dataType: "json",
+            data: { id_comercio : id, "productos[]" : productos}
+        }).done(function(data){
+
+            $.magnificPopup.open({
+                items: {
+                  src: '<div class="box box-warning white-popup"><h3>Se asignaron los productos correctamente!</h3></div>',
+                  type: 'inline'
+                }
+            });
+
         }).fail(function(){
             alert("Ocurrio un error al asignar el/los productos seleccionados.");
         });
+
+        return false;
     });
 }
+
+/* Funcion para uncheckear toda la tabla de productos */
+function deSeleccionarProductos(){
+    $("#asignarProductosGrid input[type=checkbox]:odd").each(function(){
+        if($(this).prop("checked")){
+            $(this).click();
+        }
+    });
+    $("#asignarProductosGrid input[type=checkbox]:even").each(function(){
+        if($(this).prop("checked")){
+            $(this).click();
+        }
+    });
+}
+
+/* Function para seleccionar los productos de un comercio */
+function seleccionarProductos(json){
+    for(var i = 0; i < json.length; i++){
+        $("#asignarProductosGrid input[value='" +  json[i].id + "']").click();
+    }
+}
+
+/* Function para seleccionar los productos de un comercio */
+function obtenerProductos(){
+    var id = $("#comercio-id").val();
+    deSeleccionarProductos();
+    $.post(rootURL + "/comercio/obtener-productos", { id_comercio : id }, function(json){
+        seleccionarProductos(json);
+        console.log(json);
+    });
+
+}
+
+$("#comercio-id").change(function(){
+    if($(this).val() == ""){
+        deSeleccionarProductos();
+    }else{
+        obtenerProductos();
+    }
+});

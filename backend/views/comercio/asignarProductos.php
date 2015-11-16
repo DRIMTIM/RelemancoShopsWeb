@@ -68,5 +68,6 @@ ProductoAsset::register($this);
             </div>
 
         </div>
+        <div id="mensajesModal"><h3></h3></div>
 
 </div>
