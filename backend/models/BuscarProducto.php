@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Producto;
+use backend\models\Producto;
 
 /**
  * BuscarProducto represents the model behind the search form about `app\models\Producto`.

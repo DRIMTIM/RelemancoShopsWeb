@@ -7,5 +7,5 @@ use yii\rest\ActiveController;
 class CountriesController extends ActiveController
 {
     public $modelClass = 'backend\models\Country';
-	
+
 }

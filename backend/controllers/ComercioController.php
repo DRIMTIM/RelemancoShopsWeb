@@ -4,10 +4,10 @@ namespace backend\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
-use app\models\Comercio;
+use backend\models\Comercio;
 use app\models\Localizacion;
-use app\models\BuscarComercio;
-use app\models\BuscarProducto;
+use backend\models\BuscarComercio;
+use backend\models\BuscarProducto;
 use app\models\ProductoComercioStock;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

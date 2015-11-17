@@ -8,8 +8,8 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
-use app\models\Producto;
-use app\models\BuscarProducto;
+use backend\models\Producto;
+use backend\models\BuscarProducto;
 
 /**
  * ProductoController implements the CRUD actions for Producto model.
