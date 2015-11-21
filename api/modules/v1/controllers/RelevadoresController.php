@@ -24,7 +24,7 @@ class RelevadoresController extends ActiveController
      *
      * @return string|Response
      */
-    public function actionCustom($params)
+    public function actionCustomoperation($params)
     {
         return "Bueno soy una custom action y tengo estos parametros paquete!!!! => " . $params;
     }
