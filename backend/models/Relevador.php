@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 
@@ -32,7 +32,7 @@ class Relevador extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'id_localizacion'], 'required'],
+            [['user_id'], 'required'],
             [['user_id', 'id_localizacion'], 'integer']
         ];
     }

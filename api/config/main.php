@@ -18,11 +18,6 @@ return [
         ]
     ],
     'components' => [
-        'user' => [
-            'identityClass' => 'common\models\User',
-            'enableSession' => false,
-            //'loginUrl' => null,
-        ],
         'request' => [
             // Enable JSON Input:
             'parsers' => [

@@ -16,7 +16,9 @@ nbproject
 Thumbs.db
 
 # composer vendor dir
-/vendor
+!/vendor
+vendor/*
+!/vendor/dektrium/*
 
 # composer itself is not needed
 composer.phar
