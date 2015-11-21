@@ -49,6 +49,7 @@ if (isset(Yii::$app->user->identity)) :
                     ['label' => '<i class="fa fa-building-o"></i><span>Comercios</span>', 'url' => ['/comercio']],
                     ['label' => '<i class="fa fa-building-o"></i><span>Asignar Productos</span>', 'url' => ['/comercio/asignar-productos']],
                     ['label' => '<i class="fa fa-globe"></i><span>Localizacion</span>', 'url' => ['/localizacion']],
+                    ['label' => '<i class="fa fa-globe"></i><span>Asignar Rutas</span>', 'url' => ['/rutas']],
                     ['label' => '<i class="fa fa-shopping-cart"></i><span>Productos</span>', 'url' => ['/producto']],
                     [
                         'label' => '<i class="glyphicon glyphicon-lock"></i><span>Ingrese...</span>', //for basic

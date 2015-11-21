@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
-use app\models\Localizacion;
+use backend\models\Localizacion;
 use app\models\BuscarLocalizacion;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

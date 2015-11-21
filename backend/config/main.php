@@ -21,7 +21,8 @@ return [
         'user' => [
             // following line will restrict access to admin page
             'as backend' => 'dektrium\user\filters\BackendFilter',
-            'admins' => ['pelupotter']
+            'admins' => ['pelupotter' , 'jonaf2103'],
+            'controllers' => []
         ],
     ],
     'components' => [
