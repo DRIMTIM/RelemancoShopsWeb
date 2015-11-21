@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Localizacion */
+/* @var $model backend\models\Localizacion */
 
 $this->title = $model->nota;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localizacions'), 'url' => ['index']];
@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="localizacion-view col-md-5 row">
 
     <div class="box box-solid box-warning">
-        
+
         <div class="box-header">
             <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
         </div>

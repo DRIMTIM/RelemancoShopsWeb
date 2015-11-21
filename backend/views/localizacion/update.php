@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Localizacion */
+/* @var $model backend\models\Localizacion */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'Localizacion',

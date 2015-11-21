@@ -23,7 +23,7 @@ $map = new Map([
 ]);
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Localizacion */
+/* @var $model backend\models\Localizacion */
 
 $this->title = Yii::t('app', 'Create Localizacion');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Localizacions'), 'url' => ['index']];

@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use backend\models\Comercio;
-use app\models\Localizacion;
+use backend\models\Localizacion;
 use backend\models\BuscarComercio;
 use backend\models\BuscarProducto;
 use app\models\ProductoComercioStock;

@@ -18,11 +18,6 @@ return [
         ]
     ],
     'components' => [
-        'user' => [
-            'identityClass' => 'common\models\User',
-            'enableSession' => false,
-            //'loginUrl' => null,
-        ],
         'request' => [
             // Enable JSON Input:
             'parsers' => [
@@ -48,10 +43,14 @@ return [
                     'HEAD <apiv:v\d+>/<controller:\w+>/<id:(.)+>'    => '<apiv>/<controller>/view',
                     'GET <apiv:v\d+>/<controller:\w+>/<id:(.)+>'     => '<apiv>/<controller>/view',
                     'POST <apiv:v\d+>/<controller:\w+>/<id:(.)+>'    => '<apiv>/<controller>/create',
+                    'POST /v1/security/login-api'    => '/v1/security/login-api',
                     'PUT <apiv:v\d+>/<controller:\w+>/<id:(.)+>'     => '<apiv>/<controller>/update',
                     'PATCH <apiv:v\d+>/<controller:\w+>/<id:(.)+>'   => '<apiv>/<controller>/update',
                     'DELETE <apiv:v\d+>/<controller:\w+>/<id:(.)+>'  => '<apiv>/<controller>/delete',
-            ]
+                    /*['class' => 'yii\rest\UrlRule', 'controller' => 'relevadores'],
+
+                    ['class' => 'yii\rest\UrlRule', 'controller' => 'comercios'],*/
+            ],
         ]
     ],
     'params' => $params,
