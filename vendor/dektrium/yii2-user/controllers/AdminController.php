@@ -114,6 +114,7 @@ class AdminController extends Controller
         $this->performAjaxValidation($user);
 
         if ($user->load(Yii::$app->request->post()) && $user->create()) {
+            // Relacion Relevadores - user
             $relevador = new Relevador();
             $relevador->user_id = $user->id;
             $relevador->save();
