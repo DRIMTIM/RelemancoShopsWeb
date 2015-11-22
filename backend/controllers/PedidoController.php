@@ -1,11 +1,10 @@
 <?php
 
-namespace app\controllers;
+namespace backend\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
-use app\models\Pedido;
-use app\models\BuscarPedido;
+use backend\models\Pedido;
+use backend\models\BuscarPedido;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -18,18 +17,6 @@ class PedidoController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function () {
-                           return Yii::$app->user->identity->getIsAdmin();
-                        },
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

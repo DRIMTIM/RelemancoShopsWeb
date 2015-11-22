@@ -1,14 +1,14 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Pedido;
+use backend\models\Pedido;
 
 /**
- * BuscarPedido represents the model behind the search form about `app\models\Pedido`.
+ * BuscarPedido represents the model behind the search form about `backend\models\Pedido`.
  */
 class BuscarPedido extends Pedido
 {
