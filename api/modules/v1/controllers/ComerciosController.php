@@ -33,4 +33,11 @@ class ComerciosController extends ActiveController
 
     }
 
+    public function actionObtenercomercios(){
+
+        $comercio = Comercio::find()->with('localizacion');
+        return $comercio->asArray()->all();
+
+    }
+
 }
