@@ -211,4 +211,12 @@ class ComercioController extends Controller
 
     }
 
+    public function actionObtenerComercios(){
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $comercio = Comercio::find()->with('localizacion');
+        return $comercio->asArray()->all();
+
+    }
+
 }

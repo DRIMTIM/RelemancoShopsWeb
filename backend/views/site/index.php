@@ -1,15 +1,27 @@
 <?php
+
+use app\assets\SiteAsset;
+
 /* @var $this yii\web\View */
 
 $this->title = 'RelemancoShops.com';
+
+SiteAsset::register($this);
+
 ?>
 <div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Bienvenidos!</h1>
+    <div class="col-md-12 row">
+        <div class="box box-solid box-warning">
 
-        <p class="lead">Este va a ser el Home de Relemanco, estad&iacute;sticas, comercios, mapas y mucho Rock! nenene...</p>
+            <div class="box-header">
+                <h1 class="box-title">Mapa de Comercios</h1>
+            </div>
 
+            <div class="box-body" id="mapa-comercios">
+            </div>
+
+        </div>
     </div>
 
 </div>
