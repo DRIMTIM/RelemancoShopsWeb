@@ -8,7 +8,7 @@ use backend\models\Comercio;
 use backend\models\Localizacion;
 use backend\models\BuscarComercio;
 use backend\models\BuscarProducto;
-use app\models\ProductoComercioStock;
+use backend\models\ProductoComercioStock;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

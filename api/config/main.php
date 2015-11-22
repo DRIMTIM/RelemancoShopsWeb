@@ -39,11 +39,15 @@ return [
             'showScriptName' => false,
             'rules' => [
 
+                'GET <apiv:v\d+>/comercios/obtenerproductos' => '<apiv>/comercios/obtenerproductos',
+                'POST <apiv:v\d+>/relevadores/customoperation/<id:(.)+>' => '<apiv>/relevadores/customoperation',
+                'POST <apiv:v\d+>/<controller:\w+>/<id:(.)+>' => '<apiv>/<controller>/create',
+
+
                 'HEAD <apiv:v\d+>/<controller:\w+>/<operation:\w+>' => '<apiv>/<controller>/<operation>',
                 'GET <apiv:v\d+>/<controller:\w+>/<operation:\w+>' => '<apiv>/<controller>/<operation>',
                 'HEAD <apiv:v\d+>/<controller:\w+>/<operation:\w+>/<params:(.)+>' => '<apiv>/<controller>/<operation>',
                 'GET <apiv:v\d+>/<controller:\w+>/<operation:\w+>/<params:(.)+>' => '<apiv>/<controller>/<operation>',
-                'POST <apiv:v\d+>/<controller:\w+>/<operation:\w+>/<params:(.)+>' => '<apiv>/<controller>/<operation>',
                 'PUT <apiv:v\d+>/<controller:\w+>/<operation:\w+>/<params:(.)+>' => '<apiv>/<controller>/<operation>',
                 'PATCH <apiv:v\d+>/<controller:\w+>/<operation:\w+>/<params:(.)+>' => '<apiv>/<controller>/<operation>',
                 'DELETE <apiv:v\d+>/<controller:\w+>/<operation:\w+>/<params:(.)+>' => '<apiv>/<controller>/<operation>',
