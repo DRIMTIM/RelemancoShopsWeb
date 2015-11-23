@@ -4,6 +4,9 @@
 
 var rootURL = "/RelemancoShopsWeb/backend/web";
 var comercioMarkers = [];
+var markersColors = ["blue", "brown", "green", "orange", "paleblue", "yellow"];
+var markersNameCounter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+
 
 $( document ).ready(function() {
 
@@ -21,12 +24,6 @@ function initComerciosMap(comercios) {
     });
 
     dropComercios(comercios, map);
-
-    map.addListener('click', function(e) {
-
-
-
-    });
 
 }
 
@@ -73,11 +70,30 @@ function addComercio(comercio, timeout, map) {
     var loc = comercio.localizacion;
     var position = { lat : Number(loc.latitud), lng: Number(loc.longitud) };
 
+    var comercioMark = null;
+
     window.setTimeout(function() {
-        comercioMarkers.push(new google.maps.Marker({
-          position: position,
-          map: map,
-          animation: google.maps.Animation.DROP
-        }));
+        comercioMark = new google.maps.Marker({
+            position: position,
+            map: map,
+            animation: google.maps.Animation.DROP,
+            title: comercio.nombre,
+            icon: ""
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: "Hello haloooo..."
+        });
+
+        comercioMark.addListener('click', function() {
+
+            this.setIcon(rootURL + "/img/GMapsMarkers/blue_MarkerA.png");
+            infowindow.addListener('closeclick', function(){
+                comercioMark.setIcon(null);
+            });
+            infowindow.open(map, comercioMark);
+        });
+
+        comercioMarkers.push(comercioMark);
     }, timeout);
 }
