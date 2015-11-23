@@ -4,8 +4,10 @@
 
 var rootURL = "/RelemancoShopsWeb/backend/web";
 var comercioMarkers = [];
-var markersColors = ["blue", "brown", "green", "orange", "paleblue", "yellow"];
-var markersNameCounter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+var markersColors = ["blue", "brown", "green", "orange", "paleblue", "yellow", "pink",
+                     "purple", "red", "darkgreen"];
+var markersName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+var markerCounter = 0;
 
 
 $( document ).ready(function() {
@@ -13,6 +15,18 @@ $( document ).ready(function() {
     localizarComercios();
 
 });
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function changeNameAndColorMarker(){
+    return getRandomInt(0,9);
+}
 
 function initComerciosMap(comercios) {
 
@@ -37,13 +51,6 @@ function localizarComercios(){
     }).done(function(data){
 
         console.log(data);
-        // $.magnificPopup.open({
-        //     items: {
-        //       src: '<div class="box box-warning white-popup"><h3>Se asignaron los productos correctamente!</h3></div>',
-        //       type: 'inline'
-        //     }
-        // });
-
         initComerciosMap(data);
 
     }).fail(function(){
@@ -66,6 +73,14 @@ function clearComercios(comercios) {
   comercios = [];
 }
 
+function markerAnimation(marker){
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+}
+
 function addComercio(comercio, timeout, map) {
     var loc = comercio.localizacion;
     var position = { lat : Number(loc.latitud), lng: Number(loc.longitud) };
@@ -78,20 +93,21 @@ function addComercio(comercio, timeout, map) {
             map: map,
             animation: google.maps.Animation.DROP,
             title: comercio.nombre,
-            icon: ""
+            icon: rootURL + "/img/GMapsMarkers/" +
+                    markersColors[changeNameAndColorMarker()] + "_Marker" +
+                    markersName[changeNameAndColorMarker()] + ".png"
         });
 
         var infowindow = new google.maps.InfoWindow({
-            content: "Hello haloooo..."
+            content: "<h4>" + comercio.nombre + "</h4>"
         });
 
         comercioMark.addListener('click', function() {
-
-            this.setIcon(rootURL + "/img/GMapsMarkers/blue_MarkerA.png");
             infowindow.addListener('closeclick', function(){
-                comercioMark.setIcon(null);
+                comercioMark.setAnimation(null);
             });
-            infowindow.open(map, comercioMark);
+            markerAnimation(this);
+            infowindow.open(map, this);
         });
 
         comercioMarkers.push(comercioMark);
