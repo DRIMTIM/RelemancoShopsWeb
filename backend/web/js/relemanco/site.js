@@ -6,8 +6,8 @@ var rootURL = "/RelemancoShopsWeb/backend/web";
 var comercioMarkers = [];
 var markersColors = ["blue", "brown", "green", "orange", "paleblue", "yellow", "pink",
                      "purple", "red", "darkgreen"];
-var markersName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-var markerCounter = 0;
+var markersName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "N",
+                    "O", "P", "Q", "R", "S", "T", "X"];
 
 
 $( document ).ready(function() {
@@ -22,10 +22,6 @@ $( document ).ready(function() {
  */
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function changeNameAndColorMarker(){
-    return getRandomInt(0,9);
 }
 
 function initComerciosMap(comercios) {
@@ -81,6 +77,37 @@ function markerAnimation(marker){
     }
 }
 
+/* Funcion para genera la lista de comercios en la ventana de informacion del
+    Comercio */
+function generarInfoListaProductoComercio(productos){
+    if(productos != null){
+        var lista = "<ul>";
+        for (var i = 0; i < productos.length; i++){
+            lista += "<li>" + productos[i].nombre + "</li>";
+        }
+        lista += "</ul>";
+        return lista;
+    }
+    return "<li>Este comercio no tiene productos asignados.</li>";
+}
+
+function generarEnlaceComecio(comercio){
+    return "&nbsp;&nbsp;&nbsp;<a href='" + rootURL  + '/comercio/view?id=' + comercio.id +
+                                    "'><i class='fa fa-eye'>&nbsp;</i>Ver Comercio</a>";
+}
+
+function generarInfoComercio(comercio){
+    if(comercio != null){
+        var info = "<h4>" + comercio.nombre + "</h4>";
+        info += "<hr/>";
+        info += generarInfoListaProductoComercio(comercio.productos);
+        info += "<hr/>";
+        info += generarEnlaceComecio(comercio);
+        return info;
+    }
+    return null;
+}
+
 function addComercio(comercio, timeout, map) {
     var loc = comercio.localizacion;
     var position = { lat : Number(loc.latitud), lng: Number(loc.longitud) };
@@ -93,12 +120,12 @@ function addComercio(comercio, timeout, map) {
             animation: google.maps.Animation.DROP,
             title: comercio.nombre,
             icon: rootURL + "/img/GMapsMarkers/" +
-                    markersColors[changeNameAndColorMarker()] + "_Marker" +
-                    markersName[changeNameAndColorMarker()] + ".png"
+                    markersColors[getRandomInt(0,9)] + "_Marker" +
+                    markersName[getRandomInt(0,19)] + ".png"
         });
 
         var infowindow = new google.maps.InfoWindow({
-            content: "<h4>" + comercio.nombre + "</h4>"
+            content: generarInfoComercio(comercio)
         });
 
         comercioMark.addListener('click', function() {
