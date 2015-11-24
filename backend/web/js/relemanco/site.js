@@ -84,7 +84,6 @@ function markerAnimation(marker){
 function addComercio(comercio, timeout, map) {
     var loc = comercio.localizacion;
     var position = { lat : Number(loc.latitud), lng: Number(loc.longitud) };
-
     var comercioMark = null;
 
     window.setTimeout(function() {
