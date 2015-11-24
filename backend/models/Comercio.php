@@ -128,4 +128,14 @@ class Comercio extends \yii\db\ActiveRecord
     {
         return $this->hasMany(RutasRelevadorComercio::className(), ['id_comercio' => 'id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComerciosConLocalizacion()
+    {
+        return $this->find()->with('localizaciones');
+    }
+
+
 }

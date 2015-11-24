@@ -8,7 +8,7 @@ use backend\models\Comercio;
 use backend\models\Localizacion;
 use backend\models\BuscarComercio;
 use backend\models\BuscarProducto;
-use app\models\ProductoComercioStock;
+use backend\models\ProductoComercioStock;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -208,6 +208,14 @@ class ComercioController extends Controller
                 }
             }
         }
+
+    }
+
+    public function actionObtenerComercios(){
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $comercio = Comercio::find()->with('localizacion', 'productos');
+        return $comercio->asArray()->all();
 
     }
 

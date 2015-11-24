@@ -2,9 +2,12 @@
 /*  Funciones para manejo de datos de Comercios       */
 /******************************************************/
 
+var rootURL = "/RelemancoShopsWeb/backend/web";
+
 $( document ).ready(function() {
 
     initMap();
+    // obtenerComercios();
 
 });
 

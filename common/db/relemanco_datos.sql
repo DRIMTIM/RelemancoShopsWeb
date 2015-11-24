@@ -29,9 +29,41 @@ INSERT INTO categorias (nombre, descripcion) VALUES ("Música, Libros y Películ
 INSERT INTO categorias (nombre, descripcion) VALUES ("Ropa, Calzados y Accesorios", "Ropa, Calzados y Accesorios");
 INSERT INTO categorias (nombre, descripcion) VALUES ("Salud y Belleza", "Salud y Belleza");
 INSERT INTO categorias (nombre, descripcion) VALUES ("Otras categorías", "Otras categorías");
+INSERT INTO categorias (nombre, descripcion) VALUES ("Comestibles", "Comestibles");
 
 /* PRIORIDADES */
 INSERT INTO prioridades (nombre, descripcion) VALUES ("URGENTE", "Urgente.");
 INSERT INTO prioridades (nombre, descripcion) VALUES ("ALTA", "Prioridad alta.");
 INSERT INTO prioridades (nombre, descripcion) VALUES ("MEDIA", "Prioridad media.");
 INSERT INTO prioridades (nombre, descripcion) VALUES ("BAJA", "Prioridad baja");
+
+/*PRODUCTOS*/
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(1, 22, 'Aceite de Girasol BENFAST', 'aceite.jpg', 'Aceite 0 calorias');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(2, 22, 'Aceitunas Los Nietitos', 'aceitunas.jpg', 'Aceite 0 calorias');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(3, 22, 'Mermelada JOYAREAL', 'jalea.jpg', 'Jalea de frutas');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(4, 22, 'Melones VEDRULERIA DODERA SA', 'melon.jpg', 'Melones bien frescos');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(5, 22, 'Brownies de Cannabis', 'brouniFaso.jpg', 'Brownies de Cannabis  0% Grasa');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(6, 17, 'Juguete Se Me ChispoTeo', 'chavo.jpg', 'Juguete del Chavo del 8');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(7, 22, 'Cheetos', 'chetos.jpg', 'PEPSICO');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(8, 22, 'Coca Cola 600ML', 'coca.jpg', 'COCA COLA COMPANY');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(9, 22, 'Duraznos En Almibar DOS CABALLOS', 'durazno.jpg', 'Cocktail de frutas magike');
+
+INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
+VALUES(10, 22, 'Marihuana MUJICA', 'faso.jpg', 'Como el asado del pepe, pero nada que ver.');
