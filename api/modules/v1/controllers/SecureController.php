@@ -40,7 +40,10 @@ class SecureController extends SecurityController {
         $this->performAjaxValidation($model);
 
         if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
-            return $this->finder->findUserByUsernameOrEmail($model->login);
+            $user = $this->finder->findUserByUsernameOrEmail($model->login);
+            unset($user['password_hash']);
+            unset($user['auth_key']);
+            return $user;
         }
 
         return false;
