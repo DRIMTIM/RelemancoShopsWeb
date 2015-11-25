@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use dektrium\user\models\User;
 use backend\models\Localizacion;
+use backend\controllers\LocalizacionController;
 
 /**
  * RelevadorController implements the CRUD actions for Relevador model.
@@ -140,6 +141,26 @@ class RelevadorController extends Controller
             'relevador' => $relevador,
             'localizacion' => $localizacion,
         ]);
+
+    }
+
+    public function actionGuardarLocalizacion($id){
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $relevador = $this->findModel($id);
+        $localizacion = new Localizacion();
+
+        if($relevador->id_localizacion != null){
+            $localizacion = Localizacion::findOne($relevador->id_localizacion);
+        }
+
+        if ($localizacion->load(Yii::$app->request->post()) && $localizacion->save()) {
+            $relevador->id_localizacion = $localizacion->id;
+            $relevador->save(false);
+            return "OK";
+        }
+
+        return "ERROR";
 
     }
 

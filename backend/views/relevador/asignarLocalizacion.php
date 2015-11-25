@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\grid\GridView;
-use app\assets\ComercioAsset;
+use app\assets\RelevadorAsset;
 use backend\controllers\RelevadorController;
 
 /* @var $this yii\web\View */
@@ -13,7 +13,7 @@ use backend\controllers\RelevadorController;
 $this->title = Yii::t('app', 'Asignar Localizacion');
 $this->params['breadcrumbs'][] = $this->title;
 
-ComercioAsset::register($this);
+RelevadorAsset::register($this);
 
 ?>
 <div class="relevador-index col-md-5 row">
@@ -55,7 +55,7 @@ ComercioAsset::register($this);
                     </div>
 
                     <div class="form-group">
-                        <?= Html::a(Yii::t('app', 'Asignar Localizacion'), [''], ['class' => 'btnAsignar btn btn-success']) ?>
+                        <?= Html::a(Yii::t('app', 'Asignar Localizacion'), [''], ['class' => 'btnAsignarLoc btn btn-success']) ?>
                     </div>
 
                 <?php ActiveForm::end(); ?>
