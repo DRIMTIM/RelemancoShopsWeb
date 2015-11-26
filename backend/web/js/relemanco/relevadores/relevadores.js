@@ -57,8 +57,6 @@ function asignarLocalizacionClick(){
         var lng = $("#localizacion-longitud").val();
         var nota = $("#relevador-id[selected]").html();
 
-        alert(nota);
-
         $.ajax({
             method: "POST",
             url: rootURL + "/relevador/guardar-localizacion?id=" + id,
@@ -66,13 +64,12 @@ function asignarLocalizacionClick(){
             data: {"Localizacion[latitud]" : lat, "Localizacion[longitud]" : lng, "Localizacion[nota]" : nota }
         }).done(function(data){
 
-            // $.magnificPopup.open({
-            //     items: {
-            //       src: '<div class="box box-warning white-popup"><h3>Se asigno la localizacion correctamente!</h3></div>',
-            //       type: 'inline'
-            //     }
-            // });
-            alert(data);
+            $.magnificPopup.open({
+                items: {
+                  src: '<div class="box box-warning white-popup"><h3>Se asigno la localizacion correctamente!</h3></div>',
+                  type: 'inline'
+                }
+            });
 
         }).fail(function(){
             alert("Ocurrio un error al asignar la localizacion.");

@@ -17,7 +17,8 @@ class RelevadorAsset extends AssetBundle
     public function init() {
         $this->js = [
             'https://maps.googleapis.com/maps/api/js?' . http_build_query($this->options),
-            'js/relemanco/relevadores/relevadores.js'
+            'js/relemanco/relevadores/relevadores.js',
+            'js/magnificPopup.js',
         ];
     }
 
@@ -25,6 +26,7 @@ class RelevadorAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/estiloRelevador.css',
+        'css/magnificPopup.css',
     ];
 
     public $depends = [

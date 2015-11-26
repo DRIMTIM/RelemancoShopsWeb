@@ -67,3 +67,29 @@ VALUES(9, 22, 'Duraznos En Almibar DOS CABALLOS', 'durazno.jpg', 'Cocktail de fr
 
 INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
 VALUES(10, 22, 'Marihuana MUJICA', 'faso.jpg', 'Como el asado del pepe, pero nada que ver.');
+
+
+/* Update de esquema, habia una tabla al dope (pedidosComercios) */
+DROP TABLE IF EXISTS pedidosComercio, productosPedidos, pedidos;
+
+CREATE TABLE
+pedidos(
+
+	id bigint NOT NULL AUTO_INCREMENT,
+    id_comercio bigint NOT NULL,
+    fecha_realizado TIMESTAMP NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE
+productosPedidos(
+
+    id_pedido bigint NOT NULL,
+    id_producto bigint NOT NULL,
+    cantidad DECIMAL(10,2),
+    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE
+
+);

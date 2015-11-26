@@ -8,9 +8,10 @@ use Yii;
  * This is the model class for table "pedidos".
  *
  * @property integer $id
+ * @property integer $id_comercio
  * @property string $fecha_realizado
  *
- * @property PedidosComercios[] $pedidosComercios
+ * @property Comercios $idComercio
  * @property ProductosPedidos[] $productosPedidos
  */
 class Pedido extends \yii\db\ActiveRecord
@@ -29,6 +30,8 @@ class Pedido extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id_comercio'], 'required'],
+            [['id_comercio'], 'integer'],
             [['fecha_realizado'], 'safe']
         ];
     }
@@ -40,6 +43,7 @@ class Pedido extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'id_comercio' => Yii::t('app', 'Id Comercio'),
             'fecha_realizado' => Yii::t('app', 'Fecha Realizado'),
         ];
     }
@@ -47,9 +51,9 @@ class Pedido extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPedidosComercios()
+    public function getIdComercio()
     {
-        return $this->hasMany(PedidosComercios::className(), ['id_pedido' => 'id']);
+        return $this->hasOne(Comercios::className(), ['id' => 'id_comercio']);
     }
 
     /**

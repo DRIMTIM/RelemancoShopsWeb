@@ -17,6 +17,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
+    <?= $form->field($model, 'id_comercio') ?>
+
     <?= $form->field($model, 'fecha_realizado') ?>
 
     <div class="form-group">

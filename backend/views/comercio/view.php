@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="box-body">
             <div style="float: right">
+                    <?= Html::a(Yii::t('app', 'Realizar Pedido'), ['/pedido/create', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
                     <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
                     <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
                         'class' => 'btn btn-danger',

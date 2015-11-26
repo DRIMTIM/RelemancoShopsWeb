@@ -12,6 +12,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'id_comercio')->textInput() ?>
+
     <?= $form->field($model, 'fecha_realizado')->textInput() ?>
 
     <div class="form-group">
