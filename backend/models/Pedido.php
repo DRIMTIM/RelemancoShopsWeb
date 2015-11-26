@@ -11,8 +11,8 @@ use Yii;
  * @property integer $id_comercio
  * @property string $fecha_realizado
  *
- * @property Comercios $idComercio
- * @property ProductosPedidos[] $productosPedidos
+ * @property Comercio $comercio
+ * @property ProductoPedido[] $productosPedidos
  */
 class Pedido extends \yii\db\ActiveRecord
 {
@@ -44,14 +44,13 @@ class Pedido extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'id_comercio' => Yii::t('app', 'Id Comercio'),
-            'fecha_realizado' => Yii::t('app', 'Fecha Realizado'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdComercio()
+    public function getComercio()
     {
         return $this->hasOne(Comercios::className(), ['id' => 'id_comercio']);
     }

@@ -11,6 +11,7 @@ $( document ).ready(function() {
 
 });
 
+$(".summary").css("float", "right");
 $('label[for="comercio-id_localizacion"]').css("display", "none");
 $('label[for="localizacion-nota"]').css("display", "none");
 
