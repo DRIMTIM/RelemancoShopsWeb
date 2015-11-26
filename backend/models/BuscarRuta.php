@@ -10,7 +10,7 @@ use backend\models\Ruta;
 /**
  * BuscarRutas represents the model behind the search form about `backend\models\Ruta`.
  */
-class BuscarRutas extends Ruta
+class BuscarRuta extends Ruta
 {
     /**
      * @inheritdoc

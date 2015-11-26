@@ -15,6 +15,13 @@ use Yii;
  */
 class Ruta extends \yii\db\ActiveRecord
 {
+
+    public $rules = [
+        [['fecha_asignada'], 'safe'],
+        [['id_estado'], 'required'],
+        [['id_estado'], 'integer']
+    ];
+
     /**
      * @inheritdoc
      */
@@ -26,13 +33,8 @@ class Ruta extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-            [['fecha_asignada'], 'safe'],
-            [['id_estado'], 'required'],
-            [['id_estado'], 'integer']
-        ];
+    public function rules() {
+        return $this->rules;
     }
 
     /**

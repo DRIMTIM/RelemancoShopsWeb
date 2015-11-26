@@ -3,9 +3,10 @@
 namespace backend\controllers;
 
 use backend\models\BuscarComercio;
-use backend\models\BuscarRelevador;
 use backend\models\BuscarRutas;
 use backend\models\Relevador;
+use backend\models\RutasDataProvider;
+use backend\models\RutasSearchModel;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -51,28 +52,21 @@ class RutasController extends Controller
         ];
     }
 
-    /**
-     * Lists all Ruta models.
-     * @return mixed
-     */
     public function actionIndex()
     {
-        $searchModel = new BuscarRutas();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $searchModel = new RutasSearchModel();
+        $dataProvider = $searchModel->buscarRutas(Yii::$app->request->queryParams);
+        $searchModel = $searchModel->getRutaProvider();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
-    /**
-     * Lists all Ruta models.
-     * @return mixed
-     */
     public function actionEligeRelevador(){
-        $searchModel = new BuscarRelevador();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new RutasSearchModel();
+        $dataProvider = $searchModel->buscarRelevadores(Yii::$app->request->queryParams);
+        $searchModel = $searchModel->getRelevadorProvider();
         return $this->render('wizard', [
             'subtitle' => Yii::t('app', 'Elija un Relevador'),
             'actions' => $this->fillStepsConfig(0),
@@ -92,10 +86,9 @@ class RutasController extends Controller
      * @return mixed
      */
     public function actionElegirComercio(){
-        $searchModel = new BuscarComercio();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $condition = intval(Yii::$app->request->post('relevadorSeleccionado')[0]);
-        $relevadorSeleccionado = Relevador::findOne($condition);
+        $idRelevador = intval(Yii::$app->request->post('relevadorSeleccionado')[0]);
+        $searchModel = new RutasSearchModel();
+        $comerciosDisponibles = $searchModel->buscarComerciosEnRadioRelevador($idRelevador);
         return $this->render('wizard', [
             'subtitle' => Yii::t('app', 'Elija Comercios para el Relevador'),
             'actions' => $this->fillStepsConfig(1),
@@ -104,9 +97,7 @@ class RutasController extends Controller
             'formAction' => 'wizard?actionStep=2',
             'formMethod' => 'post',
             'container' => [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'relevadorSeleccionado' => $relevadorSeleccionado
+                'comerciosDisponibles' => $comerciosDisponibles
             ]
         ]);
     }
