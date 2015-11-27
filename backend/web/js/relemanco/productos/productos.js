@@ -7,6 +7,7 @@ var rootURL = "/RelemancoShopsWeb/backend/web";
 $( document ).ready(function() {
 
     $("label[for=comercio-id]").css("display", "none");
+    $(".summary").css("float", "right");
     asignarProductosClick();
 
 });

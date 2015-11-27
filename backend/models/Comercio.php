@@ -17,7 +17,7 @@ use Yii;
  * @property Prioridad $prioridad
  * @property Contratos[] $contratos
  * @property PedidosComercios[] $pedidosComercios
- * @property ProductosComercioStock[] $productosComercioStocks
+ * @property ProductoComercioStock[] $productosComercioStock
  * @property Productos[] $productos
  * @property RutasRelevadorComercio[] $rutasRelevadorComercios
  */
@@ -108,9 +108,9 @@ class Comercio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProductosComercioStocks()
+    public function getProductosComercioStock()
     {
-        return $this->hasMany(ProductosComercioStock::className(), ['id_comercio' => 'id']);
+        return $this->hasMany(ProductoComercioStock::className(), ['id_comercio' => 'id']);
     }
 
     /**
