@@ -18,7 +18,7 @@ class BuscarPedido extends Pedido
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'id_comercio'], 'integer'],
             [['fecha_realizado'], 'safe'],
         ];
     }
@@ -57,6 +57,7 @@ class BuscarPedido extends Pedido
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'id_comercio' => $this->id_comercio,
             'fecha_realizado' => $this->fecha_realizado,
         ]);
 

@@ -163,7 +163,7 @@ class ComercioController extends Controller
                         $prodComStock = new ProductoComercioStock();
                         $prodComStock->id_comercio = $_POST['id_comercio'];
                         $prodComStock->id_producto = $producto;
-                        $prodComStock->cantidad = 100000;
+                        $prodComStock->cantidad = 1000;
                         $prodComStock->save();
                     }
                 }

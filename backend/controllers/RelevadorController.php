@@ -3,16 +3,19 @@
 namespace backend\controllers;
 
 use Yii;
-use backend\models\Pedido;
-use backend\models\BuscarPedido;
+use backend\models\Relevador;
+use backend\models\BuscarRelevador;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use dektrium\user\models\User;
+use backend\models\Localizacion;
+use backend\controllers\LocalizacionController;
 
 /**
- * PedidoController implements the CRUD actions for Pedido model.
+ * RelevadorController implements the CRUD actions for Relevador model.
  */
-class PedidoController extends Controller
+class RelevadorController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +30,12 @@ class PedidoController extends Controller
     }
 
     /**
-     * Lists all Pedido models.
+     * Lists all Relevador models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new BuscarPedido();
+        $searchModel = new BuscarRelevador();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,7 +45,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * Displays a single Pedido model.
+     * Displays a single Relevador model.
      * @param integer $id
      * @return mixed
      */
@@ -54,13 +57,13 @@ class PedidoController extends Controller
     }
 
     /**
-     * Creates a new Pedido model.
+     * Creates a new Relevador model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id)
+    public function actionCreate()
     {
-        $model = new Pedido();
+        $model = new Relevador();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,7 +75,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * Updates an existing Pedido model.
+     * Updates an existing Relevador model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,7 +94,7 @@ class PedidoController extends Controller
     }
 
     /**
-     * Deletes an existing Pedido model.
+     * Deletes an existing Relevador model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,18 +107,62 @@ class PedidoController extends Controller
     }
 
     /**
-     * Finds the Pedido model based on its primary key value.
+     * Finds the Relevador model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Pedido the loaded model
+     * @return Relevador the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Pedido::findOne($id)) !== null) {
+        if (($model = Relevador::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function getAll(){
+
+        return User::find()->select(['username', 'id'])->indexBy('id')->column();
+
+    }
+
+    public function actionAsignarLocalizacion(){
+
+        $relevador = new Relevador();
+        $localizacion = new Localizacion();
+
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //     return $this->redirect(['view', 'id' => $model->id]);
+        // }
+
+        return $this->render('asignarLocalizacion', [
+            'relevador' => $relevador,
+            'localizacion' => $localizacion,
+        ]);
+
+    }
+
+    public function actionGuardarLocalizacion($id){
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $relevador = $this->findModel($id);
+        $localizacion = new Localizacion();
+
+        if($relevador->id_localizacion != null){
+            $localizacion = Localizacion::findOne($relevador->id_localizacion);
+        }
+
+        if ($localizacion->load(Yii::$app->request->post()) && $localizacion->save()) {
+            $relevador->id_localizacion = $localizacion->id;
+            $relevador->save(false);
+            return "OK";
+        }
+
+        return "ERROR";
+
+    }
+
+
 }

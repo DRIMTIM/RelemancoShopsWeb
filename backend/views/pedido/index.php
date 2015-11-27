@@ -12,24 +12,38 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pedido-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="box box-solid box-warning">
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Pedido'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <div class="box-header">
+            <h1 class="box-title"><?= Html::encode($this->title) ?></h1>
+            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        </div>
 
-            'id',
-            'fecha_realizado',
+        <div class="box-body">
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            <div class="pull-right">
+                <?= Html::a(Yii::t('app', 'Realizar Pedido'), [''], ['class' => 'btn btn-success']) ?>
+            </div>
+
+            <br/><br/>
+
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+
+                    'id',
+                    'id_comercio',
+                    'fecha_realizado',
+
+                    ['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]); ?>
+
+        </div>
+
+    </div>
 
 </div>

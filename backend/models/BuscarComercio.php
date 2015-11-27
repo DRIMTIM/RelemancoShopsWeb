@@ -71,4 +71,42 @@ class BuscarComercio extends Comercio
 
         return $dataProvider;
     }
+
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function searchQuery($query, $params = null)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $dataProvider->sort->attributes['prioridad.nombre'] = [
+            'asc' => ['id_prioridad' => SORT_ASC],
+            'desc' => ['id_prioridad' => SORT_DESC],
+        ];
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'id_localizacion' => $this->id_localizacion,
+            'id_prioridad' => $this->id_prioridad,
+        ]);
+
+        $query->andFilterWhere(['like', 'id_prioridad', $this->id_prioridad]);
+        $query->andFilterWhere(['like', 'nombre', $this->nombre]);
+
+        return $dataProvider;
+    }
 }

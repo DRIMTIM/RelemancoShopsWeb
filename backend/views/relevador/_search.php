@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\BuscarPedido */
+/* @var $model backend\models\BuscarRelevador */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="pedido-search">
+<div class="relevador-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,9 +17,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'id_comercio') ?>
+    <?= $form->field($model, 'user_id') ?>
 
-    <?= $form->field($model, 'fecha_realizado') ?>
+    <?= $form->field($model, 'id_localizacion') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>

@@ -14,7 +14,7 @@ class RutasSearchModel {
     private $comercioProvider;
     private $relevadorProvider;
     private $rutaProvider;
-    public static $radioPredefinido = 50;
+    public static $radioPredefinido = 1; //En kilometros
 
     function __construct(){
         $this->localizacionProvider = new BuscarLocalizacion();
@@ -58,7 +58,7 @@ class RutasSearchModel {
     }
 
     public static function isValidPoint($latitud, $longitud, $latOrig, $longOrig){
-        if(RutasSearchModel::harvestine($latitud, $longitud, $latOrig, $longOrig) > RutasSearchModel::$radioPredefinido / 2){
+        if(RutasSearchModel::harvestine($latitud, $longitud, $latOrig, $longOrig) > RutasSearchModel::$radioPredefinido){
             return false;
         }
         return true;
@@ -70,6 +70,37 @@ class RutasSearchModel {
 
     public function buscarRutas($params){
         return $this->rutaProvider->search($params);
+    }
+
+    public function buscarComerciosSeleccionados($idArray){
+        $query = $this->buscarComerciosSeleccionadosQuery($idArray)->with('localizacion');
+        return $query->asArray()->all();
+    }
+
+    public function buscarComerciosSeleccionadosDataProvider($idArray){
+        $query = $this->buscarComerciosSeleccionadosQuery($idArray);
+        $comercioSearchModel = new BuscarComercio();
+        $dataProvider = $comercioSearchModel->searchQuery($query);
+        return $dataProvider;
+    }
+
+    private function buscarComerciosSeleccionadosQuery($idArray){
+        $sql = 'SELECT * FROM ' . Comercio::tableName() . ' WHERE ';
+
+        for($i = 0; $i < count($idArray); $i = $i + 1){
+            $id = intval($idArray[$i]);
+            if($i + 1 >= count($idArray)){
+                $sql = $sql . 'id=' . $id;
+            }else{
+                $sql = $sql . 'id=' . $id . ' OR ';
+            }
+        }
+
+        $comercioSearchModel = new BuscarComercio();
+
+        $query = $comercioSearchModel->findBySql($sql);
+
+        return $query;
     }
 
     public function buscarComerciosEnRadioRelevador($idRelevador){

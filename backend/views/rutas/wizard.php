@@ -9,8 +9,10 @@ use backend\controllers\RutasController;
 $this->title = Yii::t('app', 'Asignar Ruta');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Rutas'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 if($isForm) echo Html::beginForm($formAction, $formMethod);
 ?>
+
 <div class="ruta-create">
     <div class="box box-solid box-warning">
         <div class="box-header">
@@ -32,7 +34,7 @@ if($isForm) echo Html::beginForm($formAction, $formMethod);
                 if(empty($actions) || empty($partialView)){
                     echo Html::a(Yii::t('app', 'Volver'), ['wizard?' . RutasController::$ACTION_STEP . '=-1'], ['class' => 'btn btn-success pull-left']);
                 }else{
-                    echo Html::a(Yii::t('app', 'Atrás'), ['wizard?' . RutasController::$ACTION_STEP . '=' . $actions['prevStep']], ['class' => 'btn btn-success pull-left']);
+                    echo Html::a(Yii::t('app', 'Atrás'), ['wizard?' . RutasController::$ACTION_STEP . '=' . $actions['prevStep'] . '&' . RutasController::$BACK_STEP . '=true'], ['class' => 'btn btn-success pull-left']);
                     if($isForm)
                         echo Html::submitButton(Yii::t('app', 'Siguiente'), ['class' => 'btn btn-success pull-right']);
                     else

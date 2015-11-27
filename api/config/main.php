@@ -19,6 +19,8 @@ return [
     ],
     'components' => [
         'request' => [
+            'enableCookieValidation' => false,
+            'enableCsrfValidation' => false,
             // Enable JSON Input:
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
@@ -42,6 +44,7 @@ return [
                 'GET <apiv:v\d+>/comercios/obtenerproductos' => '<apiv>/comercios/obtenerproductos',
                 'GET <apiv:v\d+>/comercios/obtenercomercios' => '<apiv>/comercios/obtenercomercios',
                 'POST <apiv:v\d+>/relevadores/customoperation/<id:(.)+>' => '<apiv>/relevadores/customoperation',
+                'POST <apiv:v\d+>/secure/login' => '<apiv>/secure/login',
                 'POST <apiv:v\d+>/<controller:\w+>/<id:(.)+>' => '<apiv>/<controller>/create',
 
 

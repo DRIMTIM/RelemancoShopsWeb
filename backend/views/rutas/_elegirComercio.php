@@ -1,7 +1,20 @@
 <?php
 
 use yii\grid\GridView;
-foreach($comerciosDisponibles as $comercio){
-    echo $comercio->id . '<br>';
-}
+use backend\widgets\duallistbox\DualListBoxWidget;
+
+echo DualListBoxWidget::widget([
+    'model' => $model,
+    'attribute' => 'id',
+    'data' => $comerciosDisponibles,
+    'data_value'=> 'id',
+    'data_text'=> 'nombre',
+    'opcionesLenguaje' => [
+        'mostrando_text' => ' - ',
+        'disponible_text' => Yii::t('app', 'Disponibles'),
+        'seleccionado_text' => Yii::t('app', 'Seleccionados')
+    ]
+]);
+
+
 ?>
