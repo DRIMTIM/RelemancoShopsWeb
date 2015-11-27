@@ -81,13 +81,6 @@ class PedidoController extends Controller
             'comercio' => $comercio,
         ]);
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     return $this->redirect(['view', 'id' => $model->id]);
-        // } else {
-        //     return $this->render('create', [
-        //         'model' => $model,
-        //     ]);
-        // }
     }
 
     public function actionConfirmarPedido(){
@@ -104,7 +97,10 @@ class PedidoController extends Controller
                     $pedido = new Pedido();
                     $pedido->id_comercio = $_POST['id_comercio'];
                     $dateSplit = explode("/", $_POST['fecha']);
-                    $date = new \DateTime($dateSplit[2] + "/" + $dateSplit[1] + "/" + $dateSplit[0]);
+                    $hoy = new \DateTime();
+                    $hoySplit = $hoy->format('Y-m-d H:i:s');
+                    $hoySplit2 = explode(" ", $hoySplit);
+                    $date = new \DateTime($dateSplit[2] . "/" . $dateSplit[1] . "/" . $dateSplit[0] . " " . $hoySplit2[1]);
                     $pedido->fecha_realizado = $date->format('Y-m-d H:i:s');
                     $pedido->save();
                     $i = 0;
@@ -115,7 +111,7 @@ class PedidoController extends Controller
                         $prodPedido->id_producto = $producto;
                         $prodPedido->cantidad = $cantidades[$i];
                         $prodComStock = ProductoComercioStock::find()->where(['id_comercio' => $pedido->id_comercio, 'id_producto' => $prodPedido->id_producto])->one();
-                        $prodComStock->cantidad = $prodComStock->cantidad + $prodPedido->cantidad;
+                        $prodComStock->cantidad += $cantidades[$i];
                         $prodComStock->save();
                         $prodPedido->save();
                         $i++;

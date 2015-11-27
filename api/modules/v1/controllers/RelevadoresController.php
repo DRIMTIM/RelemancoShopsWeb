@@ -19,14 +19,7 @@ class RelevadoresController extends ActiveController
 	    return $behaviors;
 	}
 
-    /**
-     * Displays the login page.
-     *
-     * @return string|Response
-     */
-    public function actionCustomoperation()
-    {
-        return "Bueno soy una custom action y tengo estos parametros paquete!!!! => ";
-    }
+
+
 
 }

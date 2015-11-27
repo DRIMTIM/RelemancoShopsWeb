@@ -50,10 +50,12 @@ function confirmarPedidoClick(){
         var fecha = $("#pedido-fecha_realizado").val();
         var productos = $('#armarPedidoGrid').yiiGridView('getSelectedRows');
         var productosCant = [];
+        var i = 0;
 
-        $('.cantidad').each(function(i){
-            if($(this).val() != ''){
+        $('.cantidad').each(function(){
+            if($(this).val() != '' && $(this).val() != null){
                 productosCant[i] = $(this).val();
+                i++;
             }
         });
 
@@ -64,7 +66,7 @@ function confirmarPedidoClick(){
             data: { id_comercio : id, "productos[]" : productos, "cantidades[]" : productosCant, "fecha" : fecha }
         }).done(function(data){
             console.log(data);
-            
+
             $.magnificPopup.open({
                 items: {
                   src: '<div class="box box-warning white-popup"><h3>Se confirmo el pedido correctamente!</h3></div>',
@@ -72,9 +74,6 @@ function confirmarPedidoClick(){
                 }
             });
 
-            setTimeout(function(){
-                window.location.replace(rootURL + "/pedido");
-            }, 1500);
 
         }).fail(function(){
             alert("Ocurrio un error al realizar el pedido.");
