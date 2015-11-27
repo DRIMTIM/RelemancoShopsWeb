@@ -29,7 +29,22 @@ function initComerciosMap(data) {
         zoom: 16,
         center: relevadorLatLong
     });
+    dropRelevador(data, map);
     dropComercios(data.comercios, map);
+}
+
+function dropRelevador(data, map){
+    var relevadorLatLong = {lat: data.localizacionRelevador.latitud, lng: data.localizacionRelevador.longitud};
+    return new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: relevadorLatLong,
+        radius: data.radioRelevador
+    });
 }
 
 /* Obtener todos los comercios para ubicar en la mapa */

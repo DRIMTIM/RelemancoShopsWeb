@@ -14,7 +14,7 @@ class RutasSearchModel {
     private $comercioProvider;
     private $relevadorProvider;
     private $rutaProvider;
-    public static $radioPredefinido = 1; //En kilometros
+    public static $radioPredefinido = 500; //En metros
 
     function __construct(){
         $this->localizacionProvider = new BuscarLocalizacion();
@@ -54,7 +54,7 @@ class RutasSearchModel {
         $dlong = ($long1 - $long2);
         $dvalue = (sin($lat1 * $degtorad) * sin($lat2 * $degtorad)) + (cos($lat1 * $degtorad) * cos($lat2 * $degtorad) * cos($dlong * $degtorad));
         $dd = acos($dvalue) * $radtodeg;
-        return round(($dd * $km), 2);
+        return (round(($dd * $km), 2)) * 1000;
     }
 
     public static function isValidPoint($latitud, $longitud, $latOrig, $longOrig){
