@@ -10,7 +10,9 @@ $( document ).ready(function() {
     $("label[for=pedido-id_comercio]").remove();
     $(".summary").css("float", "right");
     $("#pedido-fecha_realizado").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
+    $(".cantidad").inputmask();
     confirmarPedidoClick();
+
 
 });
 
@@ -42,6 +44,50 @@ $("#armarPedidoGrid tr input[type=checkbox]:odd").click(function(){
     });*/
 });
 
+function validarPedido(){
+
+    var keys = $('#armarPedidoGrid').yiiGridView('getSelectedRows');
+    var valido = false;
+
+    if(keys.length != 0){
+        for(var key in keys){
+            var cantidad = $("input[value=" + keys[key] + "]").parent().parent('tr').children('td').last().children('input').val();
+            valido = cantidad != "" || cantidad != 0;
+        }
+        if(!valido){
+            $.magnificPopup.open({
+                items: {
+                  src: '<div class="box box-warning white-popup"><h3>Verifique que la cantidades de los productos no sean nulas...</h3></div>',
+                  type: 'inline'
+                }
+            });
+        }
+    }else{
+        $.magnificPopup.open({
+            items: {
+              src: '<div class="box box-warning white-popup"><h3>Por favor ingrese un por los menos un Producto hdp!</h3></div>',
+              type: 'inline'
+            }
+        });
+    }
+
+    return valido && validarFecha();
+
+}
+
+function validarFecha(){
+    if($("#pedido-fecha_realizado").val() == "" || $("#pedido-fecha_realizado").val() == null){
+        $.magnificPopup.open({
+            items: {
+              src: '<div class="box box-warning white-popup"><h3>Por favor ingrese una fecha!</h3></div>',
+              type: 'inline'
+            }
+        });
+        return false;
+    }
+    return true;
+}
+
 /* Funcion que envia los id de los productos seleccionados para asignarlos
 al comercio elegido */
 function confirmarPedidoClick(){
@@ -59,25 +105,32 @@ function confirmarPedidoClick(){
             }
         });
 
-        $.ajax({
-            method: "POST",
-            url: rootURL + "/pedido/confirmar-pedido",
-            dataType: "json",
-            data: { id_comercio : id, "productos[]" : productos, "cantidades[]" : productosCant, "fecha" : fecha }
-        }).done(function(data){
-            console.log(data);
+        if(validarPedido()){
 
-            $.magnificPopup.open({
-                items: {
-                  src: '<div class="box box-warning white-popup"><h3>Se confirmo el pedido correctamente!</h3></div>',
-                  type: 'inline'
-                }
+            $.ajax({
+                method: "POST",
+                url: rootURL + "/pedido/confirmar-pedido",
+                dataType: "json",
+                data: { id_comercio : id, "productos[]" : productos, "cantidades[]" : productosCant, "fecha" : fecha }
+            }).done(function(data){
+                console.log(data);
+
+                $.magnificPopup.open({
+                    items: {
+                      src: '<div class="box box-warning white-popup"><h3>Se confirmo el pedido correctamente!</h3></div>',
+                      type: 'inline'
+                    }
+                });
+
+                setTimeout(function(){
+                    window.location.replace(rootURL + "/pedido");
+                }, 1500);
+
+            }).fail(function(){
+                alert("Ocurrio un error al realizar el pedido.");
             });
 
-
-        }).fail(function(){
-            alert("Ocurrio un error al realizar el pedido.");
-        });
+        }
 
         return false;
     });

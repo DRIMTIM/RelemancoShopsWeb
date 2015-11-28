@@ -71,7 +71,10 @@ PedidoAsset::register($this);
                         [
                             'attribute' => 'cantidad',
                             'value' => function(){
-                                return Html::textInput('cantidad', '', [ 'class' => 'cantidad form-control input-sm']);
+                                return Html::textInput('cantidad', '', [
+                                                'class' => 'cantidad form-control input-sm',
+                                                'data-inputmask' => "'mask': '9', 'repeat': 10, 'greedy' : false",
+                                                'value' => 0]);
                             },
                             'format' => 'raw',
                             'contentOptions' => [
