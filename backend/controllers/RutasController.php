@@ -2,38 +2,63 @@
 
 namespace backend\controllers;
 
-use Yii;
-use backend\models\Ruta;
+use backend\models\BuscarComercio;
+use backend\models\BuscarRelevador;
 use backend\models\BuscarRutas;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use backend\models\Comercio;
+use backend\models\Relevador;
+use backend\models\RutasDataProvider;
+use backend\models\RutasSearchModel;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
+use yii\web\Controller;
+use yii\web\Session;
 
 /**
  * RutasController implements the CRUD actions for Ruta model.
  */
-class RutasController extends Controller
-{
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
-    }
+class RutasController extends AbstractWizardController {
 
     /**
-     * Lists all Ruta models.
-     * @return mixed
+     *
+     * Acciones que son llamadas desde AJAX, no pasan por las validaciones ni por la logica del wizard.
+     *
      */
-    public function actionIndex()
-    {
-        $searchModel = new BuscarRutas();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+    public function actionBuscarComerciosSeleccionados() {
+        $comerciosSeleccionados = Json::decode(Yii::$app->request->post('comercios_seleccionados', null));
+        $searchModel = new RutasSearchModel();
+        $comercios = $searchModel->buscarComerciosSeleccionados($comerciosSeleccionados);
+        $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
+        $relevador = new BuscarRelevador();
+        $relevador = $relevador->find()->where(['id' => $idRelevador])->with('idLocalizacion')->one();
+        $response = new Json();
+        $response->localizacionRelevador = $relevador->idLocalizacion;
+        $response->relevador = $relevador;
+        $response->comercios = $comercios;
+        $response->radioRelevador = RutasSearchModel::$radioPredefinido;
+        return Json::encode($response);
+    }
+
+    /*
+     *
+     * Acciones que se validan en caso de declarar validadores y ademas son controladas por el wizard con los pasos correspondientes.
+     *
+     */
+
+    public function init(){
+        parent::init();
+        RutasController::$ACTION_STEPS = ["actionEligeRelevador", "actionElegirComercio", "actionArmarRuta"];
+    }
+
+    public function actionIndex() {
+        foreach(RutasController::$ACTION_STEPS as $stepField){
+            Yii::$app->session->remove($stepField);
+        }
+        $searchModel = new RutasSearchModel();
+        $dataProvider = $searchModel->buscarRutas(Yii::$app->request->queryParams);
+        $searchModel = $searchModel->getRutaProvider();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -41,81 +66,45 @@ class RutasController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Ruta model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+    public function actionEligeRelevador($request) {
+        $searchModel = new RutasSearchModel();
+        $dataProvider = $searchModel->buscarRelevadores($request->queryParams);
+        $searchModel = $searchModel->getRelevadorProvider();
+
+        $this->setViewConfigSubtitle('Elija un Relevador');
+        $this->setViewConfigPartialView('_elegirRelevador');
+        $this->setViewConfigContainer([
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
         ]);
     }
 
-    /**
-     * Creates a new Ruta model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Ruta();
+    public function actionElegirComercio($request) {
+        $idRelevador = intval($request->post('relevadorSeleccionado')[0]);
+        $searchModel = new RutasSearchModel();
+        $comerciosDisponibles = $searchModel->buscarComerciosEnRadioRelevador($idRelevador);
+        $modelo = new BuscarComercio();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        $this->setViewConfigSubtitle('Elija Comercios para el Relevador');
+        $this->setViewConfigPartialView('_elegirComercio');
+        $this->setViewConfigContainer([
+            'comerciosDisponibles' => $comerciosDisponibles,
+            'model' => $modelo
+        ]);
     }
 
-    /**
-     * Updates an existing Ruta model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+    public function actionArmarRuta($request) {
+        $searchModel = new BuscarComercio();
+        $searchModel->load($request->post());
+        $comerciosSeleccionados = Json::decode($searchModel->id);
+        $searchModel = new RutasSearchModel();
+        $dataProvider = $searchModel->buscarComerciosSeleccionadosDataProvider($comerciosSeleccionados);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+        $this->setViewConfigSubtitle('Elija la Ruta');
+        $this->setViewConfigPartialView('_armarRuta');
+        $this->setViewConfigContainer([
+            'dataProvider' => $dataProvider
+        ]);
     }
 
-    /**
-     * Deletes an existing Ruta model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Ruta model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Ruta the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Ruta::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
 }

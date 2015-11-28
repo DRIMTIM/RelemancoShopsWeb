@@ -18,6 +18,12 @@ use Yii;
  */
 class Relevador extends \yii\db\ActiveRecord
 {
+
+    public $rules = [
+        [['user_id'], 'required'],
+        [['user_id', 'id_localizacion'], 'integer']
+    ];
+
     /**
      * @inheritdoc
      */
@@ -29,13 +35,7 @@ class Relevador extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-            [['user_id'], 'required'],
-            [['user_id', 'id_localizacion'], 'integer']
-        ];
-    }
+    public function rules() { return $this->rules; }
 
     /**
      * @inheritdoc

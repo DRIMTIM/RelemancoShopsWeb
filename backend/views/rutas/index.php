@@ -2,35 +2,44 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use backend\controllers\RutasController;
 
 /* @var $this yii\web\View */
-/* @var $searchModel backend\models\BuscarRutas */
+/* @var $searchModel app\models\RutaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Rutas');
+$this->params['listTitle'] = Yii::t('app', 'Rutas Asignadas');
+$this->params['asignarTitle'] = Yii::t('app', 'Asignar Rutas');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ruta-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="box box-solid box-warning">
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Ruta'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+        <div class="box-header">
+                <i class="btn pull-left fa fa-globe "><h1 class="box-title">&nbsp;&nbsp;<?= Html::encode($this->params['listTitle']) ?></h1></i>
+            <?= Html::a(Yii::t('app', 'Asignar Ruta'), ['wizard?' . RutasController::$ACTION_STEP . '=0'], ['class' => 'btn btn-success pull-right']) ?>
+        </div>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        <div class="box-body">
 
-            'id',
-            'fecha_asignada',
-            'id_estado',
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+                    'id',
+                    'fecha_asignada',
+                    'id_estado',
+
+                    ['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]); ?>
+
+        </div>
+
+    </div>
 
 </div>
