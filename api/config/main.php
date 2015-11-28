@@ -43,6 +43,7 @@ return [
 
                 'GET <apiv:v\d+>/comercios/obtenerproductos' => '<apiv>/comercios/obtenerproductos',
                 'GET <apiv:v\d+>/comercios/obtenercomercios' => '<apiv>/comercios/obtenercomercios',
+                'POST <apiv:v\d+>/pedidos/confirmarpedido' => '<apiv>/pedidos/confirmar-pedido',
                 'POST <apiv:v\d+>/secure/login' => '<apiv>/secure/login',
                 'POST <apiv:v\d+>/<controller:\w+>/<id:(.)+>' => '<apiv>/<controller>/create',
 

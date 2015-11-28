@@ -12,7 +12,7 @@ $( document ).ready(function() {
     $("#pedido-fecha_realizado").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/aaaa"});
     $(".cantidad").inputmask();
     confirmarPedidoClick();
-
+    relevarStockComercioClick();
 
 });
 
@@ -127,7 +127,64 @@ function confirmarPedidoClick(){
                 }, 1500);
 
             }).fail(function(){
-                alert("Ocurrio un error al realizar el pedido.");
+                $.magnificPopup.open({
+                    items: {
+                      src: '<div class="box box-warning white-popup"><h3>"Ocurrio un error al realizar el pedido."</h3></div>',
+                      type: 'inline'
+                    }
+                });
+            });
+
+        }
+
+        return false;
+    });
+}
+
+/* Funcion que envia los id de los productos seleccionados para relevar su stock */
+function relevarStockComercioClick(){
+    $("#btnRelevarStock").click(function(){
+        var id = $("#pedido-id_comercio").val();
+        var fecha = $("#pedido-fecha_realizado").val();
+        var productos = $('#armarPedidoGrid').yiiGridView('getSelectedRows');
+        var productosCant = [];
+        var i = 0;
+
+        $('.cantidad').each(function(){
+            if($(this).val() != '' && $(this).val() != null){
+                productosCant[i] = $(this).val();
+                i++;
+            }
+        });
+
+        if(validarPedido()){
+
+            $.ajax({
+                method: "POST",
+                url: rootURL + "/pedido/relevar-stock-comercio",
+                dataType: "json",
+                data: { id_comercio : id, "productos[]" : productos, "cantidades[]" : productosCant, "fecha" : fecha }
+            }).done(function(data){
+                console.log(data);
+
+                $.magnificPopup.open({
+                    items: {
+                      src: '<div class="box box-warning white-popup"><h3>Se confirmo el pedido correctamente!</h3></div>',
+                      type: 'inline'
+                    }
+                });
+
+                setTimeout(function(){
+                    window.location.replace(rootURL + "/pedido");
+                }, 1500);
+
+            }).fail(function(){
+                $.magnificPopup.open({
+                    items: {
+                      src: '<div class="box box-warning white-popup"><h3>Ocurrio un error al realizar el pedido.</h3></div>',
+                      type: 'inline'
+                    }
+                });
             });
 
         }

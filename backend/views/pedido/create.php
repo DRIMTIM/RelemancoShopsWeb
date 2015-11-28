@@ -44,6 +44,7 @@ PedidoAsset::register($this);
                     </div>
 
                     <div style="float: right">
+                        <?= Html::a(Yii::t('app', 'Relevar Stock'), [''], ['id' => 'btnRelevarStock', 'class' => 'btnRelevar btn btn-warning']) ?>
                         <?= Html::a(Yii::t('app', 'Confirmar Pedido'), [''], ['id' => 'btnConfirmar', 'class' => 'btnConfirmar btn btn-success']) ?>
                     </div>
 
