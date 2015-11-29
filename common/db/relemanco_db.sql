@@ -141,11 +141,23 @@ contratos(
 CREATE TABLE
 pedidos(
 
-	id bigint NOT NULL AUTO_INCREMENT,
+    id bigint NOT NULL AUTO_INCREMENT,
     id_comercio bigint NOT NULL,
     fecha_realizado TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
+
+);
+
+
+CREATE TABLE
+productosPedidos(
+
+    id_pedido bigint NOT NULL,
+    id_producto bigint NOT NULL,
+    cantidad DECIMAL(10,2),
+    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE
 
 );
 
@@ -156,17 +168,6 @@ pedidosRelevadores(
     id_relevador bigint NOT NULL,
     FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
     FOREIGN KEY(id_relevador) REFERENCES relevadores(id) ON DELETE CASCADE
-
-);
-
-CREATE TABLE
-productosPedidos(
-
-    id_pedido bigint NOT NULL,
-    id_producto bigint NOT NULL,
-    cantidad DECIMAL(10,2),
-    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE
 
 );
 
