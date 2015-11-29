@@ -90,7 +90,7 @@ CREATE TABLE
 comercios(
 
   	id bigint NOT NULL AUTO_INCREMENT,
-  	id_localizacion bigint NOT NULL,
+  	id_localizacion bigint,
     id_prioridad smallint NOT NULL,
   	nombre varchar(100) NOT NULL,
   	PRIMARY KEY (id),
