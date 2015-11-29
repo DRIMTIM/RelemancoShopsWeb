@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers;
 use yii\rest\ActiveController;
 use backend\controllers\ComercioController;
 use backend\models\Comercio;
+use backend\models\ProductoComercioStock;
 
 class ComerciosController extends ActiveController
 {
@@ -27,7 +28,7 @@ class ComerciosController extends ActiveController
             $id = $_GET['id_comercio'];
             $model = Comercio::findOne($id);
             if (isset($model)) {
-                return $model->getProductos()->all();
+                return $model->getProductos()->with('productosComercioStock')->asArray()->all();
             }
         }
 
