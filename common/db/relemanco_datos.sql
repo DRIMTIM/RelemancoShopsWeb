@@ -68,13 +68,6 @@ VALUES(9, 22, 'Duraznos En Almibar DOS CABALLOS', 'durazno.jpg', 'Cocktail de fr
 INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
 VALUES(10, 22, 'Marihuana MUJICA', 'faso.jpg', 'Como el asado del pepe, pero nada que ver.');
 
-/*COMERCIOS*/
-
-INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (1, 1, 1, 'EL Luisito SHOP');
-INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (2, 2, 2, 'Devoto 35');
-INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (3, 3, 3, 'LEOS PANADERIA');
-INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (4, 4, 2, 'FARMASHOP 27');
-INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (5, 5, 1, 'ALTA YANTA SHOP');
 
 /*LOCALIZACION DE COMERCIOS*/
 
@@ -83,6 +76,14 @@ INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (2, -34.921337, -5
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (3, -34.925243, -56.16106, 'LEOS PANADERIA');
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (4, -34.92426, -56.154312, 'FARMASHOP 27');
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (5, -34.913666, -56.15409, 'ALTA YANTA SHOP');
+
+/*COMERCIOS*/
+
+INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (1, 1, 1, 'EL Luisito SHOP');
+INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (2, 2, 2, 'Devoto 35');
+INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (3, 3, 3, 'LEOS PANADERIA');
+INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (4, 4, 2, 'FARMASHOP 27');
+INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (5, 5, 1, 'ALTA YANTA SHOP');
 
 /*PRODUCTOS ASIGNADOS*/
 
@@ -108,31 +109,3 @@ INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (
 INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (4, 8, 986.00);
 INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (4, 10, 112.00);
 INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (5, 4, 333.00);
-
-
-
-
-/* Update de esquema, habia una tabla al dope (pedidosComercios) */
-DROP TABLE IF EXISTS pedidosComercio, productosPedidos, pedidos;
-
-CREATE TABLE
-pedidos(
-
-	id bigint NOT NULL AUTO_INCREMENT,
-    id_comercio bigint NOT NULL,
-    fecha_realizado TIMESTAMP NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
-
-);
-
-CREATE TABLE
-productosPedidos(
-
-    id_pedido bigint NOT NULL,
-    id_producto bigint NOT NULL,
-    cantidad DECIMAL(10,2),
-    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE
-
-);
