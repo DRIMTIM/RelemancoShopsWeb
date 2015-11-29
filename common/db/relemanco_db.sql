@@ -79,7 +79,7 @@ relevadores(
 
   	id bigint NOT NULL AUTO_INCREMENT,
     user_id int(11) NOT NULL,
-    id_localizacion bigint NOT NULL,
+    id_localizacion bigint,
     PRIMARY KEY (id),
     FOREIGN KEY(user_id) REFERENCES profile(user_id) ON DELETE CASCADE,
     FOREIGN KEY(id_localizacion) REFERENCES localizacion(id) ON DELETE CASCADE
