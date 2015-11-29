@@ -20,6 +20,9 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
+use backend\models\Relevador;
+use backend\models\Localizacion;
+
 class SecureController extends SecurityController {
 
     public function actions()
@@ -41,9 +44,15 @@ class SecureController extends SecurityController {
 
         if ($model->load(Yii::$app->getRequest()->post()) && $model->login()) {
             $user = $this->finder->findUserByUsernameOrEmail($model->login);
+            $relevador = Relevador::find()->where([ 'user_id' => $user->id ])->one();
+            $user->id = $relevador->id;
+            $localizacion = Localizacion::findOne($relevador->id_localizacion);
             unset($user['password_hash']);
             unset($user['auth_key']);
-            return $user;
+            $result = [];
+            array_push($result, $user);
+            array_push($result, $localizacion);
+            return $result;
         }
 
         return false;
