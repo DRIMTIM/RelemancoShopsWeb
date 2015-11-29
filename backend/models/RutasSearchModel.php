@@ -14,7 +14,7 @@ class RutasSearchModel {
     private $comercioProvider;
     private $relevadorProvider;
     private $rutaProvider;
-    public static $radioPredefinido = 500; //En metros
+    public static $radioPredefinido = 1500; //En metros
 
     function __construct(){
         $this->localizacionProvider = new BuscarLocalizacion();
@@ -65,7 +65,7 @@ class RutasSearchModel {
     }
 
     public function buscarRelevadores($params){
-        return $this->relevadorProvider->search($params);
+        return $this->relevadorProvider->searchWithUsers($params);
     }
 
     public function buscarRutas($params){
@@ -74,6 +74,11 @@ class RutasSearchModel {
 
     public function buscarComerciosSeleccionados($idArray){
         $query = $this->buscarComerciosSeleccionadosQuery($idArray)->with('localizacion');
+        return $query->asArray()->all();
+    }
+
+    public function buscarRelevadoresDisponibles($idArray){
+        $query = $this->buscarRelevadoresDisponiblesQuery($idArray)->with('user')->with('idLocalizacion');
         return $query->asArray()->all();
     }
 
@@ -99,6 +104,25 @@ class RutasSearchModel {
         $comercioSearchModel = new BuscarComercio();
 
         $query = $comercioSearchModel->findBySql($sql);
+
+        return $query;
+    }
+
+    private function buscarRelevadoresDisponiblesQuery($idArray){
+        $sql = 'SELECT * FROM ' . Relevador::tableName() . ' WHERE ';
+
+        for($i = 0; $i < count($idArray); $i = $i + 1){
+            $id = intval($idArray[$i]);
+            if($i + 1 >= count($idArray)){
+                $sql = $sql . 'id=' . $id;
+            }else{
+                $sql = $sql . 'id=' . $id . ' OR ';
+            }
+        }
+
+        $relevadorSearchModel = new BuscarRelevador();
+
+        $query = $relevadorSearchModel->findBySql($sql);
 
         return $query;
     }

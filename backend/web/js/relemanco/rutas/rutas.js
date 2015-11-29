@@ -4,14 +4,17 @@
 
 var rootURL = "/RelemancoShopsWeb/backend/web";
 var comercioMarkers = [];
+var relevadorMarkers = [];
 var markersColors = ["blue", "brown", "green", "orange", "paleblue", "yellow", "pink",
                      "purple", "red", "darkgreen"];
 var markersName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "N",
-                    "O", "P", "Q", "R", "S", "T", "X"];
+                    "O", "P", "Q", "S", "T", "X"];
 
 
 $( document ).ready(function() {
     localizarComercios();
+    loadRoutePointsCheckEventHandlers();
+    $('#_id_form_step_2').submit(function(){loadDataBeforeSubmit();});
 });
 
 /**
@@ -26,21 +29,23 @@ function initComerciosMap(data) {
     var localizacionRelevador = data.localizacionRelevador;
     var relevadorLatLong = {lat: localizacionRelevador.latitud, lng: localizacionRelevador.longitud};
     var map = new google.maps.Map(document.getElementById('mapa-ruta'), {
-        zoom: 16,
+        zoom: 14,
         center: relevadorLatLong
     });
+    routeMap = map;
     dropRelevador(data, map);
     dropComercios(data.comercios, map);
 }
 
 function dropRelevador(data, map){
     var relevadorLatLong = {lat: data.localizacionRelevador.latitud, lng: data.localizacionRelevador.longitud};
+    addRelevador(data, 2000, map);
     return new google.maps.Circle({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
+        strokeColor: 'red',
+        strokeOpacity: 0.5,
+        strokeWeight: 3,
+        fillColor: 'blue',
+        fillOpacity: 0.1,
         map: map,
         center: relevadorLatLong,
         radius: data.radioRelevador
@@ -64,6 +69,7 @@ function localizarComercios(){
     }).done(function(data){
         console.log(data);
         initComerciosMap(data);
+        comerciosDisponibles = data.comercios;
 
     }).fail(function(error){
         console.log(error);
@@ -94,8 +100,8 @@ function markerAnimation(marker){
     }
 }
 
-/* Funcion para genera la lista de comercios en la ventana de informacion del
-    Comercio */
+/* Funcion para genera la lista de comercios en la ventana de informacion del Comercio */
+
 function generarInfoListaProductoComercio(productos){
     if(productos != null){
         var lista = "<ul>";
@@ -108,11 +114,6 @@ function generarInfoListaProductoComercio(productos){
     return "<li>Este comercio no tiene productos asignados.</li>";
 }
 
-function generarEnlaceComecio(comercio){
-    return "&nbsp;&nbsp;&nbsp;<a href='" + rootURL  + '/comercio/view?id=' + comercio.id +
-                                    "'><i class='fa fa-eye'>&nbsp;</i>Ver Comercio</a>";
-}
-
 function generarInfoComercio(comercio){
     if(comercio != null){
         var info = "<h4>" + comercio.nombre + "</h4>";
@@ -120,6 +121,26 @@ function generarInfoComercio(comercio){
         info += generarInfoListaProductoComercio(comercio.productos);
         info += "<hr/>";
         info += generarEnlaceComecio(comercio);
+        return info;
+    }
+    return null;
+}
+
+function generarEnlaceComecio(comercio){
+    return "&nbsp;&nbsp;&nbsp;<a href='" + rootURL  + '/comercio/view?id=' + comercio.id +
+        "'><i class='fa fa-eye'>&nbsp;</i>Ver Comercio</a>";
+}
+
+function generarEnlaceRelevador(user){
+    return "&nbsp;&nbsp;&nbsp;<a href='" + rootURL  + '/user/admin/update?id=' + user.id +
+        "'><i class='fa fa-eye'>&nbsp;</i>Ver Relevador</a>";
+}
+
+function generarInfoRelevador(relevador, user){
+    if(relevador != null && user != null){
+        var info = "<h4>" + user.username + "</h4>";
+        info += "<hr/>";
+        info += generarEnlaceRelevador(user);
         return info;
     }
     return null;
@@ -137,8 +158,7 @@ function addComercio(comercio, timeout, map) {
             animation: google.maps.Animation.DROP,
             title: comercio.nombre,
             icon: rootURL + "/img/GMapsMarkers/" +
-                    markersColors[getRandomInt(0,9)] + "_Marker" +
-                    markersName[getRandomInt(0,19)] + ".png"
+                    markersColors[getRandomInt(0,9)] + "_MarkerC.png"
         });
 
         var infowindow = new google.maps.InfoWindow({
@@ -155,4 +175,175 @@ function addComercio(comercio, timeout, map) {
 
         comercioMarkers.push(comercioMark);
     }, timeout);
+}
+
+function addRelevador(data, timeout, map) {
+    var position = { lat : Number(data.localizacionRelevador.latitud), lng: Number(data.localizacionRelevador.longitud) };
+    localizacionRelevador = position;
+    var relevadorMark = null;
+
+    window.setTimeout(function() {
+        relevadorMark = new google.maps.Marker({
+            position: position,
+            map: map,
+            animation: google.maps.Animation.DROP,
+            title: data.relevador.username,
+            icon: rootURL + "/img/GMapsMarkers/" +
+            markersColors[getRandomInt(0,9)] + "_MarkerR.png"
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: generarInfoRelevador(data.relevador, data.user)
+        });
+
+        relevadorMark.addListener('click', function() {
+            infowindow.addListener('closeclick', function(){
+                relevadorMark.setAnimation(null);
+            });
+            markerAnimation(this);
+            infowindow.open(map, this);
+        });
+
+        relevadorMarkers.push(relevadorMark);
+    }, timeout);
+}
+
+//Comienza el codigo para el armado de rutas en pantalla
+
+var routeMap = null;
+var routePoints = [];
+var comerciosDisponibles = [];
+var directionsDisplay = null;
+var directionsService = new google.maps.DirectionsService();
+var localizacionRelevador = null;
+
+function getComercioDisponible(idComercio){
+    for(var i = 0; i < comerciosDisponibles.length; i++){
+        if(comerciosDisponibles[i].id === idComercio){
+            return comerciosDisponibles[i];
+        }
+    }
+    return null;
+}
+
+function RutePoint(comercio, localizacion){
+    this.comercio = comercio;
+    this.localizacion = localizacion;
+}
+
+function existeEnRuta(idComercio){
+    if(idComercio){
+        for(var i = 0; i < routePoints.length; i++){
+            var routePoint = routePoints[i];
+            if(routePoint.comercio.id === idComercio)
+                return true;
+        }
+        return false;
+    }
+    return null;
+}
+
+function updateRoutePoint(idComercio){
+    if(existeEnRuta(idComercio) === false) {
+        var comercio = getComercioDisponible(idComercio);
+        var rutePoint = new RutePoint(comercio, {
+            lat: parseFloat(comercio.localizacion.latitud),
+            lng: parseFloat(comercio.localizacion.longitud)
+        });
+        routePoints.push(rutePoint);
+        updateMapWithRoute();
+    }else{
+        removeRoutePoint(idComercio);
+        if(routePoints.length > 0) {
+            updateMapWithRoute();
+        }else{
+            localizarComercios();
+        }
+    }
+}
+
+function removeRoutePoint(idComercio){
+    if(idComercio){
+        for(var i = 0; i < routePoints.length; i++){
+            var routePoint = routePoints[i];
+            if(idComercio === routePoint.comercio.id)
+                routePoints.splice(i, 1);
+        }
+    }
+}
+
+function updateMapWithRoute(){
+    if(directionsDisplay === null)
+        directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(routeMap);
+    directionsDisplay.setOptions({
+        suppressMarkers: true,
+        polylineOptions: {
+            strokeWeight: 2,
+            strokeOpacity: 0.8,
+            strokeColor:  'green'
+        }
+    });
+    var ruteRequest = new RuteRequest();
+    directionsService.route(ruteRequest, function(result, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(result);
+        }
+    });
+}
+
+function getDestination(){
+    if(routePoints.length > 0){
+        return routePoints[routePoints.length - 1].localizacion;
+    }
+    return null;
+}
+
+function getWayPoints(){
+    waypoints = [];
+    if(routePoints.length > 0){
+        for(var i = 0; i < routePoints.length - 1; i++){
+            var waypoint = {
+                location: routePoints[i].localizacion,
+                stopover: true
+            };
+            waypoints.push(waypoint);
+        }
+    }
+    return waypoints;
+}
+
+function RuteRequest(){
+    return {
+        origin: localizacionRelevador,
+        destination: getDestination(),
+        provideRouteAlternatives: false,
+        waypoints: getWayPoints(),
+        travelMode: google.maps.TravelMode.WALKING,
+        unitSystem: google.maps.UnitSystem.METRIC
+    };
+}
+
+function loadRoutePointsCheckEventHandlers(){
+    var checkboxes = $(":checkbox");
+    for(var i = 0; i < checkboxes.length; i++){
+        checkboxes[i].onchange = function(){
+            var idComercio = this.value;
+            updateRoutePoint(idComercio);
+            updateMapWithRoute();
+        };
+    }
+}
+
+function loadDataBeforeSubmit(){
+    if(routePoints !== null && routePoints.length > 0){
+        var listaOrdenadaComercios = [];
+        for(var i = 0; i < routePoints.length; i++){
+            var idComercio = routePoints[i].comercio.id;
+            listaOrdenadaComercios.push(idComercio);
+        }
+        $("#ruta_comercios").val(JSON.stringify(listaOrdenadaComercios));
+    }else{
+        $("#ruta_comercios").val(null);
+    }
 }

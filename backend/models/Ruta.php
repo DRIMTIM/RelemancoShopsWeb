@@ -49,11 +49,17 @@ class Ruta extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    //TODO: VER SI SE USA, LA CLASE NO EXISTE
     public function getRutasRelevadorComercios()
     {
         return $this->hasMany(RutasRelevadorComercio::className(), ['id_ruta' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComerciosRuta()
+    {
+        return $this->hasMany(Comercio::className(), ['id_ruta' => 'id']);
     }
 }

@@ -1,6 +1,14 @@
 <?php
 
 use yii\grid\GridView;
+use app\assets\RutaAsset;
+
+RutaAsset::elegirRelevadorAsset();
+RutaAsset::register($this);
+
+?>
+<div class="col-md-5">
+<?php
 
 echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -11,9 +19,7 @@ echo GridView::widget([
                 'multiple' => false,
                 'name' => 'relevadorSeleccionado'
             ],
-            'id',
-            'user_id',
-            'id_localizacion'
+            'user.username'
         ],
         'rowOptions'=>function($model, $key, $index, $gridView){
             if(!is_integer($index / 2)){
@@ -23,3 +29,5 @@ echo GridView::widget([
     ]);
 
 ?>
+</div>
+<div id="mapa-ruta" class="col-md-7" style="height: 300pt;"></div>
