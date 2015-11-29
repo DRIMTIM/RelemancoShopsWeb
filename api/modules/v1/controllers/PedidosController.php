@@ -53,7 +53,6 @@ class PedidosController extends ActiveController
                 $pedido->id_comercio = $jsonPOST['id_comercio'];
                 $pedido->fecha_realizado = $this->formatoFecha(null);
                 $pedido->save();
-                $i = 0;
 
                 foreach ($productos as $producto) {
                     $prodPedido = new ProductoPedido();
@@ -67,41 +66,42 @@ class PedidosController extends ActiveController
                     $prodComStock->cantidad += $prodPedido->cantidad;
                     $prodComStock->save();
                     $prodPedido->save();
-                    $i++;
                 }
 
             }
-            $item = "";
+            $item = "OK";
             return $item;
         }
+
+        return "ERROR";
 
     }
 
     public function actionRelevarStockComercio(){
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $jsonPOST = json_decode(file_get_contents('php://input'), true);
 
-        if(isset($_POST['id_comercio'])){
-            $comercio = Comercio::findOne($_POST['id_comercio']);
+        if(isset($jsonPOST['id_comercio'])){
+            $comercio = Comercio::findOne($jsonPOST['id_comercio']);
 
-            if(isset($_POST['productos'])){
-                $productos = $_POST['productos'];
-                $cantidades = $_POST['cantidades'];
-                $i = 0;
+            if(isset($jsonPOST['productos'])){
+                $productos = $jsonPOST['productos'];
 
                 foreach ($productos as $producto) {
                     $prodComStock = ProductoComercioStock::find()->where([
                                                             'id_comercio' => $comercio->id,
-                                                            'id_producto' => $productos[$i]
+                                                            'id_producto' => $producto["id"]
                                                         ])->one();
-                    $prodComStock->cantidad = $cantidades[$i];
+                    $prodComStock->cantidad = $producto['cantidad'];
                     $prodComStock->save();
-                    $i++;
                 }
             }
-            $item = $_POST['productos'];
+            $item = "OK";
             return $item;
         }
+
+        return "ERROR";
 
     }
 
