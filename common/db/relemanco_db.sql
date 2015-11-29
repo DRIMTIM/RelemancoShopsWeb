@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS administradores, rutasRelevadorComercio, agendaComercios, dias,
-productosPedidos, productosComercioStock, pedidosComercios, productos, contratos, comercios, pedidos,
+productosPedidos, ventasComercios, productosComercioStock, productos, contratos, comercios, pedidos,
 relevadores, rutas, empresas, localizacion, categorias, prioridades, estados;
 
 CREATE TABLE
@@ -90,7 +90,7 @@ CREATE TABLE
 comercios(
 
   	id bigint NOT NULL AUTO_INCREMENT,
-  	id_localizacion bigint NOT NULL,
+  	id_localizacion bigint,
     id_prioridad smallint NOT NULL,
   	nombre varchar(100) NOT NULL,
   	PRIMARY KEY (id),
@@ -142,8 +142,20 @@ CREATE TABLE
 pedidos(
 
 	id bigint NOT NULL AUTO_INCREMENT,
+    id_comercio bigint NOT NULL,
     fecha_realizado TIMESTAMP NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE
+pedidosRelevadores(
+
+    id_pedido bigint NOT NULL,
+    id_relevador bigint NOT NULL,
+    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_relevador) REFERENCES relevadores(id) ON DELETE CASCADE
 
 );
 
@@ -159,13 +171,16 @@ productosPedidos(
 );
 
 CREATE TABLE
-pedidosComercios(
+ventasComercios(
 
-    id_pedido bigint NOT NULL,
+	id bigint NOT NULL AUTO_INCREMENT,
     id_comercio bigint NOT NULL,
-    cantidad DECIMAL(10,2),
-    FOREIGN KEY(id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
+    id_producto bigint NOT NULL,
+    fecha_realizado TIMESTAMP NOT NULL,
+    cantidad decimal(10,2),
+    PRIMARY KEY (id),
+    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE,
+    FOREIGN KEY(id_producto) REFERENCES productos(id) ON DELETE CASCADE
 
 );
 

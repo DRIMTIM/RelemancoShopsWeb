@@ -15,6 +15,7 @@ class PedidoAsset extends AssetBundle {
             'plugins/input-mask/jquery.inputmask.js',
             'plugins/input-mask/jquery.inputmask.date.extensions.js',
             'plugins/input-mask/jquery.inputmask.extensions.js',
+            'plugins/input-mask/jquery.inputmask.numeric.extensions.js',
         ];
     }
 

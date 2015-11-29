@@ -83,6 +83,27 @@ class PedidoController extends Controller
 
     }
 
+    /**
+     * Creates a new Pedido model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return string
+     */
+    public function formatoFecha($fecha){
+
+        if(!empty($fecha) || $fecha != ''){
+            $dateSplit = explode("/", $fecha);
+            $hoy = new \DateTime();
+            $hoySplit = $hoy->format('Y-m-d H:i:s');
+            $hoySplit2 = explode(" ", $hoySplit);
+            $date = new \DateTime($dateSplit[2] . "/" . $dateSplit[1] . "/" . $dateSplit[0] . " " . $hoySplit2[1]);
+            return $date->format('Y-m-d H:i:s');
+        }else{
+            $hoy = new \DateTime();
+            return $hoy->format('Y-m-d H:i:s');
+        }
+
+    }
+
     public function actionConfirmarPedido(){
 
         if(Yii::$app->request->isAjax){
@@ -96,12 +117,7 @@ class PedidoController extends Controller
                     $cantidades = $_POST['cantidades'];
                     $pedido = new Pedido();
                     $pedido->id_comercio = $_POST['id_comercio'];
-                    $dateSplit = explode("/", $_POST['fecha']);
-                    $hoy = new \DateTime();
-                    $hoySplit = $hoy->format('Y-m-d H:i:s');
-                    $hoySplit2 = explode(" ", $hoySplit);
-                    $date = new \DateTime($dateSplit[2] . "/" . $dateSplit[1] . "/" . $dateSplit[0] . " " . $hoySplit2[1]);
-                    $pedido->fecha_realizado = $date->format('Y-m-d H:i:s');
+                    $pedido->fecha_realizado = $this->formatoFecha($_POST['fecha']);
                     $pedido->save();
                     $i = 0;
 
@@ -110,7 +126,10 @@ class PedidoController extends Controller
                         $prodPedido->id_pedido = $pedido->id;
                         $prodPedido->id_producto = $producto;
                         $prodPedido->cantidad = $cantidades[$i];
-                        $prodComStock = ProductoComercioStock::find()->where(['id_comercio' => $pedido->id_comercio, 'id_producto' => $prodPedido->id_producto])->one();
+                        $prodComStock = ProductoComercioStock::find()->where([
+                                                            'id_comercio' => $pedido->id_comercio,
+                                                            'id_producto' => $prodPedido->id_producto
+                                                        ])->one();
                         $prodComStock->cantidad += $cantidades[$i];
                         $prodComStock->save();
                         $prodPedido->save();
@@ -123,6 +142,35 @@ class PedidoController extends Controller
             }
         }
 
+    }
+
+    public function actionRelevarStockComercio(){
+
+        if(Yii::$app->request->isAjax){
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            if(isset($_POST['id_comercio'])){
+                $comercio = Comercio::findOne($_POST['id_comercio']);
+
+                if(isset($_POST['productos'])){
+                    $productos = $_POST['productos'];
+                    $cantidades = $_POST['cantidades'];
+                    $i = 0;
+
+                    foreach ($productos as $producto) {
+                        $prodComStock = ProductoComercioStock::find()->where([
+                                                                'id_comercio' => $comercio->id,
+                                                                'id_producto' => $productos[$i]
+                                                            ])->one();
+                        $prodComStock->cantidad = $cantidades[$i];
+                        $prodComStock->save();
+                        $i++;
+                    }
+                }
+                $item = $_POST['productos'];
+                return $item;
+            }
+        }
     }
 
     /**

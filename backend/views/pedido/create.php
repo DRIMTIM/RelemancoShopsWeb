@@ -44,6 +44,7 @@ PedidoAsset::register($this);
                     </div>
 
                     <div style="float: right">
+                        <?= Html::a(Yii::t('app', 'Relevar Stock'), [''], ['id' => 'btnRelevarStock', 'class' => 'btnRelevar btn btn-warning']) ?>
                         <?= Html::a(Yii::t('app', 'Confirmar Pedido'), [''], ['id' => 'btnConfirmar', 'class' => 'btnConfirmar btn btn-success']) ?>
                     </div>
 
@@ -71,7 +72,10 @@ PedidoAsset::register($this);
                         [
                             'attribute' => 'cantidad',
                             'value' => function(){
-                                return Html::textInput('cantidad', '', [ 'class' => 'cantidad form-control input-sm']);
+                                return Html::textInput('cantidad', '', [
+                                                'class' => 'cantidad form-control input-sm',
+                                                'data-inputmask' => "'mask': '9', 'repeat': 10, 'greedy' : false",
+                                                'value' => 0]);
                             },
                             'format' => 'raw',
                             'contentOptions' => [
