@@ -10,6 +10,8 @@ use backend\models\Comercio;
 use backend\models\Pedido;
 use backend\models\ProductoPedido;
 use backend\models\ProductoComercioStock;
+use backend\models\PedidoRelevador;
+use backend\models\VentaComercio;
 
 class PedidosController extends ActiveController
 {
@@ -44,7 +46,7 @@ class PedidosController extends ActiveController
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $jsonPOST = json_decode(file_get_contents('php://input'), true);
 
-        if(isset($jsonPOST['id_comercio'])){
+        if(isset($jsonPOST['id_comercio']) && isset($jsonPOST['id_relevador'])){
             $comercio = Comercio::findOne($jsonPOST['id_comercio']);
 
             if(isset($jsonPOST['productos'])){
@@ -53,6 +55,11 @@ class PedidosController extends ActiveController
                 $pedido->id_comercio = $jsonPOST['id_comercio'];
                 $pedido->fecha_realizado = $this->formatoFecha(null);
                 $pedido->save();
+
+                $pedidoRelevador = new PedidoRelevador();
+                $pedidoRelevador->id_relevador = $jsonPOST['id_relevador'];
+                $pedidoRelevador->id_pedido = $pedido->id;
+                $pedidoRelevador->save();
 
                 foreach ($productos as $producto) {
                     $prodPedido = new ProductoPedido();
@@ -89,11 +96,22 @@ class PedidosController extends ActiveController
                 $productos = $jsonPOST['productos'];
 
                 foreach ($productos as $producto) {
+                    $ventaComercio = new VentaComercio();
+                    $ventaComercio->id_comercio = $comercio->id;
+                    $ventaComercio->id_producto = $producto["id"];
+
                     $prodComStock = ProductoComercioStock::find()->where([
                                                             'id_comercio' => $comercio->id,
                                                             'id_producto' => $producto["id"]
                                                         ])->one();
+
+                    if(($prodComStock->cantidad - $producto['cantidad']) < 0){
+                        return "ERROR: " . "Cantidad producto id= " . $producto["id"] . " incorrecta.";
+                    }
+
+                    $ventaComercio->cantidad = $prodComStock->cantidad - $producto['cantidad'];
                     $prodComStock->cantidad = $producto['cantidad'];
+                    $ventaComercio->save();
                     $prodComStock->save();
                 }
             }
