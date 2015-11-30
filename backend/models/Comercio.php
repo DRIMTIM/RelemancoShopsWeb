@@ -124,6 +124,14 @@ class Comercio extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getProductosStock($id_comercio)
+    {
+        return Comercio::find()->joinWith('productosComercioStock')->where(['comercios.id' => $id_comercio])->with('productos');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getRutasRelevadorComercios()
     {
         return $this->hasMany(RutasRelevadorComercio::className(), ['id_comercio' => 'id']);

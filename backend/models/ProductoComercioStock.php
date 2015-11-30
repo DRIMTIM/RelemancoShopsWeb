@@ -51,9 +51,9 @@ class ProductoComercioStock extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdProducto()
+    public function getProducto()
     {
-        return $this->hasOne(Productos::className(), ['id' => 'id_producto']);
+        return $this->hasOne(Producto::className(), ['id' => 'id_producto']);
     }
 
     /**

@@ -28,7 +28,7 @@ class ComerciosController extends ActiveController
             $id = $_GET['id_comercio'];
             $model = Comercio::findOne($id);
             if (isset($model)) {
-                return $model->getProductos()->with('productosComercioStock')->asArray()->all();
+                return $model->getProductosComercioStock()->with('producto')->asArray()->all();
             }
         }
 
