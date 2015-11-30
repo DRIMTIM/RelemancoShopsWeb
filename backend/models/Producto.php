@@ -101,7 +101,7 @@ class Producto extends \yii\db\ActiveRecord
      */
     public function getProductosComercioStock()
     {
-        return $this->hasMany(ProductoComercioStock::className(), ['id_producto' => 'id']);
+        return $this->hasMany(ProductoComercioStock::className(), ['id_producto' => 'id'] );
     }
 
     /**
