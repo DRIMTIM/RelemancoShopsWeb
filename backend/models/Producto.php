@@ -16,7 +16,7 @@ use app\models\UploadForm;
  * @property string $descripcion
  *
  * @property Categoria $categoria
- * @property ProductosComercioStock[] $productosComercioStocks
+ * @property ProductosComercioStock[] $productosComercioStock
  * @property Comercios[] $idComercios
  * @property ProductosPedidos[] $productosPedidos
  */
@@ -99,9 +99,9 @@ class Producto extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProductosComercioStocks()
+    public function getProductosComercioStock()
     {
-        return $this->hasMany(ProductosComercioStock::className(), ['id_producto' => 'id']);
+        return $this->hasMany(ProductoComercioStock::className(), ['id_producto' => 'id']);
     }
 
     /**
