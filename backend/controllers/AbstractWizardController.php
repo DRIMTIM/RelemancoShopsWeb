@@ -24,7 +24,7 @@ use yii\web\Session;
  * @package backend\controllers
  */
 
-class AbstractWizardController extends Controller{
+class AbstractWizardController extends Controller {
 
     public function behaviors() {
         return [
@@ -42,6 +42,11 @@ class AbstractWizardController extends Controller{
     public static $ACTION_STEPS = [];
     public static $DEFAULT_STEP = null;
     private $VIEW_CONFIG = null;
+    public $TYPE_RESULT = [
+        'INFO' => 'info',
+        'DANGER' => 'danger',
+        'WARNING' => 'warning'
+    ];
 
     public function init(){
         $this->VIEW_CONFIG = [
@@ -51,13 +56,15 @@ class AbstractWizardController extends Controller{
             'isForm' => null,
             'formAction' => null,
             'formMethod' => null,
+            'formOptions' => null,
             'container' => [
-                'errores' => null
+                'errores' => [],
+                'resultado' => []
             ]
         ];
     }
 
-    public function setViewConfig($subtitle, $actions, $partialView, $isForm, $formAction, $formMethod, $container){
+    public function setViewConfig($subtitle, $actions, $partialView, $isForm, $formAction, $formMethod, $formOptions, $container){
         $this->setViewConfigSubtitle($subtitle);
         $this->setViewConfigActions($actions);
         $this->setViewConfigPartialView($partialView);
@@ -65,6 +72,7 @@ class AbstractWizardController extends Controller{
         $this->setViewConfigFormAction($formAction);
         $this->setViewConfigFormMethod($formMethod);
         $this->setViewConfigContainer($container);
+        $this->setViewConfigFormOptions($formOptions);
     }
 
     public function setViewConfigContainer($containerArray){
@@ -82,6 +90,12 @@ class AbstractWizardController extends Controller{
                 $nextStep = $this->VIEW_CONFIG['actions']['nextStep'];
             }
             $this->VIEW_CONFIG['formAction'] = 'wizard?actionStep=' . $nextStep;
+        }
+    }
+
+    public function setViewConfigFormOptions($formOptions){
+        if(!empty($formOptions)){
+            $this->VIEW_CONFIG['formOptions'] = $formOptions;
         }
     }
 
@@ -147,10 +161,14 @@ class AbstractWizardController extends Controller{
         return Yii::$app->request->get(AbstractWizardController::$BACK_STEP, false);
     }
 
-    public function actionWizard(){
+    public function actionWizard($isError = false){
 
         $step = $this->getStep();
         $request = null;
+
+        if($isError){
+            $step = $step - 1;
+        }
 
         if($this->isBackStep() && $step != -1){
             if(isset(Yii::$app->session[AbstractWizardController::$ACTION_STEPS[$step]])){
@@ -161,25 +179,32 @@ class AbstractWizardController extends Controller{
                 }
                 $this->actionIndex();
             }
-        }else if($step != -1){
+        }else if($step != -1 && !$isError){
             Yii::$app->session[AbstractWizardController::$ACTION_STEPS[$step]] = Yii::$app->request;
             $request = Yii::$app->request;
+        }else if($isError){
+            $request = Yii::$app->session[AbstractWizardController::$ACTION_STEPS[$step]];
         }else{
             return $this->actionIndex();
         }
 
         $actionName = AbstractWizardController::$ACTION_STEPS[$step];
 
-        $this->validateActionIfExists($request, $actionName);
+        if(!$isError) {
+            $prevStepError = $this->validateActionIfExists($request, $actionName);
+            if (!empty($prevStepError)) {
+                return $prevStepError;
+            }
+        }
 
-        $this->setViewConfig(null, $this->fillStepsConfig($step), null, null, null, null, null);
+        $this->setViewConfig(null, $this->fillStepsConfig($step), null, null, null, null, ['id' => '_id_form_step_' . $step], null);
 
         if(method_exists($this, $actionName)){
             try{
                 $this->$actionName($request);
                 return $this->renderWizard();
             }catch (Exception $e){
-                return $this->actionIndex();
+                echo var_dump($e);
             }
         }else{
             return $this->actionIndex();
@@ -195,7 +220,11 @@ class AbstractWizardController extends Controller{
             $validatorName = 'validate' . substr($actionName, 6);
             if(method_exists($this, $validatorName)){
                 try{
-                    $this->VIEW_CONFIG['container']['errores'] = array_merge($this->VIEW_CONFIG['container']['errores'], $this->$validatorName($request));
+                    $errores = array_merge($this->VIEW_CONFIG['container']['errores'], $this->$validatorName($request));
+                    $this->VIEW_CONFIG['container']['errores'] = $errores;
+                    if(!empty($errores)){
+                        return $this->actionWizard(true);
+                    }
                 }catch (Exception $e){}
             }
         }
@@ -207,6 +236,15 @@ class AbstractWizardController extends Controller{
             'nextStep' => $actualStep + 1,
             'prevStep' => $actualStep - 1
         ];
+    }
+
+    public function setResultMessage($content, $type){
+        if(!empty($content) && !empty($type)){
+            $this->setViewConfigSubtitle('Resultado');
+            $this->setViewConfigPartialView('_resultado');
+            $this->VIEW_CONFIG['container']['resultado']['type'] = $type;
+            $this->VIEW_CONFIG['container']['resultado']['content'] = $content;
+        }
     }
 
 

@@ -2,14 +2,18 @@
 
 namespace backend\controllers;
 
+use app\models\Estado;
 use backend\models\BuscarComercio;
 use backend\models\BuscarRelevador;
 use backend\models\BuscarRutas;
 use backend\models\Comercio;
 use backend\models\Relevador;
+use backend\models\Ruta;
 use backend\models\RutasDataProvider;
+use backend\models\RutasRelevadorComercio;
 use backend\models\RutasSearchModel;
 use Yii;
+use yii\base\Exception;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
@@ -32,11 +36,22 @@ class RutasController extends AbstractWizardController {
         $comercios = $searchModel->buscarComerciosSeleccionados($comerciosSeleccionados);
         $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
         $relevador = new BuscarRelevador();
-        $relevador = $relevador->find()->where(['id' => $idRelevador])->with('idLocalizacion')->one();
+        $relevador = $relevador->find()->where(['id' => $idRelevador])->with('idLocalizacion')->with('user')->one();
         $response = new Json();
         $response->localizacionRelevador = $relevador->idLocalizacion;
         $response->relevador = $relevador;
         $response->comercios = $comercios;
+        $response->user = $relevador->user;
+        $response->radioRelevador = RutasSearchModel::$radioPredefinido;
+        return Json::encode($response);
+    }
+
+    public function actionBuscarRelevadoresForMap() {
+        $relevadoresDisponibles = Json::decode(Yii::$app->request->post('relevadores_disponibles', null));
+        $searchModel = new RutasSearchModel();
+        $relevadores = $searchModel->buscarRelevadoresDisponibles($relevadoresDisponibles);
+        $response = new Json();
+        $response->relevadores = $relevadores;
         $response->radioRelevador = RutasSearchModel::$radioPredefinido;
         return Json::encode($response);
     }
@@ -49,7 +64,31 @@ class RutasController extends AbstractWizardController {
 
     public function init(){
         parent::init();
-        RutasController::$ACTION_STEPS = ["actionEligeRelevador", "actionElegirComercio", "actionArmarRuta"];
+        RutasController::$ACTION_STEPS = ["actionEligeRelevador", "actionElegirComercio", "actionArmarRuta", "actionAltaRuta"];
+    }
+
+    public function validateElegirComercio($request) {
+        $errores = [];
+        if(empty($request->post('relevadorSeleccionado'))){
+            array_push($errores, Yii::t('app', 'Debe elegir un relevador!'));
+        }
+        return $errores;
+    }
+
+    public function validateArmarRuta($request) {
+        $errores = [];
+        if($request->post()['BuscarComercio']['id'] == '[]'){
+            array_push($errores, Yii::t('app', 'Debe elegir al menos un comercio!'));
+        }
+        return $errores;
+    }
+
+    public function validateAltaRuta($request) {
+        $errores = [];
+        if(empty($request->post('rutaComercios'))){
+            array_push($errores, Yii::t('app', 'Debe definir al menos un comercio para la ruta!'));
+        }
+        return $errores;
     }
 
     public function actionIndex() {
@@ -71,7 +110,7 @@ class RutasController extends AbstractWizardController {
         $dataProvider = $searchModel->buscarRelevadores($request->queryParams);
         $searchModel = $searchModel->getRelevadorProvider();
 
-        $this->setViewConfigSubtitle('Elija un Relevador');
+        $this->setViewConfigSubtitle('Seleccion de Relevador');
         $this->setViewConfigPartialView('_elegirRelevador');
         $this->setViewConfigContainer([
             'searchModel' => $searchModel,
@@ -85,7 +124,7 @@ class RutasController extends AbstractWizardController {
         $comerciosDisponibles = $searchModel->buscarComerciosEnRadioRelevador($idRelevador);
         $modelo = new BuscarComercio();
 
-        $this->setViewConfigSubtitle('Elija Comercios para el Relevador');
+        $this->setViewConfigSubtitle('Seleccion de Comercios');
         $this->setViewConfigPartialView('_elegirComercio');
         $this->setViewConfigContainer([
             'comerciosDisponibles' => $comerciosDisponibles,
@@ -100,11 +139,42 @@ class RutasController extends AbstractWizardController {
         $searchModel = new RutasSearchModel();
         $dataProvider = $searchModel->buscarComerciosSeleccionadosDataProvider($comerciosSeleccionados);
 
-        $this->setViewConfigSubtitle('Elija la Ruta');
+        $this->setViewConfigSubtitle('Ruta del Día');
         $this->setViewConfigPartialView('_armarRuta');
         $this->setViewConfigContainer([
             'dataProvider' => $dataProvider
         ]);
+    }
+
+    public function actionAltaRuta($request){
+        $idComercios = Json::decode($request->post('rutaComercios'), null);
+        $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
+        $content = null;
+        $type = $this->TYPE_RESULT['INFO'];
+        try {
+            if (!empty($idComercios) && !empty($idRelevador)) {
+                $ruta = new Ruta();
+                $ruta->setAttribute('id_estado', Estado::findEstadoByNombre(Estado::$DISPONIBLE)->id);
+                $ruta->save();
+                $idRuta = $ruta->id;
+                foreach ($idComercios as $idComercio) {
+                    $infoRuta = new RutasRelevadorComercio();
+                    $infoRuta->setAttribute('id_ruta', $idRuta);
+                    $infoRuta->setAttribute('id_relevador', $idRelevador);
+                    $infoRuta->setAttribute('id_comercio', $idComercio);
+                    $infoRuta->save();
+                }
+                $content = Yii::t('app', 'Se ha creado la ruta exitosamente!');
+            }else{
+                $type = $this->TYPE_RESULT['DANGER'];
+                $content = Yii::t('app', 'Ha ocurrido un error al guardar la ruta: ');
+            }
+        }catch(Exception $e){
+            $type = $this->TYPE_RESULT['DANGER'];
+            $content = Yii::t('app', 'Ha ocurrido un error al guardar la ruta: ' . $e->getMessage());
+
+        }
+        $this->setResultMessage($content, $type);
     }
 
 }

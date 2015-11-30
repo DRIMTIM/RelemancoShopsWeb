@@ -3,6 +3,7 @@
 use yii\grid\GridView;
 use \app\assets\RutaAsset;
 
+RutaAsset::armarRutaAsset();
 RutaAsset::register($this);
 
 ?>
@@ -31,4 +32,5 @@ RutaAsset::register($this);
 
     ?>
 </div>
-<div id="mapa-ruta" class="col-md-7" style="height: 500pt;"></div>
+<div id="mapa-ruta" class="col-md-7" style="height: 300pt;"></div>
+<input type="hidden" id="ruta_comercios" name="rutaComercios">

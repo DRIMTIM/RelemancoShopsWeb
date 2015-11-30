@@ -4,21 +4,31 @@ namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class RutaAsset extends AssetBundle
-{
+class RutaAsset extends AssetBundle {
 
-    public $options = [
+    public static $static_options = [
         'key' => 'AIzaSyCc8qdTE4hoIsnmWLGoGzhp0Djsgck8Kmk',
         'language' => 'es',
         'version' => '3.1.18'
     ];
-    public $js = [];
+    public static $static_js = null;
 
-    public function init() {
-        $this->js = [
-            'https://maps.googleapis.com/maps/api/js?' . http_build_query($this->options),
+    public static function armarRutaAsset(){
+        RutaAsset::$static_js = [
+            'https://maps.googleapis.com/maps/api/js?' . http_build_query(RutaAsset::$static_options),
             'js/relemanco/rutas/rutas.js'
         ];
+    }
+
+    public static function elegirRelevadorAsset(){
+        RutaAsset::$static_js = [
+            'https://maps.googleapis.com/maps/api/js?' . http_build_query(RutaAsset::$static_options),
+            'js/relemanco/rutas/relevador.js'
+        ];
+    }
+
+    public function init(){
+        $this->js = RutaAsset::$static_js;
     }
 
     public $basePath = '@webroot';

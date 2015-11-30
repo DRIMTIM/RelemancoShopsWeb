@@ -37,6 +37,13 @@ INSERT INTO prioridades (nombre, descripcion) VALUES ("ALTA", "Prioridad alta.")
 INSERT INTO prioridades (nombre, descripcion) VALUES ("MEDIA", "Prioridad media.");
 INSERT INTO prioridades (nombre, descripcion) VALUES ("BAJA", "Prioridad baja");
 
+/* ESTADOS */
+INSERT INTO estados (nombre, descripcion) VALUES ("RELEVADA", "Estado de una ruta al ser relevada.");
+INSERT INTO estados (nombre, descripcion) VALUES ("ASIGNADO", "Estado de un comercio al ser asignado a una ruta.");
+INSERT INTO estados (nombre, descripcion) VALUES ("DISPONIBLE", "Estado de un comercio o una ruta al estar disponible para ser asignado o ser relevada.");
+INSERT INTO estados (nombre, descripcion) VALUES ("RELEVADO", "Estado de un comercio al ser relevado.");
+INSERT INTO estados (nombre, descripcion) VALUES ("PENDIENTE", "Estado de un comercio o una ruta al estar asignado/a y en proceso de ser relevado/a.");
+
 /*PRODUCTOS*/
 INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
 VALUES(1, 22, 'Aceite de Girasol BENFAST', 'aceite.jpg', 'Aceite 0 calorias');

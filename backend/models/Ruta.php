@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use app\models\Estado;
 use Yii;
 
 /**
@@ -49,11 +50,12 @@ class Ruta extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRutasRelevadorComercios()
-    {
+    public function getInfo() {
         return $this->hasMany(RutasRelevadorComercio::className(), ['id_ruta' => 'id']);
     }
+
+    public function getEstado() {
+        return $this->hasOne(Estado::className(), ['id' => 'id_estado']);
+    }
+
 }

@@ -11,21 +11,23 @@ use Yii;
  * @property string $nombre
  * @property string $descripcion
  */
-class Estado extends \yii\db\ActiveRecord
-{
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
+class Estado extends \yii\db\ActiveRecord {
+
+    public static $RELEVADA = 'RELEVADA';
+    public static $ASIGNADO = 'ASIGNADO';
+    public static $DISPONIBLE = 'DISPONIBLE';
+    public static $RELEVADO = 'RELEVADO';
+    public static $PENDIENTE = 'PENDIENTE';
+
+    public static function findEstadoByNombre($nombreEstado){
+        return Estado::find()->where('nombre="' . $nombreEstado . '"')->one();
+    }
+
+    public static function tableName() {
         return 'estados';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['nombre'], 'required'],
             [['nombre'], 'string', 'max' => 50],
@@ -33,11 +35,7 @@ class Estado extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => Yii::t('app', 'ID'),
             'nombre' => Yii::t('app', 'Nombre'),
