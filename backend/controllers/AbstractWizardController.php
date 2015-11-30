@@ -24,7 +24,7 @@ use yii\web\Session;
  * @package backend\controllers
  */
 
-class AbstractWizardController extends Controller{
+class AbstractWizardController extends Controller {
 
     public function behaviors() {
         return [
@@ -42,6 +42,11 @@ class AbstractWizardController extends Controller{
     public static $ACTION_STEPS = [];
     public static $DEFAULT_STEP = null;
     private $VIEW_CONFIG = null;
+    public $TYPE_RESULT = [
+        'INFO' => 'info',
+        'DANGER' => 'danger',
+        'WARNING' => 'warning'
+    ];
 
     public function init(){
         $this->VIEW_CONFIG = [
@@ -53,7 +58,8 @@ class AbstractWizardController extends Controller{
             'formMethod' => null,
             'formOptions' => null,
             'container' => [
-                'errores' => []
+                'errores' => [],
+                'resultado' => []
             ]
         ];
     }
@@ -230,6 +236,15 @@ class AbstractWizardController extends Controller{
             'nextStep' => $actualStep + 1,
             'prevStep' => $actualStep - 1
         ];
+    }
+
+    public function setResultMessage($content, $type){
+        if(!empty($content) && !empty($type)){
+            $this->setViewConfigSubtitle('Resultado');
+            $this->setViewConfigPartialView('_resultado');
+            $this->VIEW_CONFIG['container']['resultado']['type'] = $type;
+            $this->VIEW_CONFIG['container']['resultado']['content'] = $content;
+        }
     }
 
 

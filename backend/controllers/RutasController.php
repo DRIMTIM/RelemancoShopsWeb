@@ -2,14 +2,18 @@
 
 namespace backend\controllers;
 
+use app\models\Estado;
 use backend\models\BuscarComercio;
 use backend\models\BuscarRelevador;
 use backend\models\BuscarRutas;
 use backend\models\Comercio;
 use backend\models\Relevador;
+use backend\models\Ruta;
 use backend\models\RutasDataProvider;
+use backend\models\RutasRelevadorComercio;
 use backend\models\RutasSearchModel;
 use Yii;
+use yii\base\Exception;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
@@ -144,11 +148,33 @@ class RutasController extends AbstractWizardController {
 
     public function actionAltaRuta($request){
         $idComercios = Json::decode($request->post('rutaComercios'), null);
-        if(!empty($idComercios)){
-            foreach($idComercios as $idComercio){
-
+        $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
+        $content = null;
+        $type = $this->TYPE_RESULT['INFO'];
+        try {
+            if (!empty($idComercios) && !empty($idRelevador)) {
+                $ruta = new Ruta();
+                $ruta->setAttribute('id_estado', Estado::findEstadoByNombre(Estado::$DISPONIBLE)->id);
+                $ruta->save();
+                $idRuta = $ruta->id;
+                foreach ($idComercios as $idComercio) {
+                    $infoRuta = new RutasRelevadorComercio();
+                    $infoRuta->setAttribute('id_ruta', $idRuta);
+                    $infoRuta->setAttribute('id_relevador', $idRelevador);
+                    $infoRuta->setAttribute('id_comercio', $idComercio);
+                    $infoRuta->save();
+                }
+                $content = Yii::t('app', 'Se ha creado la ruta exitosamente!');
+            }else{
+                $type = $this->TYPE_RESULT['DANGER'];
+                $content = Yii::t('app', 'Ha ocurrido un error al guardar la ruta: ');
             }
+        }catch(Exception $e){
+            $type = $this->TYPE_RESULT['DANGER'];
+            $content = Yii::t('app', 'Ha ocurrido un error al guardar la ruta: ' . $e->getMessage());
+
         }
+        $this->setResultMessage($content, $type);
     }
 
 }
