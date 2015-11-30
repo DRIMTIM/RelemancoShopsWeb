@@ -38,7 +38,7 @@ class RutasRelevadorComercio extends ActiveRecord {
     }
 
     public function getRutaDia() {
-        return $this->hasOne(Ruta::className(), ['id' => 'id_ruta'])->where("fecha_asignada <= ADDTIME(NOW(), '12:0:0.0') AND fecha_asignada > ADDTIME(NOW(), '-12:0:0.0')");
+        return $this->hasOne(Ruta::className(), ['id' => 'id_ruta'])->where("DATE(fecha_asignada) = curdate()");
     }
 
     public function getRelevador() {
