@@ -14,6 +14,7 @@ class RutasSearchModel {
     private $comercioProvider;
     private $relevadorProvider;
     private $rutaProvider;
+    private $rutaRelevadorComercioProvider;
     public static $radioPredefinido = 1500; //En metros
 
     function __construct(){
@@ -21,6 +22,7 @@ class RutasSearchModel {
         $this->comercioProvider = new BuscarComercio();
         $this->relevadorProvider = new BuscarRelevador();
         $this->rutaProvider = new BuscarRuta();
+        $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
     }
 
     public function getLocalizacionProvider(){ return $this->localizacionProvider; }
@@ -152,6 +154,27 @@ class RutasSearchModel {
             }
         }
         return $comerciosDisponibles;
+    }
+
+    public function buscarRutaDelDia($idRelevador){
+        $dateFormat = 'Y-m-d H:i:s';
+        if(!empty($idRelevador)){
+            $secondsOfDay = (60 * 60 * 12);
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
+            asArray()->all();
+            $comercios = [];
+            if(!empty($queryRutaDelDia)){
+                foreach($queryRutaDelDia as $query){
+                    if(!empty($query['rutaDia'])){
+                        $comercio = $query['comercio'];
+                        array_push($comercios, $comercio);
+                    }
+                }
+                return $comercios;
+            }
+        }
+        return null;
     }
 
 }

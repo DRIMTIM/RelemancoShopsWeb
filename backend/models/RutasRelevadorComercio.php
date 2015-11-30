@@ -37,12 +37,16 @@ class RutasRelevadorComercio extends ActiveRecord {
         return $this->hasOne(Ruta::className(), ['id' => 'id_ruta']);
     }
 
+    public function getRutaDia() {
+        return $this->hasOne(Ruta::className(), ['id' => 'id_ruta'])->where("fecha_asignada <= ADDTIME(NOW(), '12:0:0.0') AND fecha_asignada > ADDTIME(NOW(), '-12:0:0.0')");
+    }
+
     public function getRelevador() {
         return $this->hasOne(Relevador::className(), ['id' => 'id_relevador']);
     }
 
     public function getComercio() {
-        return $this->hasOne(Comercios::className(), ['id' => 'id_comercio']);
+        return $this->hasOne(Comercio::className(), ['id' => 'id_comercio']);
     }
 
 }
