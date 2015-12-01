@@ -157,9 +157,7 @@ class RutasSearchModel {
     }
 
     public function buscarRutaDelDia($idRelevador){
-        $dateFormat = 'Y-m-d H:i:s';
         if(!empty($idRelevador)){
-            $secondsOfDay = (60 * 60 * 12);
             $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
             $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
             asArray()->all();
@@ -172,6 +170,46 @@ class RutasSearchModel {
                     }
                 }
                 return $comercios;
+            }
+        }
+        return null;
+    }
+
+    public function buscarHistoricoRutas($idRelevador, $limite = 10, $ultimoIdRuta = -1){
+        if(!empty($idRelevador)){
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaHistorica')->with('comercio.localizacion')->asArray()->all();
+            $comerciosDisponibles = [];
+            $rutasReferencia = [];
+            $rutasDevolver = [];
+            $contadorRutas = 0;
+            if(!empty($queryRutaDelDia)){
+                foreach($queryRutaDelDia as $query){
+                    if(!empty($query['rutaHistorica'])){
+                        $ruta = $query['rutaHistorica'];
+                        if(!array_key_exists($ruta['id'], $rutasReferencia)){
+                            $rutasReferencia[$ruta['id']] = $ruta;
+                        }
+                        $comercio = $query['comercio'];
+                        if(array_key_exists($ruta['id'], $comerciosDisponibles)){
+                            array_push($comerciosDisponibles[$ruta['id']], $comercio);
+                        }else{
+                            $comerciosDisponibles[$ruta['id']] = [$comercio];
+                        }
+                    }
+                }
+                foreach($rutasReferencia as $idRuta => $rutaReferencia){
+                    if($ultimoIdRuta < $idRuta){
+                        $rutaReferencia['comercios'] = $comerciosDisponibles[$idRuta];
+                        unset($rutaReferencia['id_estado']);
+                        array_push($rutasDevolver, $rutaReferencia);
+                    }
+                    $contadorRutas++;
+                    if($contadorRutas > $limite){
+                        break;
+                    }
+                }
+                return $rutasDevolver;
             }
         }
         return null;

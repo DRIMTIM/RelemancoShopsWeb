@@ -41,6 +41,10 @@ class RutasRelevadorComercio extends ActiveRecord {
         return $this->hasOne(Ruta::className(), ['id' => 'id_ruta'])->where("DATE(fecha_asignada) = curdate()");
     }
 
+    public function getRutaHistorica() {
+        return $this->hasOne(Ruta::className(), ['id' => 'id_ruta'])->where("DATE(fecha_asignada) <= curdate()")->with('estado');
+    }
+
     public function getRelevador() {
         return $this->hasOne(Relevador::className(), ['id' => 'id_relevador']);
     }
