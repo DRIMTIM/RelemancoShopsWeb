@@ -73,11 +73,10 @@ INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre
 VALUES(9, 22, 'Duraznos En Almibar DOS CABALLOS', 'durazno.jpg', 'Cocktail de frutas magike');
 
 INSERT INTO PHP.productos(productos.id, productos.id_categoria, productos.nombre, productos.imagen, productos.descripcion)
-VALUES(10, 22, 'Marihuana MUJICA', 'faso.jpg', 'Como el asado del pepe, pero nada que ver.');
+VALUES(10, 22, 'Marihuana MUJICA', 'faso2.jpg', 'Como el asado del pepe, pero nada que ver.');
 
 
 /*LOCALIZACION DE COMERCIOS*/
-
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (1, -34.917606, -56.161835, 'EL Luisito SHOP');
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (2, -34.921337, -56.161663, 'Devoto 35');
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (3, -34.925243, -56.16106, 'LEOS PANADERIA');
@@ -85,7 +84,6 @@ INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (4, -34.92426, -56
 INSERT INTO localizacion (id, latitud, longitud, nota) VALUES (5, -34.913666, -56.15409, 'ALTA YANTA SHOP');
 
 /*COMERCIOS*/
-
 INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (1, 1, 1, 'EL Luisito SHOP');
 INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (2, 2, 2, 'Devoto 35');
 INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (3, 3, 3, 'LEOS PANADERIA');
@@ -93,7 +91,6 @@ INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (4, 4, 
 INSERT INTO comercios (id, id_localizacion, id_prioridad, nombre) VALUES (5, 5, 1, 'ALTA YANTA SHOP');
 
 /*PRODUCTOS ASIGNADOS*/
-
 INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (1, 1, 432.00);
 INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (1, 2, 12.00);
 INSERT INTO productosComercioStock (id_comercio, id_producto, cantidad) VALUES (1, 3, 14.00);
