@@ -26,15 +26,6 @@ empresas(
 );
 
 CREATE TABLE
-dias(
-
-    id smallint NOT NULL AUTO_INCREMENT,
-    nombre varchar(20) NOT NULL,
-    PRIMARY KEY (id)
-
-);
-
-CREATE TABLE
 categorias(
 
     id bigint NOT NULL AUTO_INCREMENT,
@@ -203,18 +194,6 @@ rutasRelevadorComercio(
     id_comercio bigint NOT NULL,
     fecha_relevada TIMESTAMP NOT NULL,
     FOREIGN KEY(id_ruta) REFERENCES rutas(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_relevador) REFERENCES relevadores(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
-
-);
-
-CREATE TABLE
-agendaComercios(
-
-    id_dia smallint NOT NULL,
-    id_relevador bigint NOT NULL,
-    id_comercio bigint NOT NULL,
-    FOREIGN KEY(id_dia) REFERENCES dias(id) ON DELETE CASCADE,
     FOREIGN KEY(id_relevador) REFERENCES relevadores(id) ON DELETE CASCADE,
     FOREIGN KEY(id_comercio) REFERENCES comercios(id) ON DELETE CASCADE
 
