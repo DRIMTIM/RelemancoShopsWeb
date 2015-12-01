@@ -2,22 +2,17 @@
 
 namespace backend\controllers;
 
-use app\models\Estado;
 use backend\models\BuscarComercio;
 use backend\models\BuscarRelevador;
 use backend\models\BuscarRutas;
-use backend\models\Comercio;
-use backend\models\Relevador;
+use backend\models\Estado;
 use backend\models\Ruta;
 use backend\models\RutasDataProvider;
 use backend\models\RutasRelevadorComercio;
 use backend\models\RutasSearchModel;
 use Yii;
 use yii\base\Exception;
-use yii\filters\VerbFilter;
 use yii\helpers\Json;
-use yii\web\Controller;
-use yii\web\Session;
 
 /**
  * RutasController implements the CRUD actions for Ruta model.
