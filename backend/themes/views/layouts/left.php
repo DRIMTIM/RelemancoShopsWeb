@@ -43,20 +43,16 @@ if (isset(Yii::$app->user->identity)) :
                 'items' => [
                     '<li class="header">RelemancoShops - Menu</li>',
                     ['label' => '<i class="fa fa-user"></i><span>Perfil</span>', 'url' => ['/user/profile/show','id'=>isset(Yii::$app->user->identity) ? Yii::$app->user->identity->id : -1], 'visible' =>!Yii::$app->user->isGuest],
-                    ['label' => '<i class="fa fa-tags"></i><span>Categorias</span>', 'url' => ['/categoria']],
-                    ['label' => '<i class="fa fa-user-secret"></i><span>Usuarios</span>', 'url' => ['/user/admin']],
-                    ['label' => '<i class="fa fa-map-marker"></i><span>Asignar Localizacion</span>', 'url' => ['/relevador/asignar-localizacion']],
-                    ['label' => '<i class="fa fa-institution"></i><span>Empresas</span>', 'url' => ['/empresa']],
-                    ['label' => '<i class="fa fa-building-o"></i><span>Comercios</span>', 'url' => ['/comercio']],
+                    ['label' => '<i class="fa fa-tags"></i><span>Categorias</span>', 'url' => ['/categoria'], 'options' => ['class' => 'treeview']],
+                    ['label' => '<i class="fa fa-user-secret"></i><span>Usuarios</span>', 'url' => ['/user/admin'], 'options' => ['class' => 'treeview']],
+                    ['label' => '<i class="fa fa-map-marker"></i><span>Asignar Localizacion</span>', 'url' => ['/relevador/asignar-localizacion'], 'options' => ['class' => 'treeview']],
+                    ['label' => '<i class="fa fa-institution"></i><span>Empresas</span>', 'url' => ['/empresa'], 'options' => ['class' => 'treeview']],
+                    ['label' => '<i class="fa fa-building-o"></i><span>Comercios</span>', 'url' => ['/comercio'], 'options' => ['class' => 'treeview']],
                     ['label' => '<i class="fa fa-building-o"></i><span>Asignar Productos</span>', 'url' => ['/comercio/asignar-productos']],
                     ['label' => '<i class="fa fa-globe"></i><span>Localizacion</span>', 'url' => ['/localizacion']],
                     ['label' => '<i class="fa fa-globe"></i><span>Asignar Rutas</span>', 'url' => ['/rutas']],
                     ['label' => '<i class="fa fa-shopping-cart"></i><span>Productos</span>', 'url' => ['/producto']],
-                    [
-                        'label' => '<i class="glyphicon glyphicon-lock"></i><span>Ingrese...</span>', //for basic
-                        'url' => ['/site/login'],
-                        'visible' =>Yii::$app->user->isGuest
-                    ],
+                    ['label' => '<i class="fa fa-pie-chart"></i><span>Estadisticas</span>', 'url' => ['/grafica']],
                 ],
             ]
         );
