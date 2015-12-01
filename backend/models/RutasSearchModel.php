@@ -14,6 +14,7 @@ class RutasSearchModel {
     private $comercioProvider;
     private $relevadorProvider;
     private $rutaProvider;
+    private $rutaRelevadorComercioProvider;
     public static $radioPredefinido = 1500; //En metros
 
     function __construct(){
@@ -21,6 +22,7 @@ class RutasSearchModel {
         $this->comercioProvider = new BuscarComercio();
         $this->relevadorProvider = new BuscarRelevador();
         $this->rutaProvider = new BuscarRuta();
+        $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
     }
 
     public function getLocalizacionProvider(){ return $this->localizacionProvider; }
@@ -152,6 +154,65 @@ class RutasSearchModel {
             }
         }
         return $comerciosDisponibles;
+    }
+
+    public function buscarRutaDelDia($idRelevador){
+        if(!empty($idRelevador)){
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
+            asArray()->all();
+            $comercios = [];
+            if(!empty($queryRutaDelDia)){
+                foreach($queryRutaDelDia as $query){
+                    if(!empty($query['rutaDia'])){
+                        $comercio = $query['comercio'];
+                        array_push($comercios, $comercio);
+                    }
+                }
+                return $comercios;
+            }
+        }
+        return null;
+    }
+
+    public function buscarHistoricoRutas($idRelevador, $limite = 10, $ultimoIdRuta = -1){
+        if(!empty($idRelevador)){
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaHistorica')->with('comercio.localizacion')->asArray()->all();
+            $comerciosDisponibles = [];
+            $rutasReferencia = [];
+            $rutasDevolver = [];
+            $contadorRutas = 0;
+            if(!empty($queryRutaDelDia)){
+                foreach($queryRutaDelDia as $query){
+                    if(!empty($query['rutaHistorica'])){
+                        $ruta = $query['rutaHistorica'];
+                        if(!array_key_exists($ruta['id'], $rutasReferencia)){
+                            $rutasReferencia[$ruta['id']] = $ruta;
+                        }
+                        $comercio = $query['comercio'];
+                        if(array_key_exists($ruta['id'], $comerciosDisponibles)){
+                            array_push($comerciosDisponibles[$ruta['id']], $comercio);
+                        }else{
+                            $comerciosDisponibles[$ruta['id']] = [$comercio];
+                        }
+                    }
+                }
+                foreach($rutasReferencia as $idRuta => $rutaReferencia){
+                    if($ultimoIdRuta < $idRuta){
+                        $rutaReferencia['comercios'] = $comerciosDisponibles[$idRuta];
+                        unset($rutaReferencia['id_estado']);
+                        array_push($rutasDevolver, $rutaReferencia);
+                    }
+                    $contadorRutas++;
+                    if($contadorRutas > $limite){
+                        break;
+                    }
+                }
+                return $rutasDevolver;
+            }
+        }
+        return null;
     }
 
 }

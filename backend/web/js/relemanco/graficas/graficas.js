@@ -7,9 +7,43 @@ var rootURL = "/RelemancoShopsWeb/backend/web";
 $( document ).ready(function() {
 
     dibujarGraficaBarras();
+    obtenerProductosMasVendidosComecio();
 
 });
 
+function obtenerProductosMasVendidosComecio(){
+
+    $('#comercio-id').change(function(){
+
+        var id = $('#comercio-id').val();
+
+        $.ajax({
+            method: "POST",
+            url: rootURL + "/grafica/grafica-barras",
+            dataType: "json",
+            data: { id_comercio : id }
+        }).done(function(data){
+            console.log(data);
+
+            $.magnificPopup.open({
+                items: {
+                  src: '<div class="box box-warning white-popup"><h3>Se confirmo el pedido correctamente!</h3></div>',
+                  type: 'inline'
+                }
+            });
+
+        }).fail(function(){
+            $.magnificPopup.open({
+                items: {
+                  src: '<div class="box box-warning white-popup"><h3>"Ocurrio un error al realizar el pedido."</h3></div>',
+                  type: 'inline'
+                }
+            });
+        });
+
+    });
+
+}
 
 //-------------
 //- BAR CHART -

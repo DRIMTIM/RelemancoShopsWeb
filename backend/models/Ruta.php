@@ -2,7 +2,6 @@
 
 namespace backend\models;
 
-use app\models\Estado;
 use Yii;
 
 /**

@@ -161,7 +161,7 @@ function relevarStockComercioClick(){
 
             $.ajax({
                 method: "POST",
-                url: rootURL + "/pedido/relevar-stock-comercio",
+                url: rootURL + "/pedido/relevar-stock-comercio-back",
                 dataType: "json",
                 data: { id_comercio : id, "productos[]" : productos, "cantidades[]" : productosCant, "fecha" : fecha }
             }).done(function(data){
