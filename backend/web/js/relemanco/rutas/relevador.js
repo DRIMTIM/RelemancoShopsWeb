@@ -159,6 +159,7 @@ function loadEventHandlers(){
                     center: getLocalizacionRelevador(idRelevador),
                     radius: radioRelevador
                 });
+                relevadoresMap.setCenter(getLocalizacionRelevador(idRelevador));
             }
         };
     }

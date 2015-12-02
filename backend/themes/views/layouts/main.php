@@ -48,7 +48,8 @@ if (Yii::$app->controller->action->id === 'login') {
 
     </div>
     <div id="_block_ui_message" style="display:none;">
-        <h1><?php echo Yii::t('app', 'Estamos procesando su solicitud, porfavor espere...'); ?></h1>
+        <h3><?php echo Yii::t('app', 'Procesando...'); ?></h3>
+        <br>
     </div>
     <?php $this->endBody() ?>
     </body>

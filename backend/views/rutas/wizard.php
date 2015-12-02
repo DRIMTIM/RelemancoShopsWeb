@@ -44,9 +44,9 @@ if(!empty($container['errores'])){
         <?php
             if(empty($container['resultado'])) {
                 if (empty($actions) || empty($partialView)) {
-                    echo Html::a(Yii::t('app', 'Volver'), ['wizard?' . RutasController::$ACTION_STEP . '=-1'], ['class' => 'btn btn-success pull-left']);
+                    echo Html::a(Yii::t('app', 'Volver'), ['wizard?' . RutasController::$ACTION_STEP . '=-1'], ['class' => 'btn btn-success pull-left', 'onclick' => 'javascript:blockScreenOnAction()']);
                 } else {
-                    echo Html::a(Yii::t('app', 'Atrás'), ['wizard?' . RutasController::$ACTION_STEP . '=' . $actions['prevStep'] . '&' . RutasController::$BACK_STEP . '=true'], ['class' => 'btn btn-success pull-left']);
+                    echo Html::a(Yii::t('app', 'Atrás'), ['wizard?' . RutasController::$ACTION_STEP . '=' . $actions['prevStep'] . '&' . RutasController::$BACK_STEP . '=true'], ['class' => 'btn btn-success pull-left', 'onclick' => 'javascript:blockScreenOnAction()']);
                     if ($isForm)
                         echo Html::submitButton(Yii::t('app', 'Siguiente'), ['class' => 'btn btn-success pull-right']);
                     else

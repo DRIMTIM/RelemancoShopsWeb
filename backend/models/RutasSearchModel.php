@@ -215,4 +215,9 @@ class RutasSearchModel {
         return null;
     }
 
+    public function buscarDisponibilidades(){
+        $searchModel = new Disponibilidad();
+        return $searchModel->find()->asArray()->all();
+    }
+
 }

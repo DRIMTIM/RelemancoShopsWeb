@@ -12,6 +12,18 @@ $this->title = Yii::t('app', 'Rutas');
 $this->params['listTitle'] = Yii::t('app', 'Rutas Asignadas');
 $this->params['asignarTitle'] = Yii::t('app', 'Asignar Rutas');
 $this->params['breadcrumbs'][] = $this->title;
+
+if(!empty($errores)){
+    foreach($errores as $error) {
+        ?>
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert" style="text-decoration: none !important;">&times;</a>
+            <strong><?php echo Yii::t('app', 'Error!') ?></strong>&nbsp;<?php echo $error ?>
+        </div>
+        <?php
+    }
+}
+
 ?>
 <div class="ruta-index">
 

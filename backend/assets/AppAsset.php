@@ -16,7 +16,8 @@ class AppAsset extends AssetBundle {
     public $css = ['css/AdminLTE.css'];
     public $js = [
         'js/app.js',
-        'js/relemanco/backend.js'
+        'js/relemanco/backend.js',
+        'js/relemanco/plugins/jquery.blockUI.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -72,7 +72,7 @@ class BuscarRelevador extends Relevador
      */
     public function searchWithUsers($params)
     {
-        $query = Relevador::find()->params($params)->with('user');
+        $query = Relevador::find()->params($params)->with('user')->with('idLocalizacion')->where('id_localizacion IS NOT NULL');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
