@@ -12,7 +12,7 @@ class m151201_030611_tabla_disponibilidad_rutas extends Migration {
     private $disponibilidadForeingKeyColumn = 'id_disponibilidad';
 
     private $disponibilidades = [
-        'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'
+        'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
     ];
 
     public function safeUp() {

@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use backend\controllers\RutasController;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -156,7 +157,7 @@ class RutasSearchModel {
         return $comerciosDisponibles;
     }
 
-    public function buscarRutaDelDia($idRelevador){
+    public function buscarRutaDelDia($idRelevador, $isUpdated = false){
         if(!empty($idRelevador)){
             $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
             $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
@@ -169,15 +170,42 @@ class RutasSearchModel {
                         array_push($comercios, $comercio);
                     }
                 }
-                return $comercios;
             }
+            if(!$isUpdated) {
+                $buscarUpdateRuta = $this->updateRutasDelDia($idRelevador);
+                if ($buscarUpdateRuta) {
+                    $comercios = $this->buscarRutaDelDia($idRelevador, true);
+                }
+            }
+            return $comercios;
         }
         return null;
     }
 
+    private function updateRutasDelDia($idRelevador){
+        $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
+        $rutasPendientes = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->asArray()->all();
+        if(!empty($rutasPendientes)){
+            $diaActual = jddayofweek(cal_to_jd(CAL_GREGORIAN,date("m"),date("d"),date("Y")), 0);
+            $queryDispRutas = new RutasDisponibilidad();
+            foreach($rutasPendientes as $rutaPendiente){
+                $disponibilidadRuta = $queryDispRutas->find()->where(['id_disponibilidad' => $diaActual, 'id_ruta' => $rutaPendiente['id_ruta']])->asArray()->all();
+                if(!empty($disponibilidadRuta)){
+                    $rutaUpdater = new Ruta();
+                    $rutaUpdater = $rutaUpdater->findOne($rutaPendiente['id_ruta']);
+                    $fechaActual = date(RutasController::$DATE_FORMAT);
+                    $rutaUpdater->fecha_asignada = $fechaActual;
+                    $rutaUpdater->update(true, ['fecha_asignada']);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function buscarHistoricoRutas($idRelevador, $limite = 10, $ultimoIdRuta = -1){
         if(!empty($idRelevador)){
-            $this->rutaRelevadorComercioProvider = new RutasRelevadorCokomercio();
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
             $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaHistorica')->with('comercio.localizacion')->asArray()->all();
             $comerciosDisponibles = [];
             $rutasReferencia = [];
