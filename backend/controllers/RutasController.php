@@ -86,7 +86,7 @@ class RutasController extends AbstractWizardController {
         return $errores;
     }
 
-    public function actionIndex() {
+    public function actionIndex($errores = null) {
         foreach(RutasController::$ACTION_STEPS as $stepField){
             Yii::$app->session->remove($stepField);
         }
@@ -97,6 +97,7 @@ class RutasController extends AbstractWizardController {
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'errores' => $errores
         ]);
     }
 
@@ -104,13 +105,16 @@ class RutasController extends AbstractWizardController {
         $searchModel = new RutasSearchModel();
         $dataProvider = $searchModel->buscarRelevadores($request->queryParams);
         $searchModel = $searchModel->getRelevadorProvider();
-
         $this->setViewConfigSubtitle('Seleccion de Relevador');
         $this->setViewConfigPartialView('_elegirRelevador');
-        $this->setViewConfigContainer([
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
-        ]);
+        if($dataProvider->count > 0) {
+            $this->setViewConfigContainer([
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider
+            ]);
+        }else{
+            $this->actionIndex(Yii::t('app', 'Debe dar de alta un relevador primero antes de poder asignar rutas!'));
+        }
     }
 
     public function actionElegirComercio($request) {

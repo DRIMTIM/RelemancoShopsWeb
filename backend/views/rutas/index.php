@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="box-header">
                 <i class="btn pull-left fa fa-globe "><h1 class="box-title">&nbsp;&nbsp;<?= Html::encode($this->params['listTitle']) ?></h1></i>
-            <?= Html::a(Yii::t('app', 'Asignar Ruta'), ['wizard?' . RutasController::$ACTION_STEP . '=0'], ['class' => 'btn btn-success pull-right']) ?>
+            <?= Html::a(Yii::t('app', 'Asignar Ruta'), ['wizard?' . RutasController::$ACTION_STEP . '=0'], ['class' => 'btn btn-success pull-right', 'onclick' => 'javascript:blockScreenOnAction()']) ?>
         </div>
 
         <div class="box-body">

@@ -10,11 +10,7 @@ if (Yii::$app->controller->action->id === 'login') {
     );
 } else {
 
-    if (class_exists('backend\assets\AppAsset')) {
-        backend\assets\AppAsset::register($this);
-    } else {
-        app\assets\AppAsset::register($this);
-    }
+    app\assets\AppAsset::register($this);
 
     dmstr\web\AdminLteAsset::register($this);
 
@@ -51,7 +47,9 @@ if (Yii::$app->controller->action->id === 'login') {
         ) ?>
 
     </div>
-
+    <div id="_block_ui_message" style="display:none;">
+        <h1><?php echo Yii::t('app', 'Estamos procesando su solicitud, porfavor espere...'); ?></h1>
+    </div>
     <?php $this->endBody() ?>
     </body>
     </html>
