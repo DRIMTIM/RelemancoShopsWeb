@@ -5,11 +5,8 @@ namespace backend\controllers;
 use backend\models\BuscarComercio;
 use backend\models\BuscarDisponibilidad;
 use backend\models\BuscarRelevador;
-use backend\models\BuscarRutas;
-use backend\models\Disponibilidad;
 use backend\models\Estado;
 use backend\models\Ruta;
-use backend\models\RutasDataProvider;
 use backend\models\RutasDisponibilidad;
 use backend\models\RutasRelevadorComercio;
 use backend\models\RutasSearchModel;
@@ -21,6 +18,8 @@ use yii\helpers\Json;
  * RutasController implements the CRUD actions for Ruta model.
  */
 class RutasController extends AbstractWizardController {
+
+    public static $DATE_FORMAT = "Y-m-d H:i:s";
 
     /**
      *
@@ -169,6 +168,9 @@ class RutasController extends AbstractWizardController {
             if (!empty($idComercios) && !empty($idRelevador)) {
                 $ruta = new Ruta();
                 $ruta->setAttribute('id_estado', Estado::findEstadoByNombre(Estado::$DISPONIBLE)->id);
+                if($request->post()['BuscarDisponibilidad']['id'] == '[]'){
+                   $ruta->setAttribute('fecha_asignada', date(RutasController::$DATE_FORMAT));
+                }
                 $ruta->save();
                 $idRuta = $ruta->id;
                 foreach ($idComercios as $idComercio) {
