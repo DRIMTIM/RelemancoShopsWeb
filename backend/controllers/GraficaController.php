@@ -27,15 +27,15 @@ class GraficaController extends \yii\web\Controller
 
             if(isset($_POST['id_comercio'])){
                 $id = $_POST['id_comercio'];
-                $comercio = Comercio::find()
-                    ->select('comercios.id, ventasComercios.id_producto,
+                $ventasComercio = VentaComercio::find()
+                    ->select('ventasComercios.id, ventasComercios.id_comercio, ventasComercios.id_producto,
                              SUM(ventasComercios.cantidad) as ventas, productos.nombre')
-                    ->leftJoin('ventasComercios', '`ventasComercios`.`id_comercio` = `comercios`.`id`')
-                    ->leftJoin('productos', '`productos`.`id` = `ventasComercios`.`id_producto`')
-                    ->where(['comercios.id' => $id])
-                    ->groupBy('comercios.id');
+                    ->leftJoin('productos', 'productos.id = ventasComercios.id_producto')
+                    ->where(['ventasComercios.id_comercio' => $id])
+                    ->groupBy('ventasComercios.id_producto')
+                    ->orderBy('ventas');
 
-                return $comercio->asArray()->all();
+                return $ventasComercio->asArray()->all();
             }
         }
         return "ERROR";

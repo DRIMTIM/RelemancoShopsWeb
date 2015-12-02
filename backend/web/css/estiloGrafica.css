@@ -1,3 +1,12 @@
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
 div .box.box-solid.box-warning {
     background-color: #f5f5f0;
 }

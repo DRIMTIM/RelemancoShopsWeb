@@ -6,15 +6,23 @@ var rootURL = "/RelemancoShopsWeb/backend/web";
 
 $( document ).ready(function() {
 
-    dibujarGraficaBarras();
     obtenerProductosMasVendidosComecio();
 
 });
 
 function obtenerProductosMasVendidosComecio(){
 
-    $('#comercio-id').change(function(){
+    if($('#comercio-id').val() == 0){
+        dibujarGraficaBarras(null);
+        $.magnificPopup.open({
+            items: {
+              src: '<div class="box box-warning white-popup"><h3>Seleccione un comercio, para sacar sus estadisticas...</h3></div>',
+              type: 'inline'
+            }
+        });
+    }
 
+    $('#comercio-id').change(function(){
         var id = $('#comercio-id').val();
 
         $.ajax({
@@ -23,19 +31,14 @@ function obtenerProductosMasVendidosComecio(){
             dataType: "json",
             data: { id_comercio : id }
         }).done(function(data){
-            console.log(data);
 
-            $.magnificPopup.open({
-                items: {
-                  src: '<div class="box box-warning white-popup"><h3>Se confirmo el pedido correctamente!</h3></div>',
-                  type: 'inline'
-                }
-            });
+            console.log(data);
+            dibujarGraficaBarras(data.length == 0 ? null : data);
 
         }).fail(function(){
             $.magnificPopup.open({
                 items: {
-                  src: '<div class="box box-warning white-popup"><h3>"Ocurrio un error al realizar el pedido."</h3></div>',
+                  src: '<div class="box box-warning white-popup"><h3>Ocurrio un error al obtener datos de graficas.</h3></div>',
                   type: 'inline'
                 }
             });
@@ -45,33 +48,50 @@ function obtenerProductosMasVendidosComecio(){
 
 }
 
+function productosEjeYGraficaBarras(data){
+
+    var eje = [];
+
+    if(data == null){
+        return eje = ["No hay datos para graficar..."];
+    }
+
+    for(var i = 0; i < data.length; i++){
+        eje.push(data[i].nombre);
+    }
+    return eje;
+}
+
+function cantidadesEjeYGraficaBarras(data){
+
+    var eje = [];
+
+    if(data == null){
+        return eje = [0];
+    }
+
+    for(var i = 0; i < data.length; i++){
+        eje.push(data[i].ventas);
+    }
+    return eje;
+}
+
 //-------------
 //- BAR CHART -
 //-------------
-function dibujarGraficaBarras(){
-
+function dibujarGraficaBarras(data){
     var areaChartData = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      labels: productosEjeYGraficaBarras(data),
       datasets: [
         {
           label: "Electronics",
-          fillColor: "rgba(210, 214, 222, 1)",
+          fillColor: "#009933",
           strokeColor: "rgba(210, 214, 222, 1)",
           pointColor: "rgba(210, 214, 222, 1)",
           pointStrokeColor: "#c1c7d1",
           pointHighlightFill: "#fff",
           pointHighlightStroke: "rgba(220,220,220,1)",
-          data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-          label: "Digital Goods",
-          fillColor: "rgba(60,141,188,0.9)",
-          strokeColor: "rgba(60,141,188,0.8)",
-          pointColor: "#3b8bba",
-          pointStrokeColor: "rgba(60,141,188,1)",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(60,141,188,1)",
-          data: [28, 48, 40, 19, 86, 27, 90]
+          data: cantidadesEjeYGraficaBarras(data)
         }
       ]
     };
@@ -79,9 +99,6 @@ function dibujarGraficaBarras(){
     var barChartCanvas = $("#barChart").get(0).getContext("2d");
     var barChart = new Chart(barChartCanvas);
     var barChartData = areaChartData;
-    barChartData.datasets[1].fillColor = "#00a65a";
-    barChartData.datasets[1].strokeColor = "#00a65a";
-    barChartData.datasets[1].pointColor = "#00a65a";
     var barChartOptions = {
       //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
       scaleBeginAtZero: true,
