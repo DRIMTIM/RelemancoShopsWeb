@@ -4,14 +4,15 @@ namespace app\assets;
 
 use yii\web\AssetBundle;
 
-class PedidoAsset extends AssetBundle {
+class GraficaAsset extends AssetBundle {
 
     public $js = [];
 
     public function init() {
         $this->js = [
             'js/magnificPopup.js',
-            'js/relemanco/pedidos/pedidos.js',
+            'plugins/chartjs/Chart.js',
+            'js/relemanco/graficas/graficas.js',
             'plugins/input-mask/jquery.inputmask.js',
             'plugins/input-mask/jquery.inputmask.date.extensions.js',
             'plugins/input-mask/jquery.inputmask.extensions.js',
@@ -22,7 +23,7 @@ class PedidoAsset extends AssetBundle {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/estiloPedido.css',
+        'css/estiloGrafica.css',
         'css/magnificPopup.css',
     ];
 

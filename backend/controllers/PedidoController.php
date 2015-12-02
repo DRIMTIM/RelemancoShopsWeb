@@ -144,7 +144,7 @@ class PedidoController extends Controller
 
     }
 
-    public function actionRelevarStockComercio(){
+    public function actionRelevarStockComercioBack(){
 
         if(Yii::$app->request->isAjax){
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

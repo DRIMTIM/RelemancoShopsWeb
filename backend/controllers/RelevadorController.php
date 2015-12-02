@@ -147,7 +147,7 @@ class RelevadorController extends Controller
     public function actionGuardarLocalizacion($id){
 
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $relevador = $this->findModel($id);
+        $relevador = Relevador::find()->where(['user_id' => $id])->one();
         $localizacion = new Localizacion();
 
         if($relevador->id_localizacion != null){
