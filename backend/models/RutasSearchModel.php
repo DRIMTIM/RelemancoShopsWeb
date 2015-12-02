@@ -159,7 +159,7 @@ class RutasSearchModel {
     public function buscarRutaDelDia($idRelevador){
         if(!empty($idRelevador)){
             $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
-            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
             asArray()->all();
             $comercios = [];
             if(!empty($queryRutaDelDia)){
@@ -177,8 +177,8 @@ class RutasSearchModel {
 
     public function buscarHistoricoRutas($idRelevador, $limite = 10, $ultimoIdRuta = -1){
         if(!empty($idRelevador)){
-            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
-            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find(['id_relevador' => $idRelevador])->with('rutaHistorica')->with('comercio.localizacion')->asArray()->all();
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorCokomercio();
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaHistorica')->with('comercio.localizacion')->asArray()->all();
             $comerciosDisponibles = [];
             $rutasReferencia = [];
             $rutasDevolver = [];
