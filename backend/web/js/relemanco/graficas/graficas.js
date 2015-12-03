@@ -6,21 +6,11 @@ var rootURL = "/RelemancoShopsWeb/backend/web";
 
 $( document ).ready(function() {
 
+    $("label[for=comercio-id]").css("display", "none");
     obtenerProductosMasVendidosComecio();
 
 });
 
-function obtenerProductosMasVendidosComecio(){
-
-    if($('#comercio-id').val() == 0){
-        dibujarGraficaBarras(null);
-        $.magnificPopup.open({
-            items: {
-              src: '<div class="box box-warning white-popup"><h3>Seleccione un comercio, para sacar sus estadisticas...</h3></div>',
-              type: 'inline'
-            }
-        });
-    }
 
     $('#comercio-id').change(function(){
         var id = $('#comercio-id').val();
@@ -46,6 +36,36 @@ function obtenerProductosMasVendidosComecio(){
 
     });
 
+function obtenerProductosMasVendidosComecio(){
+
+    if($('#comercio-id').val() == 0){
+        dibujarGraficaBarras(null);
+        $.magnificPopup.open({
+            items: {
+              src: '<div class="box box-warning white-popup"><h3>Seleccione un comercio, para sacar sus estadisticas...</h3></div>',
+              type: 'inline'
+            }
+        });
+    }
+
+}
+
+function acotarNombreProductosGraficaBarras(data){
+
+    var eje = [];
+
+    if(data == null){
+        return eje = ["No hay datos para graficar..."];
+    }
+
+    for(var i = 0; i < data.length; i++){
+        if(data[i].nombre.length > 20){
+            data[i].nombre = data[i].nombre.substr(0, 20);
+            data[i].nombre.concat("...");
+        }
+        eje.push(data[i].nombre);
+    }
+    return eje;
 }
 
 function productosEjeYGraficaBarras(data){
@@ -57,7 +77,7 @@ function productosEjeYGraficaBarras(data){
     }
 
     for(var i = 0; i < data.length; i++){
-        eje.push(data[i].nombre);
+        eje.push(data[i].id_producto);
     }
     return eje;
 }
@@ -81,10 +101,9 @@ function cantidadesEjeYGraficaBarras(data){
 //-------------
 function dibujarGraficaBarras(data){
     var areaChartData = {
-      labels: productosEjeYGraficaBarras(data),
+      labels: acotarNombreProductosGraficaBarras(data),
       datasets: [
         {
-          label: "Electronics",
           fillColor: "#009933",
           strokeColor: "rgba(210, 214, 222, 1)",
           pointColor: "rgba(210, 214, 222, 1)",
@@ -121,7 +140,7 @@ function dibujarGraficaBarras(data){
       //Number - Spacing between data sets within X values
       barDatasetSpacing: 1,
       //String - A legend template
-      legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+      legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].nomProductos){%><%=datasets[i].nomProductos%><%}%></li><%}%></ul>",
       //Boolean - whether to make the chart responsive
       responsive: true,
       maintainAspectRatio: false
