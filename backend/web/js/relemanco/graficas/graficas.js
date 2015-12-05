@@ -8,22 +8,33 @@ $( document ).ready(function() {
 
     $("label[for=comercio-id]").css("display", "none");
     obtenerProductosMasVendidosComecio();
+    obtenerCantidadPedidosComercios();
 
 });
 
+function obtenerProductosMasVendidosComecio(){
+
+    if($('#comercio-id').val() == 0){
+        $.magnificPopup.open({
+            items: {
+              src: '<div class="box box-warning white-popup"><h3>Seleccione un comercio, para sacar sus estadisticas...</h3></div>',
+              type: 'inline'
+            }
+        });
+    }
 
     $('#comercio-id').change(function(){
         var id = $('#comercio-id').val();
 
         $.ajax({
             method: "POST",
-            url: rootURL + "/grafica/grafica-barras",
+            url: rootURL + "/grafica/grafica-barras-ventas",
             dataType: "json",
             data: { id_comercio : id }
         }).done(function(data){
 
             console.log(data);
-            dibujarGraficaBarras(data.length == 0 ? null : data);
+            dibujarGraficaBarrasProductosVendidos(data.length == 0 ? null : data);
 
         }).fail(function(){
             $.magnificPopup.open({
@@ -36,117 +47,158 @@ $( document ).ready(function() {
 
     });
 
-function obtenerProductosMasVendidosComecio(){
+}
 
-    if($('#comercio-id').val() == 0){
-        dibujarGraficaBarras(null);
+function obtenerCantidadPedidosComercios(){
+
+    $.ajax({
+        method: "GET",
+        url: rootURL + "/grafica/grafica-barras-pedidos",
+        dataType: "json",
+    }).done(function(data){
+
+        console.log(data);
+        dibujarGraficaBarrasPedidosComercios(data.length == 0 ? null : data);
+
+    }).fail(function(){
         $.magnificPopup.open({
             items: {
-              src: '<div class="box box-warning white-popup"><h3>Seleccione un comercio, para sacar sus estadisticas...</h3></div>',
+              src: '<div class="box box-warning white-popup"><h3>Ocurrio un error al obtener datos de graficas.</h3></div>',
               type: 'inline'
             }
         });
-    }
+    });
 
 }
 
-function acotarNombreProductosGraficaBarras(data){
+function generarDatosGraficaBarrasPedidos(data){
 
-    var eje = [];
+    var result = [];
 
-    if(data == null){
-        return eje = ["No hay datos para graficar..."];
-    }
-
-    for(var i = 0; i < data.length; i++){
-        if(data[i].nombre.length > 20){
-            data[i].nombre = data[i].nombre.substr(0, 20);
-            data[i].nombre.concat("...");
+    if(data != null){
+        for (var i = 0; i < data.length; i++){
+            var dataJSON = {};
+            dataJSON.name = data[i].nombre;
+            dataJSON.y = Number(data[i].cantidad);
+            dataJSON.drilldown = null;
+            console.log(dataJSON);
+            result.push(dataJSON);
         }
-        eje.push(data[i].nombre);
     }
-    return eje;
+
+    return result;
+
 }
 
-function productosEjeYGraficaBarras(data){
+function generarDatosGraficaBarrasVentas(data){
 
-    var eje = [];
+    var result = [];
 
-    if(data == null){
-        return eje = ["No hay datos para graficar..."];
-    }
-
-    for(var i = 0; i < data.length; i++){
-        eje.push(data[i].id_producto);
-    }
-    return eje;
-}
-
-function cantidadesEjeYGraficaBarras(data){
-
-    var eje = [];
-
-    if(data == null){
-        return eje = [0];
-    }
-
-    for(var i = 0; i < data.length; i++){
-        eje.push(data[i].ventas);
-    }
-    return eje;
-}
-
-//-------------
-//- BAR CHART -
-//-------------
-function dibujarGraficaBarras(data){
-    var areaChartData = {
-      labels: acotarNombreProductosGraficaBarras(data),
-      datasets: [
-        {
-          fillColor: "#009933",
-          strokeColor: "rgba(210, 214, 222, 1)",
-          pointColor: "rgba(210, 214, 222, 1)",
-          pointStrokeColor: "#c1c7d1",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(220,220,220,1)",
-          data: cantidadesEjeYGraficaBarras(data)
+    if(data != null){
+        for (var i = 0; i < data.length; i++){
+            var dataJSON = {};
+            dataJSON.name = data[i].nombre;
+            dataJSON.y = Number(data[i].ventas);
+            dataJSON.drilldown = null;
+            console.log(dataJSON);
+            result.push(dataJSON);
         }
-      ]
-    };
+    }
 
-    var barChartCanvas = $("#barChart").get(0).getContext("2d");
-    var barChart = new Chart(barChartCanvas);
-    var barChartData = areaChartData;
-    var barChartOptions = {
-      //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-      scaleBeginAtZero: true,
-      //Boolean - Whether grid lines are shown across the chart
-      scaleShowGridLines: true,
-      //String - Colour of the grid lines
-      scaleGridLineColor: "rgba(0,0,0,.05)",
-      //Number - Width of the grid lines
-      scaleGridLineWidth: 1,
-      //Boolean - Whether to show horizontal lines (except X axis)
-      scaleShowHorizontalLines: true,
-      //Boolean - Whether to show vertical lines (except Y axis)
-      scaleShowVerticalLines: true,
-      //Boolean - If there is a stroke on each bar
-      barShowStroke: true,
-      //Number - Pixel width of the bar stroke
-      barStrokeWidth: 2,
-      //Number - Spacing between each of the X value sets
-      barValueSpacing: 5,
-      //Number - Spacing between data sets within X values
-      barDatasetSpacing: 1,
-      //String - A legend template
-      legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].nomProductos){%><%=datasets[i].nomProductos%><%}%></li><%}%></ul>",
-      //Boolean - whether to make the chart responsive
-      responsive: true,
-      maintainAspectRatio: false
-    };
+    return result;
 
-    barChartOptions.datasetFill = false;
-    barChart.Bar(barChartData, barChartOptions);
+}
+
+/* Funciones para dibujar las graficas. Libreria : www.highcharts.com (un fuego!!) */
+function dibujarGraficaBarrasProductosVendidos(data){
+    // Create the chart
+    $('#divGraficaProductos').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Productos mas Vendidos 2015'
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: 'Cantidad de Productos'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> unidades<br/>'
+        },
+
+        series: [{
+            name: 'Ventas',
+            colorByPoint: true,
+            data: generarDatosGraficaBarrasVentas(data)
+        }]
+
+    });
+
+}
+
+/* Funciones para dibujar las graficas. Libreria : www.highcharts.com (un fuego!!) */
+function dibujarGraficaBarrasPedidosComercios(data){
+    // Create the chart
+    $('#divGraficaPedidos').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de Pedidos de Comercios'
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: 'Cantidad de Pedidos'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> pedidos<br/>'
+        },
+
+        series: [{
+            name: 'Comercio:',
+            colorByPoint: true,
+            data: generarDatosGraficaBarrasPedidos(data)
+        }]
+
+    });
 
 }

@@ -29,7 +29,7 @@ GraficaAsset::register($this);
         <div class="box-body">
 
             <div class="col-md-12">
-
+                <br/>
                 <div class="divGraficas box box-warning">
                     <div class="box-header with-border">
                         <h3 class="box-title">Productos mas Vendidos</h3>
@@ -48,15 +48,29 @@ GraficaAsset::register($this);
                         <?php ActiveForm::end(); ?>
 
                     </div>
-                    <br/>                     
+                    <br/>
                     <div class="box-body">
                         <div class="chart">
-                            <canvas id='barChart' style="width: 550px; height: 400px;">
+                            <div id='divGraficaProductos'></div>
                         </div>
                     </div>
                 </div>
+
+                <div class="divGraficas box box-warning">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Pedidos de Comercios</h3>
+                    </div>
+                    <br/>
+                    <div class="box-body">
+                        <div class="chart">
+                            <div id='divGraficaPedidos'></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+
         <div id="mensajesModal"><h3></h3></div>
 
 </div>
