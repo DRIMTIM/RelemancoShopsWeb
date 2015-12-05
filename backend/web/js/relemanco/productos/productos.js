@@ -6,6 +6,7 @@ var rootURL = "/RelemancoShopsWeb/backend/web";
 
 $( document ).ready(function() {
 
+    $('.select-on-check-all').val(0);
     $("label[for=comercio-id]").css("display", "none");
     $(".summary").css("float", "right");
     asignarProductosClick();
@@ -37,7 +38,7 @@ $("#producto-imagefile").change(function(){
 
 // keys is an array consisting of the keys associated with the selected rows
 $("#asignarProductosGrid tr input[type=checkbox]:even").click(function(){
-    var keys = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
+
     if($(this).prop("checked")){
         $(this).parent().parent('tr').css("background-color", "#FAD9A4");
     }else{
@@ -47,7 +48,7 @@ $("#asignarProductosGrid tr input[type=checkbox]:even").click(function(){
 });
 
 $("#asignarProductosGrid tr input[type=checkbox]:odd").click(function(){
-    var keys = $('#asignarProductosGrid').yiiGridView('getSelectedRows');
+
     if($(this).prop("checked")){
         $(this).parent().parent('tr').css("background-color", "#FAD9A4");
     }else{

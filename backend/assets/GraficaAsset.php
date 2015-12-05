@@ -11,7 +11,9 @@ class GraficaAsset extends AssetBundle {
     public function init() {
         $this->js = [
             'js/magnificPopup.js',
-            'plugins/chartjs/Chart.js',
+            'https://code.highcharts.com/highcharts.js',
+            'https://code.highcharts.com/modules/data.js',
+            'https://code.highcharts.com/modules/drilldown.js',
             'js/relemanco/graficas/graficas.js',
             'plugins/input-mask/jquery.inputmask.js',
             'plugins/input-mask/jquery.inputmask.date.extensions.js',

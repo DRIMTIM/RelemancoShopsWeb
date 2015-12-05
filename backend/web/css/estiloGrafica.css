@@ -13,5 +13,5 @@ div .box.box-solid.box-warning {
 
 .chart{
     width: 550px;
-    height: 300px;
+    height: auto;
 }

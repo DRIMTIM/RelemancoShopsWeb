@@ -6,6 +6,7 @@ use Yii;
 use backend\models\VentaComercio;
 use backend\models\Comercio;
 use backend\models\Producto;
+use backend\models\Pedido;
 
 class GraficaController extends \yii\web\Controller
 {
@@ -20,7 +21,7 @@ class GraficaController extends \yii\web\Controller
 
     }
 
-    public function actionGraficaBarras(){
+    public function actionGraficaBarrasVentas(){
 
         if(Yii::$app->request->isAjax){
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -41,9 +42,22 @@ class GraficaController extends \yii\web\Controller
         return "ERROR";
     }
 
-    public function actionGraficaTorta()
-    {
-        return $this->render('grafica-torta');
+    public function actionGraficaBarrasPedidos(){
+
+        if(Yii::$app->request->isAjax){
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+            $ventasComercio = Pedido::find()
+                ->select('pedidos.id_comercio, comercios.nombre, pedidos.fecha_realizado, COUNT(*) as cantidad')
+                ->leftJoin('comercios', 'comercios.id = pedidos.id_comercio')
+                ->groupBy('pedidos.id_comercio')
+                ->orderBy('cantidad');
+
+            return $ventasComercio->asArray()->all();
+
+        }
+        return "ERROR";
+
     }
 
 }
