@@ -80,7 +80,8 @@ function generarDatosGraficaBarrasPedidos(data){
             var dataJSON = {};
             dataJSON.name = data[i].nombre;
             dataJSON.y = Number(data[i].cantidad);
-            dataJSON.drilldown = null;
+            dataJSON.drilldown = Number(data[i].id_comercio);
+            console.log("Pedidos: ");
             console.log(dataJSON);
             result.push(dataJSON);
         }
@@ -100,6 +101,41 @@ function generarDatosGraficaBarrasVentas(data){
             dataJSON.name = data[i].nombre;
             dataJSON.y = Number(data[i].ventas);
             dataJSON.drilldown = null;
+            console.log("Ventas: ");
+            console.log(dataJSON);
+            result.push(dataJSON);
+        }
+    }
+
+    return result;
+
+}
+
+function generarDatosDrilldownGraficaBarrasPedidos(data){
+
+    var result = [];
+
+    if(data != null){
+        var i = 0;
+        while (i < data.length){
+            var dataJSON = {};
+            var dataDrilldown = [];
+            dataJSON.name = data[i].fecha_realizado;
+            dataJSON.id = Number(data[i].id_comercio);
+
+            while((i < data.length) && (dataJSON.id == data[i].id_comercio)){
+
+                var item = [];
+                item.push(data[i].fecha_realizado);
+                item.push(Number(data[i].cantidad));
+                dataDrilldown.push(item);
+                i++;
+
+            }
+
+            dataJSON.data = dataDrilldown;
+
+            console.log("Pedidos drilldown: ");
             console.log(dataJSON);
             result.push(dataJSON);
         }
@@ -196,8 +232,12 @@ function dibujarGraficaBarrasPedidosComercios(data){
         series: [{
             name: 'Comercio:',
             colorByPoint: true,
-            data: generarDatosGraficaBarrasPedidos(data)
-        }]
+            data: generarDatosGraficaBarrasPedidos(data[0])
+        }],
+
+        drilldown:{
+            series: generarDatosDrilldownGraficaBarrasPedidos(data[1])
+        }
 
     });
 

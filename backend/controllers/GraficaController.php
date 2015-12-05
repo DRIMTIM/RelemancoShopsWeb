@@ -47,13 +47,22 @@ class GraficaController extends \yii\web\Controller
         if(Yii::$app->request->isAjax){
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-            $ventasComercio = Pedido::find()
+            $cantPedidosComercios = Pedido::find()
                 ->select('pedidos.id_comercio, comercios.nombre, pedidos.fecha_realizado, COUNT(*) as cantidad')
                 ->leftJoin('comercios', 'comercios.id = pedidos.id_comercio')
                 ->groupBy('pedidos.id_comercio')
                 ->orderBy('cantidad');
 
-            return $ventasComercio->asArray()->all();
+            $pedidosComercio = Pedido::find()
+                ->select('pedidos.id, pedidos.id_comercio, pedidos.fecha_realizado, SUM(productosPedidos.cantidad) as cantidad')
+                ->leftJoin('productosPedidos', 'pedidos.id = productosPedidos.id_pedido')
+                ->groupBy('pedidos.id, pedidos.fecha_realizado')
+                ->orderBy('cantidad');
+
+            $result = [];
+            array_push($result, $cantPedidosComercios->asArray()->all(), $pedidosComercio->asArray()->all());
+
+            return $result;
 
         }
         return "ERROR";
