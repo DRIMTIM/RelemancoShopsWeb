@@ -20,6 +20,7 @@ use yii\helpers\Json;
 class RutasController extends AbstractWizardController {
 
     public static $DATE_FORMAT = "Y-m-d H:i:s";
+    public static $PRIORIDADES = ["URGENTE", "ALTA", "MEDIA", "BAJA"];
 
     /**
      *
@@ -50,6 +51,17 @@ class RutasController extends AbstractWizardController {
         $response = new Json();
         $response->relevadores = $relevadores;
         $response->radioRelevador = RutasSearchModel::$radioPredefinido;
+        return Json::encode($response);
+    }
+
+    public function actionLoadBestRoute(){
+        $comerciosParaRuta = Json::decode(Yii::$app->request->post('comercios_disponibles', null));
+        $localizacionRelevador = Json::decode(Yii::$app->request->post('localizacion_relevador', null));
+        $searchModel = new RutasSearchModel();
+        $comercios = $searchModel->obtenerMejorRuta($localizacionRelevador, $comerciosParaRuta);
+        $response = new Json();
+        $response->comercios = $comercios;
+        $response->maximaDistanciaRecorrer = RutasSearchModel::$maximaDistanciaRecorrer;
         return Json::encode($response);
     }
 

@@ -64,5 +64,8 @@ RutaAsset::register($this);
             <div id="mapa-ruta" class="col-md-7" style="height: 300pt;"></div>
             <input type="hidden" id="ruta_comercios" name="rutaComercios">
         </div>
+        <div class="box-footer">
+            <input type="button" onclick="javascript:loadBestRoute()" value="PRUEBA">
+        </div>
     </div>
 </div>
