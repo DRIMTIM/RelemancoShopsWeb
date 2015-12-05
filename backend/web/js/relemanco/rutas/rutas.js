@@ -396,6 +396,7 @@ function loadBestRoute(){
             for(var i = 0; i < data.comercios.length; i++){
                 updateRoutePoint(data.comercios[i].id);
             }
+            $("#_cartel_info").show();
         }
     }).fail(function(error){
         console.log(error);
