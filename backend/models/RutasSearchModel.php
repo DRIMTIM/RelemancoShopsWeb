@@ -7,6 +7,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\Ruta;
+use yii\helpers\Json;
 
 
 class RutasSearchModel {
@@ -160,8 +161,9 @@ class RutasSearchModel {
 
     public function buscarRutaDelDia($idRelevador, $isUpdated = false){
         if(!empty($idRelevador)){
+            $ruta = null;
             $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
-            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
+            $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaDia.estado')->with('comercio.localizacion')->
             asArray()->all();
             $comercios = [];
             if(!empty($queryRutaDelDia)){
@@ -169,16 +171,21 @@ class RutasSearchModel {
                     if(!empty($query['rutaDia'])){
                         $comercio = $query['comercio'];
                         array_push($comercios, $comercio);
+                        $ruta = $query['rutaDia'];
                     }
                 }
             }
-            if(!$isUpdated) {
+            if(!$isUpdated && empty($comercios)) {
                 $buscarUpdateRuta = $this->updateRutasDelDia($idRelevador);
                 if ($buscarUpdateRuta) {
                     $comercios = $this->buscarRutaDelDia($idRelevador, true);
                 }
             }
-            return $comercios;
+            $response = new Json();
+            $response->comercios = $comercios;
+            unset($ruta['id_estado']);
+            $response->ruta = $ruta;
+            return $response;
         }
         return null;
     }
