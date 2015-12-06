@@ -19,13 +19,23 @@ return [
     ],
     'components' => [
         'view' => [
-             'theme' => [
-                 'pathMap' => [
+            'theme' => [
+                'pathMap' => [
+                    '@frontend/views' => [
+                        '@frontend/themes/views',
+                    ],
                     '@dektrium/user/views' => [
-                        '@vendor/dektrium/yii2-user/views',
+                        '@frontend/themes/views/user'
                     ]
-                 ],
-             ],
+                ]
+            ]
+        ],
+        'assetManager' => [
+            'bundles' => [
+                'dmstr\web\AdminLteAsset' => [
+                    'skin' => 'skin-green',
+                ],
+            ],
         ],
         /*'user' => [
             'identityClass' => 'common\models\User',
