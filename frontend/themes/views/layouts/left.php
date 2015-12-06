@@ -42,6 +42,7 @@ if (isset(Yii::$app->user->identity)) :
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
                     '<li class="header">RelemancoShops - Menu</li>',
+                    ['label' => '<i class="fa fa-user"></i><span>Perfil</span>', 'url' => ['/user/profile/show','id'=>isset(Yii::$app->user->identity) ? Yii::$app->user->identity->id : -1], 'visible' =>!Yii::$app->user->isGuest],                    
                 ],
             ]
         );
