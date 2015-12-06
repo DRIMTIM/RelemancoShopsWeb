@@ -26,10 +26,6 @@ return [
         ],
     ],
     'components' => [
-        /*'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
-        ],*/
         'user' => [
             'identityCookie' => [
                 'name'     => '_backendIdentity',

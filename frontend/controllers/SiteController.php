@@ -2,42 +2,65 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\filters\AccessRule;
+use yii\web\Controller;
+use common\models\LoginForm;
+use yii\filters\VerbFilter;
+use dektrium\user\Finder;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    /** @var Finder */
+    protected $finder;
     /**
      * @inheritdoc
      */
+
+    /**
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param Finder $finder
+     * @param array $config
+     */
+    public function __construct($id, $module, Finder $finder, $config = [])
+    {
+        $this->finder = $finder;
+        parent::__construct($id, $module, $config);
+    }
+
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['login', 'error'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+			            'actions' => ['create'],
+			            'allow' => true,
+			            'roles' => ['@'],
+			        ],
+			        [
+			            'actions' => ['view', 'search'],
+			            'allow' => true,
+			            'roles' => ['?', '*', '@'],
+			        ],
                 ],
             ],
             'verbs' => [
@@ -58,27 +81,21 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
         ];
     }
 
     public function actionIndex()
     {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $id = Yii::$app->user->identity->id;
+        $profile = $this->finder->findProfileById($id);
+
+        if ($profile === null) {
+            throw new NotFoundHttpException;
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
+        $this->view->params['profile'] = $profile;
+
+        return $this->render('index');
     }
 
     public function actionLogin()
