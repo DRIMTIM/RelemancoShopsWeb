@@ -168,7 +168,7 @@ class RutasSearchModel {
             $comercios = [];
             if(!empty($queryRutaDelDia)){
                 foreach($queryRutaDelDia as $query){
-                    if(!empty($query['rutaDia'])){
+                    if(!empty($query['rutaDia']) && $query['rutaDia']['estado']['nombre'] === Estado::$DISPONIBLE){
                         $comercio = $query['comercio'];
                         array_push($comercios, $comercio);
                         $ruta = $query['rutaDia'];
