@@ -13,6 +13,7 @@ var markersName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "
 $( document ).ready(function() {
 
     // localizarComercios();
+    initComerciosMap();
 
 });
 
@@ -24,7 +25,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function initComerciosMap(comercios) {
+function initComerciosMap() {
 
     var myLatlng = {lat: -34.8059635, lng: -56.2145634};
 
@@ -33,7 +34,7 @@ function initComerciosMap(comercios) {
         center: myLatlng
     });
 
-    dropComercios(comercios, map);
+    // dropComercios(comercios, map);
 
 }
 
