@@ -11,7 +11,8 @@ class BuscarDisponibilidad extends Disponibilidad {
 
     public function rules() {
         return [
-            [['nombre'], 'string'],
+            [['id'], 'integer'],
+            [['nombre'], 'string']
         ];
     }
 
