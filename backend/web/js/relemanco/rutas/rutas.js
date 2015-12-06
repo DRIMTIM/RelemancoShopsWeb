@@ -10,7 +10,6 @@ var markersColors = ["blue", "brown", "green", "orange", "paleblue", "yellow", "
 var markersName = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "M", "N",
                     "O", "P", "Q", "S", "T", "X"];
 
-
 $( document ).ready(function() {
     localizarComercios();
     loadRoutePointsCheckEventHandlers();
@@ -216,6 +215,7 @@ var comerciosDisponibles = [];
 var directionsDisplay = null;
 var directionsService = new google.maps.DirectionsService();
 var localizacionRelevador = null;
+var maximoKilometrosRecorrer = null;
 
 function getComercioDisponible(idComercio){
     for(var i = 0; i < comerciosDisponibles.length; i++){
@@ -313,6 +313,14 @@ function getWayPoints(){
     return waypoints;
 }
 
+function clearRoutePoints(){
+    if(routePoints.length > 0){
+        for(var i = 0; i <= routePoints.length; i++){
+            routePoints.pop();
+        }
+    }
+}
+
 function RuteRequest(){
     return {
         origin: localizacionRelevador,
@@ -346,4 +354,52 @@ function loadDataBeforeSubmit(){
     }else{
         $("#ruta_comercios").val(null);
     }
+}
+
+function setCheckComercios(comercios){
+    if(comercios){
+        var checkboxes = $(':checkbox');
+        for(var i = 0; i < checkboxes.length; i++){
+            var idComercio = checkboxes[i].value;
+            if(isCheckForSet(idComercio, comercios)){
+                checkboxes[i].checked = true;
+            }else{
+                checkboxes[i].checked = false;
+            }
+        }
+    }
+}
+
+function isCheckForSet(idComercio, comercios){
+    if(idComercio && comercios){
+        for(var i = 0; i < comercios.length; i++){
+            var id = comercios[i].id;
+            if(id === idComercio){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function loadBestRoute(){
+    $.ajax({
+        method: "POST",
+        url: rootURL + "/rutas/load-best-route",
+        dataType: "json",
+        data: 'comercios_disponibles=' + JSON.stringify(comerciosDisponibles) +
+            '&localizacion_relevador=' + JSON.stringify({ "latitud" : localizacionRelevador['lat'], "longitud" : localizacionRelevador['lng']})
+    }).done(function(data){
+        if(data){
+            clearRoutePoints();
+            setCheckComercios(data.comercios);
+            for(var i = 0; i < data.comercios.length; i++){
+                updateRoutePoint(data.comercios[i].id);
+            }
+            $("#_cartel_info").show();
+        }
+    }).fail(function(error){
+        console.log(error);
+        alert('Ocurrió un error al generar la ruta optima para el recorrido!');
+    });
 }

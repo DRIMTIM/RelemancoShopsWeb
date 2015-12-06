@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use backend\controllers\RutasController;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -16,6 +17,7 @@ class RutasSearchModel {
     private $rutaProvider;
     private $rutaRelevadorComercioProvider;
     public static $radioPredefinido = 1500; //En metros
+    public static $maximaDistanciaRecorrer = 1000; //En metros
 
     function __construct(){
         $this->localizacionProvider = new BuscarLocalizacion();
@@ -75,7 +77,7 @@ class RutasSearchModel {
     }
 
     public function buscarComerciosSeleccionados($idArray){
-        $query = $this->buscarComerciosSeleccionadosQuery($idArray)->with('localizacion');
+        $query = $this->buscarComerciosSeleccionadosQuery($idArray)->with('localizacion')->with('prioridad');
         return $query->asArray()->all();
     }
 
@@ -156,7 +158,7 @@ class RutasSearchModel {
         return $comerciosDisponibles;
     }
 
-    public function buscarRutaDelDia($idRelevador){
+    public function buscarRutaDelDia($idRelevador, $isUpdated = false){
         if(!empty($idRelevador)){
             $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
             $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaDia')->with('comercio.localizacion')->
@@ -169,15 +171,42 @@ class RutasSearchModel {
                         array_push($comercios, $comercio);
                     }
                 }
-                return $comercios;
             }
+            if(!$isUpdated) {
+                $buscarUpdateRuta = $this->updateRutasDelDia($idRelevador);
+                if ($buscarUpdateRuta) {
+                    $comercios = $this->buscarRutaDelDia($idRelevador, true);
+                }
+            }
+            return $comercios;
         }
         return null;
     }
 
+    private function updateRutasDelDia($idRelevador){
+        $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
+        $rutasPendientes = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->asArray()->all();
+        if(!empty($rutasPendientes)){
+            $diaActual = jddayofweek(cal_to_jd(CAL_GREGORIAN,date("m"),date("d"),date("Y")), 0);
+            $queryDispRutas = new RutasDisponibilidad();
+            foreach($rutasPendientes as $rutaPendiente){
+                $disponibilidadRuta = $queryDispRutas->find()->where(['id_disponibilidad' => $diaActual, 'id_ruta' => $rutaPendiente['id_ruta']])->asArray()->all();
+                if(!empty($disponibilidadRuta)){
+                    $rutaUpdater = new Ruta();
+                    $rutaUpdater = $rutaUpdater->findOne($rutaPendiente['id_ruta']);
+                    $fechaActual = date(RutasController::$DATE_FORMAT);
+                    $rutaUpdater->fecha_asignada = $fechaActual;
+                    $rutaUpdater->update(true, ['fecha_asignada']);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function buscarHistoricoRutas($idRelevador, $limite = 10, $ultimoIdRuta = -1){
         if(!empty($idRelevador)){
-            $this->rutaRelevadorComercioProvider = new RutasRelevadorCokomercio();
+            $this->rutaRelevadorComercioProvider = new RutasRelevadorComercio();
             $queryRutaDelDia = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->with('rutaHistorica')->with('comercio.localizacion')->asArray()->all();
             $comerciosDisponibles = [];
             $rutasReferencia = [];
@@ -213,6 +242,82 @@ class RutasSearchModel {
             }
         }
         return null;
+    }
+
+    public function buscarDisponibilidades(){
+        $searchModel = new Disponibilidad();
+        return $searchModel->find()->asArray()->all();
+    }
+
+    public function obtenerMejorRuta($localizacionRelevador, $comerciosParaRuta){
+        $comercios = [];
+        if(!empty($localizacionRelevador) && !empty($comerciosParaRuta)){
+            //Ordeno de mayor a menor prioridad
+            usort($comerciosParaRuta, function ($a, $b){
+                $indexpA = array_search($a['prioridad']['nombre'], RutasController::$PRIORIDADES);
+                $indexpB = array_search($b['prioridad']['nombre'], RutasController::$PRIORIDADES);
+                if($indexpA < $indexpB){
+                    return -1;
+                }else if($indexpA === $indexpB){
+                    return 0;
+                }else{
+                    return 1;
+                }
+            });
+            //Descarto los comercios fuera del rango maximo de distancia a recorrer
+            $comercios = $this->quitarComerciosFueraDeRango($localizacionRelevador, $comerciosParaRuta);
+            //Descarto los comercios de menor prioridad cuando la suma de todas las distancias superan el rango hasta que no ocurra mas
+            $comercios = $this->verificarSumaDeDistancias($localizacionRelevador, $comercios);
+        }
+        return $comercios;
+    }
+
+    /**
+     *
+     * Va sumando las distancias de los comercios en total (partiendo de la localizacion del relevador) y agrega los comercios resultantes
+     * Si la suma de distancias supera el limite definido se corta la lista y se retorna la ruta hasta ese momento
+     * Se espera una lista ordenada en prioridad de mayor a menor
+     *
+     * @param $localizacionRelevador
+     * @param $comerciosParaRuta
+     * @return array
+     */
+    private function verificarSumaDeDistancias($localizacionRelevador, $comerciosParaRuta){
+        $comercios = [];
+        if(!empty($comerciosParaRuta) && !empty($localizacionRelevador)){
+            $distanciaARecorrer = 0;
+            $localizacionAnterior = $localizacionRelevador;
+            foreach($comerciosParaRuta as $comercio){
+                $distanciaRecorrida = $this->harvestine($comercio['localizacion']['latitud'], $comercio['localizacion']['longitud'], $localizacionAnterior['latitud'], $localizacionAnterior['longitud']);
+                if($distanciaARecorrer + $distanciaRecorrida > RutasSearchModel::$maximaDistanciaRecorrer){
+                    break;
+                }
+                $distanciaARecorrer = $distanciaARecorrer + $distanciaRecorrida;
+                array_push($comercios, $comercio);
+            }
+        }
+        return $comercios;
+    }
+
+    /**
+     *
+     * Quita todos los comercios que calculando la distnacia desde la localizacion del relevador superen el maximo de distancia a recorrer.
+     *
+     * @param $localizacionRelevador
+     * @param $comerciosParaRuta
+     * @return array
+     */
+    private function quitarComerciosFueraDeRango($localizacionRelevador, $comerciosParaRuta){
+        $comercios = [];
+        if(!empty($comerciosParaRuta) && !empty($localizacionRelevador)){
+            foreach($comerciosParaRuta as $comercio){
+                $distanciaLocalizacionComercio = $this->harvestine($comercio['localizacion']['latitud'], $comercio['localizacion']['longitud'], $localizacionRelevador['latitud'], $localizacionRelevador['longitud']);
+                if(!($distanciaLocalizacionComercio > RutasSearchModel::$maximaDistanciaRecorrer)){
+                    array_push($comercios, $comercio);
+                }
+            }
+        }
+        return $comercios;
     }
 
 }

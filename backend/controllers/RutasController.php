@@ -3,11 +3,11 @@
 namespace backend\controllers;
 
 use backend\models\BuscarComercio;
+use backend\models\BuscarDisponibilidad;
 use backend\models\BuscarRelevador;
-use backend\models\BuscarRutas;
 use backend\models\Estado;
 use backend\models\Ruta;
-use backend\models\RutasDataProvider;
+use backend\models\RutasDisponibilidad;
 use backend\models\RutasRelevadorComercio;
 use backend\models\RutasSearchModel;
 use Yii;
@@ -18,6 +18,9 @@ use yii\helpers\Json;
  * RutasController implements the CRUD actions for Ruta model.
  */
 class RutasController extends AbstractWizardController {
+
+    public static $DATE_FORMAT = "Y-m-d H:i:s";
+    public static $PRIORIDADES = ["URGENTE", "ALTA", "MEDIA", "BAJA"];
 
     /**
      *
@@ -51,6 +54,17 @@ class RutasController extends AbstractWizardController {
         return Json::encode($response);
     }
 
+    public function actionLoadBestRoute(){
+        $comerciosParaRuta = Json::decode(Yii::$app->request->post('comercios_disponibles', null));
+        $localizacionRelevador = Json::decode(Yii::$app->request->post('localizacion_relevador', null));
+        $searchModel = new RutasSearchModel();
+        $comercios = $searchModel->obtenerMejorRuta($localizacionRelevador, $comerciosParaRuta);
+        $response = new Json();
+        $response->comercios = $comercios;
+        $response->maximaDistanciaRecorrer = RutasSearchModel::$maximaDistanciaRecorrer;
+        return Json::encode($response);
+    }
+
     /*
      *
      * Acciones que se validan en caso de declarar validadores y ademas son controladas por el wizard con los pasos correspondientes.
@@ -66,6 +80,13 @@ class RutasController extends AbstractWizardController {
         $errores = [];
         if(empty($request->post('relevadorSeleccionado'))){
             array_push($errores, Yii::t('app', 'Debe elegir un relevador!'));
+        }else{
+            $idRelevador = intval($request->post('relevadorSeleccionado')[0]);
+            $searchModel = new RutasSearchModel();
+            $comerciosDisponibles = $searchModel->buscarComerciosEnRadioRelevador($idRelevador);
+            if(empty($comerciosDisponibles)){
+                array_push($errores, Yii::t('app', 'El relevador seleccionado no tiene comercios en su zona!'));
+            }
         }
         return $errores;
     }
@@ -86,7 +107,7 @@ class RutasController extends AbstractWizardController {
         return $errores;
     }
 
-    public function actionIndex() {
+    public function actionIndex($errores = null) {
         foreach(RutasController::$ACTION_STEPS as $stepField){
             Yii::$app->session->remove($stepField);
         }
@@ -97,6 +118,7 @@ class RutasController extends AbstractWizardController {
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'errores' => $errores
         ]);
     }
 
@@ -104,13 +126,16 @@ class RutasController extends AbstractWizardController {
         $searchModel = new RutasSearchModel();
         $dataProvider = $searchModel->buscarRelevadores($request->queryParams);
         $searchModel = $searchModel->getRelevadorProvider();
-
         $this->setViewConfigSubtitle('Seleccion de Relevador');
         $this->setViewConfigPartialView('_elegirRelevador');
-        $this->setViewConfigContainer([
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
-        ]);
+        if($dataProvider->count > 0) {
+            $this->setViewConfigContainer([
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider
+            ]);
+        }else{
+            return $this->actionIndex([Yii::t('app', 'Debe dar de alta un relevador y asignarle una localizacion primero antes de poder asignar rutas!')]);
+        }
     }
 
     public function actionElegirComercio($request) {
@@ -134,10 +159,15 @@ class RutasController extends AbstractWizardController {
         $searchModel = new RutasSearchModel();
         $dataProvider = $searchModel->buscarComerciosSeleccionadosDataProvider($comerciosSeleccionados);
 
+        $disponibilidades = $searchModel->buscarDisponibilidades();
+        $modeloDisponibilidad = new BuscarDisponibilidad();
+
         $this->setViewConfigSubtitle('Ruta del Día');
         $this->setViewConfigPartialView('_armarRuta');
         $this->setViewConfigContainer([
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'disponibilidadModel' => $modeloDisponibilidad,
+            'disponibilidades' => $disponibilidades
         ]);
     }
 
@@ -150,6 +180,9 @@ class RutasController extends AbstractWizardController {
             if (!empty($idComercios) && !empty($idRelevador)) {
                 $ruta = new Ruta();
                 $ruta->setAttribute('id_estado', Estado::findEstadoByNombre(Estado::$DISPONIBLE)->id);
+                if($request->post()['BuscarDisponibilidad']['id'] == '[]'){
+                   $ruta->setAttribute('fecha_asignada', date(RutasController::$DATE_FORMAT));
+                }
                 $ruta->save();
                 $idRuta = $ruta->id;
                 foreach ($idComercios as $idComercio) {
@@ -158,6 +191,17 @@ class RutasController extends AbstractWizardController {
                     $infoRuta->setAttribute('id_relevador', $idRelevador);
                     $infoRuta->setAttribute('id_comercio', $idComercio);
                     $infoRuta->save();
+                }
+                if(!$request->post()['BuscarDisponibilidad']['id'] == '[]') {
+                    $searchModel = new BuscarDisponibilidad();
+                    $searchModel->load($request->post());
+                    $disponibilidadesSeleccionadas = Json::decode($searchModel->id);
+                    foreach ($disponibilidadesSeleccionadas as $disponibilidad) {
+                        $rutaDisponibilidad = new RutasDisponibilidad();
+                        $rutaDisponibilidad->id_ruta = $ruta->id;
+                        $rutaDisponibilidad->id_disponibilidad = intval($disponibilidad);
+                        $rutaDisponibilidad->save();
+                    }
                 }
                 $content = Yii::t('app', 'Se ha creado la ruta exitosamente!');
             }else{
