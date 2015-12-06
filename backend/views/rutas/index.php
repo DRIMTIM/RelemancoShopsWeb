@@ -46,7 +46,10 @@ if(!empty($errores)){
                     'fecha_asignada',
                     'id_estado',
 
-                    ['class' => 'yii\grid\ActionColumn'],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{delete}'
+                    ],
                 ],
             ]); ?>
 

@@ -178,13 +178,15 @@ class RutasSearchModel {
             if(!$isUpdated && empty($comercios)) {
                 $buscarUpdateRuta = $this->updateRutasDelDia($idRelevador);
                 if ($buscarUpdateRuta) {
-                    $comercios = $this->buscarRutaDelDia($idRelevador, true);
+                    $response = $this->buscarRutaDelDia($idRelevador, true);
                 }
             }
-            $response = new Json();
-            $response->comercios = $comercios;
-            unset($ruta['id_estado']);
-            $response->ruta = $ruta;
+            if(empty($response)) {
+                $response = new Json();
+                $response->comercios = $comercios;
+                unset($ruta['id_estado']);
+                $response->ruta = $ruta;
+            }
             return $response;
         }
         return null;
@@ -195,6 +197,7 @@ class RutasSearchModel {
         $rutasPendientes = $this->rutaRelevadorComercioProvider->find()->where(['id_relevador' => $idRelevador])->asArray()->all();
         if(!empty($rutasPendientes)){
             $diaActual = jddayofweek(cal_to_jd(CAL_GREGORIAN,date("m"),date("d"),date("Y")), 0);
+            $diaActual = $diaActual === 0 ? 7 : $diaActual;
             $queryDispRutas = new RutasDisponibilidad();
             foreach($rutasPendientes as $rutaPendiente){
                 $disponibilidadRuta = $queryDispRutas->find()->where(['id_disponibilidad' => $diaActual, 'id_ruta' => $rutaPendiente['id_ruta']])->asArray()->all();

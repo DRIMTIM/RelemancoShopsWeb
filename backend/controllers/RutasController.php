@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\BuscarComercio;
 use backend\models\BuscarDisponibilidad;
 use backend\models\BuscarRelevador;
+use backend\models\BuscarRuta;
 use backend\models\Estado;
 use backend\models\Ruta;
 use backend\models\RutasDisponibilidad;
@@ -103,6 +104,32 @@ class RutasController extends AbstractWizardController {
         $errores = [];
         if(empty($request->post('rutaComercios'))){
             array_push($errores, Yii::t('app', 'Debe definir al menos un comercio para la ruta!'));
+        }else {
+            $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
+            $rutasSearchModel = new RutasSearchModel();
+            $response = $rutasSearchModel->buscarRutaDelDia($idRelevador);
+            if (!empty($response->ruta && $request->post()['BuscarDisponibilidad']['id'] == '[]')) {
+                array_push($errores, Yii::t('app', 'Ya existe una ruta para el relevador en el dia de hoy!'));
+            }
+            if (empty($errores) && !($request->post()['BuscarDisponibilidad']['id'] == '[]')) {
+                $searchModel = new BuscarDisponibilidad();
+                $searchModel->load(['BuscarDisponibilidad' => $request->post()['BuscarDisponibilidad']]);
+                $disponibilidadesSeleccionadas = json_decode($searchModel->id);
+                foreach ($disponibilidadesSeleccionadas as $disponibilidad) {
+                    $dispSearch = new BuscarDisponibilidad();
+                    $disp = $dispSearch->findOne($disponibilidad);
+                    $rutasDispSearch = new RutasDisponibilidad();
+                    $rutasDisp = $rutasDispSearch->find()->where(['id_disponibilidad' => $disponibilidad])->asArray()->all();
+                    $rutasRelevadorComercioSearch = new RutasRelevadorComercio();
+                    foreach ($rutasDisp as $rutaDisp) {
+                        $rutaExistente = $rutasRelevadorComercioSearch->find()->where(['id_ruta' => $rutaDisp['id_ruta'], 'id_relevador' => $idRelevador])->asArray()->all();
+                        if (!empty($rutaExistente)) {
+                            array_push($errores, Yii::t('app', 'Ya existe una ruta para el relevador el ' . $disp['nombre'] . '!'));
+                            break;
+                        }
+                    }
+                }
+            }
         }
         return $errores;
     }
@@ -172,7 +199,7 @@ class RutasController extends AbstractWizardController {
     }
 
     public function actionAltaRuta($request){
-        $idComercios = Json::decode($request->post('rutaComercios'), null);
+        $idComercios = json_decode($request->post('rutaComercios'));
         $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
         $content = null;
         $type = $this->TYPE_RESULT['INFO'];
@@ -182,6 +209,8 @@ class RutasController extends AbstractWizardController {
                 $ruta->setAttribute('id_estado', Estado::findEstadoByNombre(Estado::$DISPONIBLE)->id);
                 if($request->post()['BuscarDisponibilidad']['id'] == '[]'){
                    $ruta->setAttribute('fecha_asignada', date(RutasController::$DATE_FORMAT));
+                }else{
+                    $ruta->setAttribute('fecha_asignada', null);
                 }
                 $ruta->save();
                 $idRuta = $ruta->id;
@@ -192,16 +221,23 @@ class RutasController extends AbstractWizardController {
                     $infoRuta->setAttribute('id_comercio', $idComercio);
                     $infoRuta->save();
                 }
-                if(!$request->post()['BuscarDisponibilidad']['id'] == '[]') {
+                if(!($request->post()['BuscarDisponibilidad']['id'] == '[]')) {
                     $searchModel = new BuscarDisponibilidad();
-                    $searchModel->load($request->post());
-                    $disponibilidadesSeleccionadas = Json::decode($searchModel->id);
+                    $searchModel->load(['BuscarDisponibilidad' => $request->post()['BuscarDisponibilidad']]);
+                    $disponibilidadesSeleccionadas = json_decode($searchModel->id);
                     foreach ($disponibilidadesSeleccionadas as $disponibilidad) {
                         $rutaDisponibilidad = new RutasDisponibilidad();
                         $rutaDisponibilidad->id_ruta = $ruta->id;
                         $rutaDisponibilidad->id_disponibilidad = intval($disponibilidad);
                         $rutaDisponibilidad->save();
                     }
+                }else{
+                    $rutaDisponibilidad = new RutasDisponibilidad();
+                    $rutaDisponibilidad->id_ruta = $ruta->id;
+                    $diaActual = jddayofweek(cal_to_jd(CAL_GREGORIAN,date("m"),date("d"),date("Y")), 0);
+                    $disponibilidad = $diaActual === 0 ? 7 : $diaActual;
+                    $rutaDisponibilidad->id_disponibilidad = intval($disponibilidad);
+                    $rutaDisponibilidad->save();
                 }
                 $content = Yii::t('app', 'Se ha creado la ruta exitosamente!');
             }else{
@@ -216,48 +252,17 @@ class RutasController extends AbstractWizardController {
         $this->setResultMessage($content, $type);
     }
 
-    public function actionView($id) {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    public function actionCreate() {
-        $model = new Ruta();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
+    /**
+     *
+     * Acciones que no son controladas por el wizard y que son accedidas directamente (generalemente las del crud).
+     *
+     */
 
     public function actionDelete($id) {
-        $this->findModel($id)->delete();
-
+        $rutasSearcher = new Ruta();
+        $ruta = $rutasSearcher->findOne($id);
+        $ruta->delete();
         return $this->redirect(['index']);
-    }
-
-    protected function findModel($id) {
-        if (($model = Ruta::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
     }
 
 }
