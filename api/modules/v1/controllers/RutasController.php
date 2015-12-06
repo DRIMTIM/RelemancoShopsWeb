@@ -2,6 +2,8 @@
 
 namespace api\modules\v1\controllers;
 
+use backend\models\Estado;
+use backend\models\Ruta;
 use backend\models\RutasSearchModel;
 use yii\helpers\Json;
 use yii\rest\ActiveController;
@@ -20,10 +22,11 @@ class RutasController extends ActiveController {
         $idRelevador = Yii::$app->request->get('id_relevador');
         if(!empty($idRelevador)){
             $rutasSearchModel = new RutasSearchModel();
-            $comercios = $rutasSearchModel->buscarRutaDelDia($idRelevador);
-            return json_encode($comercios);
+            $response = $rutasSearchModel->buscarRutaDelDia($idRelevador);
+            return json_encode($response);
+        }else{
+            return json_encode(Yii::t('app', 'Debes ingresar un id de relevador!!!'));
         }
-
     }
 
     public function actionObtenerhistoricorutas(){
@@ -44,6 +47,24 @@ class RutasController extends ActiveController {
             return json_encode(Yii::t('app', 'Debes ingresar un id de relevador!!!'));
         }
 
+    }
+
+    public function actionObtenerestadosdisponibles(){
+        $estadoSearcher = new Estado();
+        $estados = $estadoSearcher->find()->asArray()->all();
+        return json_encode($estados);
+    }
+
+    public function actionRelevarruta(){
+        $ruta = json_decode(Yii::$app->request->get('ruta'));
+        if(!empty($ruta)){
+            $rutaUpdater = new Ruta();
+            $rutaUpdater = $rutaUpdater->findOne($ruta->id);
+            $rutaUpdater->id_estado = intval($ruta->estado->id);
+            $rutaUpdater->update(true, ['id_estado']);
+        }else{
+            return json_encode(Yii::t('app', 'Debes enviar la ruta a relevar!!!'));
+        }
     }
 
 
