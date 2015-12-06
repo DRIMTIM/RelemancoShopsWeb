@@ -12,10 +12,10 @@ SiteAsset::register($this);
 <div class="site-index">
 
     <div class="col-md-12 row">
-        <div class="box box-solid box-warning">
+        <div class="box box-solid box-success">
 
             <div class="box-header">
-                <h1 class="box-title">Mapa de Comercios</h1>
+                <h1 class="box-title">Mapa de Rutas</h1>
             </div>
 
             <div class="box-body" id="mapa-comercios">
