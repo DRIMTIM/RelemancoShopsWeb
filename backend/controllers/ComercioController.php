@@ -155,22 +155,32 @@ class ComercioController extends Controller
         if(Yii::$app->request->isAjax){
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
+            $item = null;
+
             if(isset($_POST['id_comercio'])){
+                
                 if(isset($_POST['productos'])){
                     $productos = $_POST['productos'];
-                    ProductoComercioStock::deleteAll(['id_comercio' => $_POST['id_comercio']]);
                     foreach ($productos as $producto) {
-                        $prodComStock = new ProductoComercioStock();
-                        $prodComStock->id_comercio = $_POST['id_comercio'];
-                        $prodComStock->id_producto = $producto;
-                        $prodComStock->cantidad = 0;
-                        $prodComStock->save();
+                        $stock = ProductoComercioStock::find()->where(['id_comercio' => $_POST['id_comercio'],
+                                                                       'id_producto' => $producto,
+                                                                      ])->one();
+                        if(empty($stock)){
+                            $prodComStock = new ProductoComercioStock();
+                            $prodComStock->id_comercio = $_POST['id_comercio'];
+                            $prodComStock->id_producto = $producto;
+                            $prodComStock->cantidad = 0;
+                            $prodComStock->save();
+                        }
                     }
                 }
+                $item = ProductoComercioStock::find()->where(['id_comercio' => $_POST['id_comercio']]);
+                return $item->asArray()->all();
+
+            }else{
+                return null;
             }
 
-            $item = $_POST['productos'];
-            return $item;
         }
     }
 
