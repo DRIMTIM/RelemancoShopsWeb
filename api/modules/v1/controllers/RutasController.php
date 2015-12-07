@@ -5,10 +5,8 @@ namespace api\modules\v1\controllers;
 use backend\models\Estado;
 use backend\models\Ruta;
 use backend\models\RutasSearchModel;
-use yii\helpers\Json;
-use yii\rest\ActiveController;
-use backend\models\Comercio;
 use Yii;
+use yii\rest\ActiveController;
 
 class RutasController extends ActiveController {
 

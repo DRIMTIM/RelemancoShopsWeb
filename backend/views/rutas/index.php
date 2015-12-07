@@ -39,7 +39,7 @@ if(!empty($errores)){
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'columns' => [
-                    'info.id_relevador',
+                    'id',
                     'fecha_asignada',
                     [
                         'attribute' => 'estado.nombre',
@@ -52,6 +52,7 @@ if(!empty($errores)){
                         'template' => '{delete}'
                     ],
                 ],
+                'emptyText' => 'No hay rutas disponibles!'
             ]); ?>
 
         </div>
