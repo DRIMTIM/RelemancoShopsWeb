@@ -56,7 +56,8 @@ class GraficaController extends \yii\web\Controller
             $pedidosComercio = Pedido::find()
                 ->select('pedidos.id, pedidos.id_comercio, pedidos.fecha_realizado, SUM(productosPedidos.cantidad) as cantidad')
                 ->leftJoin('productosPedidos', 'pedidos.id = productosPedidos.id_pedido')
-                ->groupBy('pedidos.id');
+                ->groupBy('pedidos.id')
+                ->orderBy('pedidos.id_comercio');
 
                 // var_dump($pedidosComercio->asArray()->all());
 
