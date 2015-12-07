@@ -21,6 +21,8 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
+use backend\models\Relevador;
+
 /**
  * RegistrationController is responsible for all registration process, which includes registration of a new account,
  * resending confirmation tokens, email confirmation and registration via social networks.
@@ -81,6 +83,11 @@ class RegistrationController extends Controller
         $this->performAjaxValidation($model);
 
         if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            $user = $this->finder->findUserByUsernameOrEmail($model->email);
+            $relevador = new Relevador();
+            $relevador->user_id = $user->id;
+            $relevador->save();
+
             return $this->render('/message', [
                 'title'  => Yii::t('user', 'Your account has been created'),
                 'module' => $this->module,
