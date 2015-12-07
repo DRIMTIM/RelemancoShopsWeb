@@ -10,6 +10,7 @@ namespace backend\models;
 
 
 use yii\db\ActiveRecord;
+use Yii;
 
 class RutasRelevadorComercio extends ActiveRecord {
 

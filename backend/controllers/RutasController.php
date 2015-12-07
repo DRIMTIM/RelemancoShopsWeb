@@ -202,7 +202,7 @@ class RutasController extends AbstractWizardController {
         $idComercios = json_decode($request->post('rutaComercios'));
         $idRelevador = Yii::$app->session[RutasController::$ACTION_STEPS[1]]->post('relevadorSeleccionado')[0];
         $content = null;
-        $type = $this->TYPE_RESULT['INFO'];
+        $type = $this->TYPE_RESULT['SUCCESS'];
         try {
             if (!empty($idComercios) && !empty($idRelevador)) {
                 $ruta = new Ruta();

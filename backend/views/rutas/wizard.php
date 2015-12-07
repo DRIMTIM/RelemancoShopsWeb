@@ -39,8 +39,13 @@ if(!empty($container['errores'])){
             }
         ?>
     </div>
-
-    <div class="box-footer">
+    <?php
+        $style = null;
+        if(!empty($container['resultado'])){
+            $style = 'text-align: center;';
+        }
+    ?>
+    <div class="box-footer" style="<?php echo $style; ?>" >
         <?php
             if(empty($container['resultado'])) {
                 if (empty($actions) || empty($partialView)) {
@@ -53,7 +58,7 @@ if(!empty($container['errores'])){
                         echo Html::a(Yii::t('app', 'Siguiente'), ['wizard?' . RutasController::$ACTION_STEP . '=' . $actions['nextStep']], ['class' => 'btn btn-success pull-right']);
                 }
             }else{
-                echo Html::a(Yii::t('app', 'Aceptar'), ['wizard?' . RutasController::$ACTION_STEP . '=-1'], ['class' => 'btn btn-success center']);
+                echo Html::a(Yii::t('app', 'Aceptar'), ['wizard?' . RutasController::$ACTION_STEP . '=-1'], ['class' => 'btn btn-success']);
             }
         ?>
     </div>
