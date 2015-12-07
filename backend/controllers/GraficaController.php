@@ -48,7 +48,7 @@ class GraficaController extends \yii\web\Controller
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
             $cantPedidosComercios = Pedido::find()
-                ->select('pedidos.id_comercio, comercios.nombre, pedidos.fecha_realizado, COUNT(*) as cantidad')
+                ->select('pedidos.id, pedidos.id_comercio, comercios.nombre, pedidos.fecha_realizado, COUNT(*) as cantidad')
                 ->leftJoin('comercios', 'comercios.id = pedidos.id_comercio')
                 ->groupBy('pedidos.id_comercio')
                 ->orderBy('cantidad');
@@ -56,8 +56,9 @@ class GraficaController extends \yii\web\Controller
             $pedidosComercio = Pedido::find()
                 ->select('pedidos.id, pedidos.id_comercio, pedidos.fecha_realizado, SUM(productosPedidos.cantidad) as cantidad')
                 ->leftJoin('productosPedidos', 'pedidos.id = productosPedidos.id_pedido')
-                ->groupBy('pedidos.id, pedidos.fecha_realizado')
-                ->orderBy('cantidad');
+                ->groupBy('pedidos.id');
+
+                // var_dump($pedidosComercio->asArray()->all());
 
             $result = [];
             array_push($result, $cantPedidosComercios->asArray()->all(), $pedidosComercio->asArray()->all());
