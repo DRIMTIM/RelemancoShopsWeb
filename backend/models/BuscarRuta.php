@@ -5,7 +5,6 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\Ruta;
 
 /**
  * BuscarRutas represents the model behind the search form about `backend\models\Ruta`.
@@ -41,7 +40,7 @@ class BuscarRuta extends Ruta
      */
     public function search($params)
     {
-        $query = Ruta::find();
+        $query = Ruta::find()->with('info');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

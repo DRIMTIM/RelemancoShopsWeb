@@ -38,13 +38,14 @@ if(!empty($errores)){
 
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
                 'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
-
-                    'id',
+                    'info.id_relevador',
                     'fecha_asignada',
-                    'id_estado',
+                    [
+                        'attribute' => 'estado.nombre',
+                        'format' => 'text',
+                        'label' => Yii::t('app', 'Estado')
+                    ],
 
                     [
                         'class' => 'yii\grid\ActionColumn',

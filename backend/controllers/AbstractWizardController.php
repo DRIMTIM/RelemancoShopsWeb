@@ -45,7 +45,8 @@ class AbstractWizardController extends Controller {
     public $TYPE_RESULT = [
         'INFO' => 'info',
         'DANGER' => 'danger',
-        'WARNING' => 'warning'
+        'WARNING' => 'warning',
+        'SUCCESS' => 'success'
     ];
 
     public function init(){
